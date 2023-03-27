@@ -1,0 +1,108 @@
+//
+//  ModalRouter.swift
+//
+//  Created by Thành Đỗ Long on 24.03.2021.
+//
+
+import UIKit
+
+#if !COCOAPODS
+import CleevioCore
+#endif
+
+open class ModalNavigationRouter: ModalRouter {
+
+    // MARK: - Instance Properties
+    public let navigationRouterWrapper: NavigationRouterWrapper
+    
+    // MARK: - Object Lifecycle
+
+    public init(
+        parentViewController: UIViewController,
+        presentationStyle: UIModalPresentationStyle = .automatic,
+        transitionStyle: UIModalTransitionStyle? = nil,
+        modalConfiguration: ModalConfiguration? = nil,
+        navigationRouter: NavigationRouter
+    ) {
+        self.navigationRouterWrapper = NavigationRouterWrapper(navigationRouter: navigationRouter)
+
+        super.init(
+            parentViewController: parentViewController,
+            presentationStyle: presentationStyle,
+            transitionStyle: transitionStyle,
+            configuration: modalConfiguration
+        )
+    }
+
+    // MARK: - Router
+    open override func present(_ viewController: UIViewController, animated: Bool) {
+        navigationRouterWrapper.present(viewController, animated: animated, mainRouterPresentingFunction: super.present)
+    }
+
+    open override func dismiss(animated: Bool, completion: (() -> Void)?) {
+        navigationRouterWrapper.dismiss(animated: animated, completion: completion, mainRouterDismissingAction: super.dismiss)
+    }
+
+    open func perform(_ action: NavigationRouterWrapper.Action, animated: Bool, completion: (() -> Void)? = nil) {
+        navigationRouterWrapper.perform(action, animated: animated, completion: completion, mainRouterDismissAction: super.dismiss)
+    }
+    
+    @objc open override func dismissRouter() {
+        perform(.dismiss, animated: true)
+    }
+
+    open override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        super.presentationControllerDidDismiss(presentationController)
+        navigationRouterWrapper.navigationRouter.navigationController.viewControllers = []
+    }
+
+    open override func setDismissImage(on viewController: UIViewController) {
+        if viewController === navigationRouterWrapper.navigationRouter.navigationController, let firstViewController = navigationRouterWrapper.navigationRouter.navigationController.viewControllers.first {
+            super.setDismissImage(on: firstViewController)
+        } else {
+            super.setDismissImage(on: viewController)
+        }
+    }
+}
+
+extension ModalNavigationRouter {
+    convenience public init(
+        parentViewController: UIViewController,
+        navigationController: UINavigationController = .init(),
+        presentationStyle: UIModalPresentationStyle = .automatic,
+        transitionStyle: UIModalTransitionStyle? = nil,
+        configuration: ModalConfiguration? = nil,
+        navigationAnimation: NavigationRouter.NavigationAnimation = .default
+    ) {
+       let navigationRouter = NavigationRouter(
+            navigationController: navigationController,
+            animation: navigationAnimation
+        )
+        
+        self.init(
+            parentViewController: parentViewController,
+            presentationStyle: presentationStyle,
+            transitionStyle: transitionStyle,
+            modalConfiguration: configuration,
+            navigationRouter: navigationRouter
+        )
+    }
+
+    convenience public init(
+        parentViewController: UIViewController,
+        navigationController: UINavigationController? = nil,
+        presentationStyle: UIModalPresentationStyle = .automatic,
+        transitionStyle: UIModalTransitionStyle? = nil,
+        configuration: ModalConfiguration? = nil,
+        navigationAnimation: NavigationRouter.NavigationAnimation = .default
+    ) {
+        self.init(
+            parentViewController: parentViewController,
+            navigationController: navigationController ?? .init(),
+            presentationStyle: presentationStyle,
+            transitionStyle: transitionStyle,
+            configuration: configuration,
+            navigationAnimation: navigationAnimation
+        )
+    }
+}

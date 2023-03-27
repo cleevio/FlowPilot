@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "cleevioframework-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioFramework-ios.git",
+      "state" : {
+        "branch" : "feature/reworked-cleevio-framework-packages",
+        "revision" : "9d12a52c6c8005020d66573e6c353595045f28d9"
+      }
+    },
+    {
+      "identity" : "floatingpanel",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scenee/FloatingPanel",
+      "state" : {
+        "revision" : "2a29cb5b3ecf4beb67cf524a030dd74a11b956c4",
+        "version" : "2.6.1"
+      }
+    }
+  ],
+  "version" : 2
+}
