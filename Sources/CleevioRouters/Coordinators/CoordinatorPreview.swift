@@ -56,7 +56,8 @@ open class CoordinatorPreviewCoordinator: RouterCoordinator<NavigationRouter> {
     }
 
     open override func start() {
-        let viewController = BaseUIHostingController(rootView: Text(type.description))
+        let view = Text(type.description).frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.white)
+        let viewController = BaseUIHostingController(rootView: view)
 
         router.navigationController.setViewControllers([], animated: false)
         present(viewController: viewController)
