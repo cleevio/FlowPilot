@@ -5,6 +5,7 @@
 //  Created by Lukáš Valenta on 30.12.2022.
 //
 
+#if os(iOS)
 import Foundation
 import UIKit
 
@@ -54,3 +55,4 @@ public extension NavigationRouterWrapper {
     }
 
 }
+#endif

@@ -5,10 +5,9 @@
 //  Created by Lukáš Valenta on 10.01.2023.
 //
 
+#if os(iOS)
 import UIKit
-#if !COCOAPODS
 import CleevioCore
-#endif
 
 open class WindowNavigationRouter: WindowRouter {
     // MARK: - Instance Properties
@@ -66,3 +65,4 @@ extension WindowNavigationRouter {
         )
     }
 }
+#endif

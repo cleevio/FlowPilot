@@ -5,6 +5,7 @@
 //  Created by Lukáš Valenta on 28.12.2022.
 //
 
+#if os(iOS)
 import SwiftUI
 import UIKit
 import FloatingPanel
@@ -78,3 +79,4 @@ public extension UIViewController {
         stickyHeaderController.didMove(toParent: self)
     }
 }
+#endif

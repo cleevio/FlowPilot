@@ -5,10 +5,9 @@
 //  Created by Lukáš Valenta on 10.01.2023.
 //
 
+#if os(iOS)
 import UIKit
-#if !COCOAPODS
 import CleevioCore
-#endif
 
 open class WindowRouter: Router {
     public var dismissPublisher: ActionSubject<Void> = .init()
@@ -47,3 +46,4 @@ open class WindowRouter: Router {
         }
     }
 }
+#endif
