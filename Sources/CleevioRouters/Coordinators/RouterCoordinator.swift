@@ -31,20 +31,20 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
         super.init()
     }
     
-    open override func onDeinit(of coordinator: Coordinator) {
-        super.onDeinit(of: coordinator)
-        delegate?.onDeinit(of: coordinator)
+    open func dismissByRouter() {
+        delegate?.onDismiss(of: self)
+    }
+
+    open func dismiss() {
+        delegate?.onDismiss(of: self)
     }
     
     open func onDismiss(of coordinator: CleevioCore.Coordinator) {
-        router.dismiss(animated: animated) { [weak delegate] in
-            delegate?.onDismiss(of: coordinator)
-        }
+        router.dismiss(animated: animated)
     }
     
     open func onDismissedByRouter(of coordinator: CleevioCore.Coordinator) {
         removeChildCoordinator(coordinator)
-        delegate?.onDismissedByRouter(of: coordinator)
     }
     
     open func present<T: DismissHandler & PlatformViewController>(viewController: T) {

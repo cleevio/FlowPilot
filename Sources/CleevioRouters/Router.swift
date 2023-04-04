@@ -21,3 +21,15 @@ public extension Router {
         self.dismiss(animated: animated, completion: nil)
     }
 }
+
+public protocol NavigationRouterWrappedRouter: Router {
+    var navigationRouterWrapper: NavigationRouterWrapper { get }
+}
+
+extension CleevioRouters.ModalNavigationRouter: NavigationRouterWrappedRouter { }
+extension CleevioRouters.WindowNavigationRouter: NavigationRouterWrappedRouter { }
+extension CleevioRouters.NavigationRouter: NavigationRouterWrappedRouter {
+    public var navigationRouterWrapper: CleevioRouters.NavigationRouterWrapper {
+        .init(navigationRouter: self)
+    }
+}
