@@ -10,20 +10,20 @@ import CleevioCore
 
 public struct CoordinatorPreview: View {
     let baseViewController: UIViewController
-    let delegate: PreviewRouterDelegate
+    let delegate: PreviewRouterDelegate<ModalRouter>
 
-    public init(coordinator: (NavigationRouter) -> Coordinator) {
+    public init(coordinator: (NavigationRouter) -> RouterCoordinator<NavigationRouter>) {
         let baseViewController = UINavigationController()
         let router = NavigationRouter(navigationController: baseViewController)
         self.baseViewController = baseViewController
         let coordinator = coordinator(router)
-        self.delegate = .init(router: router)
+        self.delegate = .init(router: .init(parentViewController: baseViewController))
         coordinator.setDelegate(delegate)
         coordinator.start()
     }
 
    public var body: some View {
-        UIViewControllerWrapper(viewController: baseViewController)
+       UIViewControllerWrapper(viewController: baseViewController)
     }
 
     struct UIViewControllerWrapper: UIViewControllerRepresentable {
@@ -48,32 +48,31 @@ public enum CoordinatorPreviewResultType {
     }
 }
 
-open class CoordinatorPreviewCoordinator: RouterCoordinator<NavigationRouter> {
+open class CoordinatorPreviewCoordinator<RouterType: Router>: RouterCoordinator<RouterType> {
     private let type: CoordinatorPreviewResultType
-
-    public init(type: CoordinatorPreviewResultType, router: NavigationRouter, animated: Bool) {
+    
+    public init(type: CoordinatorPreviewResultType, router: RouterType, animated: Bool) {
         self.type = type
         super.init(router: router, animated: animated)
     }
-
+    
     open override func start() {
-        let view = Text(type.description).frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.white)
+        let view = Text(type.description).preferredColorScheme(.dark)
         let viewController = BaseUIHostingController(rootView: view)
-
+        
         present(viewController: viewController)
-        router.navigationController.setViewControllers([router.navigationController.viewControllers.last!], animated: false)
     }
 }
 
-open class PreviewRouterDelegate: RouterEventDelegate {
-    let router: NavigationRouter
+open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate {
+    let router: RouterType
 
-    public init(router: NavigationRouter) {
+    public init(router: RouterType) {
         self.router = router
     }
 
     public func onDeinit(of coordinator: Coordinator) {
-        CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: router, animated: true).start()
+        CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router, animated: true).start()
     }
 
     public func onDismiss(of coordinator: Coordinator, router: some Router) {
