@@ -11,6 +11,7 @@ import CleevioCore
 public struct CoordinatorPreview: View {
     let baseViewController: UIViewController
     let delegate: PreviewRouterDelegate
+
     public init(coordinator: (NavigationRouter) -> Coordinator) {
         let baseViewController = UINavigationController()
         let router = NavigationRouter(navigationController: baseViewController)
@@ -59,8 +60,8 @@ open class CoordinatorPreviewCoordinator: RouterCoordinator<NavigationRouter> {
         let view = Text(type.description).frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.white)
         let viewController = BaseUIHostingController(rootView: view)
 
-        router.navigationController.setViewControllers([], animated: false)
         present(viewController: viewController)
+        router.navigationController.setViewControllers([router.navigationController.viewControllers.last!], animated: false)
     }
 }
 
