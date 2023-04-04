@@ -36,7 +36,7 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
     }
 
     open func dismiss() {
-        delegate?.onDismiss(of: self)
+        delegate?.onDismiss(of: self) ?? onDismiss(of: self)
     }
     
     open func onDismiss(of coordinator: CleevioCore.Coordinator) {
