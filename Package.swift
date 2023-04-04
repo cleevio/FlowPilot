@@ -15,14 +15,15 @@ let package = Package(
         .library(name: "CleevioFloatingRouters", targets: ["CleevioFloatingRouters"])
     ],
     dependencies: [
-        .package(url: "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore", .upToNextMajor(from: .init(1, 0, 0))),
+//        .package(url: "git@github.com:cleevio/CleevioCore-iOS.git", branch: "feature/new-coordinators"), //.init(2, 0, 0, prereleaseIdentifiers: ["dev3"])
+        .package(url: "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore", branch: "feature/new-coordinators"),
         .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: .init(2, 6, 1)))
     ],
     targets: [
         .target(
             name: "CleevioRouters",
             dependencies: [
-                "CleevioCore"
+                .product(name: "CleevioCore", package: "CleevioCore")
             ]),
         .target(name: "CleevioFloatingRouters", dependencies: [
             "CleevioRouters",
