@@ -10,12 +10,15 @@ import CleevioCore
 
 public struct CoordinatorPreview: View {
     let baseViewController: UIViewController
-
-    public init(onRouterSetup: (NavigationRouter) -> Coordinator) {
+    let delegate: PreviewRouterDelegate
+    public init(coordinator: (NavigationRouter) -> Coordinator) {
         let baseViewController = UINavigationController()
         let router = NavigationRouter(navigationController: baseViewController)
         self.baseViewController = baseViewController
-        onRouterSetup(router).start()
+        let coordinator = coordinator(router)
+        self.delegate = .init(router: router)
+        coordinator.setDelegate(delegate)
+        coordinator.start()
     }
 
    public var body: some View {
@@ -31,5 +34,51 @@ public struct CoordinatorPreview: View {
 
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
         }
+    }
+}
+
+public enum CoordinatorPreviewResultType {
+    case dismissedByRouter
+    case dismiss
+    case coordinatorDeinit
+
+    var description: String {
+        "\(self)"
+    }
+}
+
+open class CoordinatorPreviewCoordinator: RouterCoordinator<NavigationRouter> {
+    private let type: CoordinatorPreviewResultType
+
+    public init(type: CoordinatorPreviewResultType, router: NavigationRouter, animated: Bool) {
+        self.type = type
+        super.init(router: router, animated: animated)
+    }
+
+    open override func start() {
+        let viewController = BaseUIHostingController(rootView: Text(type.description))
+
+        router.navigationController.setViewControllers([], animated: false)
+        present(viewController: viewController)
+    }
+}
+
+open class PreviewRouterDelegate: RouterEventDelegate {
+    let router: NavigationRouter
+
+    public init(router: NavigationRouter) {
+        self.router = router
+    }
+
+    public func onDeinit(of coordinator: Coordinator) {
+        CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: router, animated: true).start()
+    }
+
+    public func onDismiss(of coordinator: Coordinator, router: some Router) {
+        CoordinatorPreviewCoordinator(type: .dismiss, router: self.router, animated: true).start()
+    }
+
+    public func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
+        CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router, animated: true).start()
     }
 }
