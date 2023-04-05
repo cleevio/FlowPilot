@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "cleeviocore",
+      "kind" : "remoteSourceControl",
+      "location" : "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore",
+      "state" : {
+        "branch" : "feature/new-coordinators",
+        "revision" : "b4d43370bded616b14c4bb83adcdc9a04142c308"
+      }
+    },
+    {
+      "identity" : "cleeviorouters",
+      "kind" : "remoteSourceControl",
+      "location" : "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioRouters",
+      "state" : {
+        "branch" : "feature/new-router-coordinator",
+        "revision" : "70ee35af2a869489670bb1f92c90e467ab8f6779"
+      }
+    },
+    {
+      "identity" : "floatingpanel",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scenee/FloatingPanel",
+      "state" : {
+        "revision" : "2a29cb5b3ecf4beb67cf524a030dd74a11b956c4",
+        "version" : "2.6.1"
+      }
+    }
+  ],
+  "version" : 2
+}
