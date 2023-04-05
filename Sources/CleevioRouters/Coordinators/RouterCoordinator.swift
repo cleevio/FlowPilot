@@ -11,6 +11,7 @@ import CleevioCore
 /**
 A delegate protocol for router events.
 */
+@available(macOS 10.15, *)
 public protocol RouterEventDelegate: CoordinatorEventDelegate {
     /**
      Called when the router should dismiss a coordinator.
@@ -63,6 +64,7 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
      - Parameters:
         - router: The router to use.
         - animated: Whether or not transitions are animated.
+        - delegate: An optional `RouterEventDelegate` to set as the delegate.
      */
     public init(router: RouterType, animated: Bool, delegate: RouterEventDelegate? = nil) {
         self.router = router
@@ -103,14 +105,24 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
         - viewController: The view controller to present.
      */
     open func present<T: DismissHandler & PlatformViewController>(viewController: T) {
-        self.viewController = viewController
-        
         viewController.dismissPublisher
             .sink(receiveValue: { [weak self] in
                 guard let self else { return }
                 self.delegate?.onDismissedByRouter(of: self, router: self.router)
             })
             .store(in: cancelBag)
+        
+        self.present(viewController: viewController as PlatformViewController)
+    }
+
+    /**
+     Presents a view controller using the router
+     
+     - Parameters:
+        - viewController: The view controller to present.
+     */
+    open func present<T: PlatformViewController>(viewController: T) {
+        setAssociatedViewController(viewController)
         
         router.present(viewController, animated: animated)
     }
