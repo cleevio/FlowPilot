@@ -8,6 +8,7 @@
 import SwiftUI
 import CleevioCore
 
+#if os(iOS)
 /**
  A view that wraps a `UIViewController` and starts a coordinator. It uses a `PreviewRouterDelegate` to handle coordinator events.
  
@@ -76,6 +77,7 @@ public enum CoordinatorPreviewResultType {
      - router: A `RouterType` that conforms to the `Router` protocol.
      - animated: A boolean indicating whether to animate the presentation of the view controller.
  */
+@available(macOS 11.0, *)
 open class CoordinatorPreviewCoordinator<RouterType: Router>: RouterCoordinator<RouterType> {
     private let type: CoordinatorPreviewResultType
     
@@ -119,4 +121,9 @@ open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate {
     public func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
         CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router, animated: true).start()
     }
+
+    public func setParentCoordinator(of coordinator: Coordinator) {
+        
+    }
 }
+#endif

@@ -39,7 +39,9 @@ public extension Router {
     }
 }
 
+#if os(iOS)
 /// A protocol that extends the `Router` protocol with a property for accessing the `NavigationRouterWrapper` instance.
+@available(macOS 10.15, *)
 public protocol NavigationRouterWrappedRouter: Router {
     var navigationRouterWrapper: NavigationRouterWrapper { get }
 }
@@ -53,4 +55,4 @@ extension CleevioRouters.NavigationRouter: NavigationRouterWrappedRouter {
         .init(navigationRouter: self)
     }
 }
-
+#endif
