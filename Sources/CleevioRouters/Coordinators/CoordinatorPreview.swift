@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  CoordinatorPreview.swift
 //  
 //
 //  Created by Lukáš Valenta on 04.04.2023.
