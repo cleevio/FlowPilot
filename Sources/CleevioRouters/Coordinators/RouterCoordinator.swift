@@ -64,10 +64,11 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
         - router: The router to use.
         - animated: Whether or not transitions are animated.
      */
-    public init(router: RouterType, animated: Bool) {
+    public init(router: RouterType, animated: Bool, delegate: RouterEventDelegate? = nil) {
         self.router = router
         self.animated = animated
-        super.init()
+        self.delegate = delegate
+        super.init(delegate: delegate)
     }
 
     /**
