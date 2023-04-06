@@ -38,7 +38,7 @@ final class CoordinatorTests: XCTestCase {
         let delegate = MockCoordinatorEventDelegate()
         
         autoreleasepool {
-            let viewController = UIViewController()
+            let viewController = PlatformViewController()
             let coordinator = Coordinator(delegate: delegate)
             
             XCTAssertEqual(coordinator.viewControllers.count, 0)
@@ -59,7 +59,7 @@ final class CoordinatorTests: XCTestCase {
         let delegate = MockCoordinatorEventDelegate()
         
         autoreleasepool {
-            let viewController = UIViewController()
+            let viewController = PlatformViewController()
 
             autoreleasepool {
                 let coordinator = Coordinator(delegate: delegate)
@@ -70,7 +70,7 @@ final class CoordinatorTests: XCTestCase {
                 XCTAssertEqual(coordinator.viewControllers.count, 1)
                 
                 autoreleasepool {
-                    let viewController2 = UIViewController()
+                    let viewController2 = PlatformViewController()
                     // Associate view controller with coordinator
                     coordinator.setAssociatedViewController(viewController2)
                     // Verify view controller was associated with coordinator
@@ -88,9 +88,9 @@ final class CoordinatorTests: XCTestCase {
     }
 
     func testMoreAssociatedViewControllers() {
-        let viewController = UIViewController()
-        let viewController2 = UIViewController()
-        let viewController3 = UIViewController()
+        let viewController = PlatformViewController()
+        let viewController2 = PlatformViewController()
+        let viewController3 = PlatformViewController()
         let coordinator = Coordinator()
 
         XCTAssertEqual(coordinator.viewControllers.count, 0)
