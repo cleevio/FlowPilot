@@ -22,7 +22,7 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
     init(count: Int, router: RouterType, animated: Bool, delegate: FirstCoordinatorDelegate? = nil) {
         self.delegate = delegate
         self.counter = count + 1
-        super.init(router: router, animated: animated)
+        super.init(router: router, animated: animated, delegate: delegate)
     }
     
     override func start() {

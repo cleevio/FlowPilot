@@ -15,7 +15,7 @@
       "location" : "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioRouters",
       "state" : {
         "branch" : "feature/new-router-coordinator",
-        "revision" : "70ee35af2a869489670bb1f92c90e467ab8f6779"
+        "revision" : "ac834298fe5ed897e2314a47b044b7a7115da4de"
       }
     },
     {
