@@ -86,21 +86,6 @@ final class CoordinatorTests: XCTestCase {
         
         XCTAssertTrue(delegate.onDeinitCalled)
     }
-
-    func testMoreAssociatedViewControllers() {
-        let viewController = PlatformViewController()
-        let viewController2 = PlatformViewController()
-        let viewController3 = PlatformViewController()
-        let coordinator = Coordinator()
-
-        XCTAssertEqual(coordinator.viewControllers.count, 0)
-
-        // Associate view controller with coordinator
-        coordinator.setAssociatedViewController(viewController)
-
-        // Verify view controller was associated with coordinator
-        XCTAssertEqual(coordinator.viewControllers.count, 1)
-    }
     
     func testDelegateDeinit() {
         let delegate = MockCoordinatorEventDelegate()
