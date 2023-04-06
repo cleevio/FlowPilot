@@ -29,7 +29,7 @@ public protocol CoordinatorEventDelegate: AnyObject {
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
 open class Coordinator: CoordinatorEventDelegate {
     /// Dictionary that stores the child coordinators.
-    public final var childCoordinators: [HashableType<Coordinator>: WeakBox<Coordinator>] = [:]
+    public private(set) final var childCoordinators: [HashableType<Coordinator>: WeakBox<Coordinator>] = [:]
 
     private var id = UUID()
 
@@ -68,7 +68,6 @@ open class Coordinator: CoordinatorEventDelegate {
     ///
     /// - Parameter type: The type of the child coordinator to return.
     /// - Returns: The child coordinator of the specified type, or `nil` if it doesn't exist.
-    @inlinable
     public final func childCoordinator<T: Coordinator>(of type: T.Type = T.self) -> T? {
         return childCoordinators[type]?.unbox as? T
     }
@@ -76,7 +75,6 @@ open class Coordinator: CoordinatorEventDelegate {
     /// Removes the child coordinator of the specified type.
     ///
     /// - Parameter type: The type of the child coordinator to remove.
-    @inlinable
     public final func removeChildCoordinator<T: Coordinator>(of type: T.Type = T.self) {
         childCoordinators[type] = nil
     }
@@ -97,7 +95,7 @@ open class Coordinator: CoordinatorEventDelegate {
     /// Sets the parent coordinator of a child coordinator.
     ///
     /// - Parameter coordinator: The child coordinator to set the parent coordinator for.
-    @inlinable public func setParentCoordinator(of coordinator: Coordinator) {
+    public func setParentCoordinator(of coordinator: Coordinator) {
         self.childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
     }
 }

@@ -35,7 +35,62 @@ final class CoordinatorTests: XCTestCase {
     }
 
     func testAssociatedViewController() {
+        let delegate = MockCoordinatorEventDelegate()
+        
+        autoreleasepool {
+            let viewController = UIViewController()
+            let coordinator = Coordinator(delegate: delegate)
+            
+            XCTAssertEqual(coordinator.viewControllers.count, 0)
+            
+            // Associate view controller with coordinator
+            coordinator.setAssociatedViewController(viewController)
+            
+            // Verify view controller was associated with coordinator
+            XCTAssertEqual(coordinator.viewControllers.count, 1)
+            
+            XCTAssertFalse(delegate.onDeinitCalled)
+        }
+        
+        XCTAssertTrue(delegate.onDeinitCalled)
+    }
+
+    func testAssociatedMultipleViewControllers() {
+        let delegate = MockCoordinatorEventDelegate()
+        
+        autoreleasepool {
+            let viewController = UIViewController()
+
+            autoreleasepool {
+                let coordinator = Coordinator(delegate: delegate)
+                
+                // Associate view controller with coordinator
+                coordinator.setAssociatedViewController(viewController)
+                // Verify view controller was associated with coordinator
+                XCTAssertEqual(coordinator.viewControllers.count, 1)
+                
+                autoreleasepool {
+                    let viewController2 = UIViewController()
+                    // Associate view controller with coordinator
+                    coordinator.setAssociatedViewController(viewController2)
+                    // Verify view controller was associated with coordinator
+                    XCTAssertEqual(coordinator.viewControllers.count, 2)
+                }
+                
+                XCTAssertEqual(nil, coordinator.viewControllers[1], "ViewController1 should not be strongly held")
+                XCTAssertFalse(delegate.onDeinitCalled, "Coordinator should not be deinited when only first coordinator is deinited")
+            }
+            
+            XCTAssertFalse(delegate.onDeinitCalled, "Coordinator should not be deinited when only first coordinator is deinited")
+        }
+        
+        XCTAssertTrue(delegate.onDeinitCalled)
+    }
+
+    func testMoreAssociatedViewControllers() {
         let viewController = UIViewController()
+        let viewController2 = UIViewController()
+        let viewController3 = UIViewController()
         let coordinator = Coordinator()
 
         XCTAssertEqual(coordinator.viewControllers.count, 0)
@@ -48,14 +103,6 @@ final class CoordinatorTests: XCTestCase {
     }
     
     func testDelegateDeinit() {
-        class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
-            var onDeinitCalled = false
-            var setParentCoordinatorCalled = false
-            
-            func onDeinit(of coordinator: Coordinator) {
-                onDeinitCalled = true
-            }
-        }
         let delegate = MockCoordinatorEventDelegate()
         
         // Test coordinator deinit
@@ -83,3 +130,11 @@ final class CoordinatorTests: XCTestCase {
     }
 }
 
+final class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
+    var onDeinitCalled = false
+    var setParentCoordinatorCalled = false
+    
+    func onDeinit(of coordinator: Coordinator) {
+        onDeinitCalled = true
+    }
+}
