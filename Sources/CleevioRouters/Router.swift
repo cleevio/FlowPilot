@@ -10,7 +10,7 @@ import Combine
 
 /// A protocol that defines the common behavior of a router that can present and dismiss view controllers.
 @available(macOS 10.15, *)
-public protocol Router: AnyObject, DismissHandler {
+public protocol Router: AnyObject {
     /// Presents a view controller.
     ///
     /// - Parameters:

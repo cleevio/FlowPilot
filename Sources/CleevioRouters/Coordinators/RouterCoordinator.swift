@@ -83,8 +83,8 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
     /**
      Dismisses the coordinator using the router, calling its delegate's `onDismiss` method.
      */
-    open func dismissByRouter() {
-        delegate?.onDismiss(of: self, router: router)
+    open func dismissedByRouter() {
+        delegate?.onDismissedByRouter(of: self, router: router)
     }
 
     /**
