@@ -37,7 +37,7 @@ final class RouterCoordinatorTests: XCTestCase {
             // Test childcoordinator deinit
             autoreleasepool {
                 let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true, delegate: delegate)
-                coordinator.setParentCoordinator(of: childCoordinator)
+                coordinator.onSetParentCoordinator(of: childCoordinator)
                 
                 // Test onDeinit delegate method is called
                 XCTAssertFalse(delegate.onDeinitCalled)
@@ -80,20 +80,15 @@ class MockRouter: Router {
     }
 }
 
-class MockRouterEventDelegate: RouterEventDelegate {
-    var onDismissCalled = false
+class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate {
     var onDismissedByRouterCalled = false
-    var onDeinitCalled = false
-    
+    var onDismissCalled = false
+
     func onDismiss(of coordinator: Coordinator, router: some Router) {
         onDismissCalled = true
     }
     
     func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
         onDismissedByRouterCalled = true
-    }
-    
-    func onDeinit(of coordinator: Coordinator) {
-        onDeinitCalled = true
     }
 }

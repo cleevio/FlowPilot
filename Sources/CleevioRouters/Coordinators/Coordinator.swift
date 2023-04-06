@@ -24,12 +24,17 @@ public protocol CoordinatorEventDelegate: AnyObject {
     ///
     /// - Parameter coordinator: The coordinator that has been deallocated.
     func onDeinit(of coordinator: Coordinator)
+
+    /// Notifies the delegate that a parent coordinator has been set.
+       ///
+       /// - Parameter coordinator: The parent coordinator that has been set.
+       func onSetParentCoordinator(of coordinator: Coordinator)
 }
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
 open class Coordinator: CoordinatorEventDelegate {
     /// Dictionary that stores the child coordinators.
-    public private(set) final var childCoordinators: [HashableType<Coordinator>: WeakBox<Coordinator>] = [:]
+    public fileprivate(set) final var childCoordinators: [HashableType<Coordinator>: WeakBox<Coordinator>] = [:]
 
     private var id = UUID()
 
@@ -91,18 +96,18 @@ open class Coordinator: CoordinatorEventDelegate {
     open func start() {
         fatalError("Implementation of start is required")
     }
-
-    /// Sets the parent coordinator of a child coordinator.
-    ///
-    /// - Parameter coordinator: The child coordinator to set the parent coordinator for.
-    public func setParentCoordinator(of coordinator: Coordinator) {
-        self.childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
-    }
 }
 
 extension CoordinatorEventDelegate where Self: Coordinator {
     /// Called on a child coordinator deinit
     public func onDeinit(of coordinator: Coordinator) {
         removeChildCoordinator(coordinator)
+    }
+
+    /// Sets the parent coordinator of a child coordinator.
+    ///
+    /// - Parameter coordinator: The child coordinator to set the parent coordinator for.
+    public func onSetParentCoordinator(of coordinator: Coordinator) {
+        self.childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
     }
 }
