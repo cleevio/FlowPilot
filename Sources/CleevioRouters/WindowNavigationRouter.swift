@@ -18,10 +18,7 @@ open class WindowNavigationRouter: WindowRouter {
 
     public init(
         window: UIWindow,
-        navigationRouter: NavigationRouter,
-        presentationStyle: UIModalPresentationStyle = .automatic,
-        transitionStyle: UIModalTransitionStyle? = nil,
-        navigationAnimation: NavigationRouter.NavigationAnimation = .default
+        navigationRouter: NavigationRouter
     ) {
         self.navigationRouterWrapper = NavigationRouterWrapper(navigationRouter: navigationRouter)
 
@@ -47,8 +44,6 @@ extension WindowNavigationRouter {
     convenience public init(
         window: UIWindow,
         navigationController: UINavigationController = .init(),
-        presentationStyle: UIModalPresentationStyle = .automatic,
-        transitionStyle: UIModalTransitionStyle? = nil,
         navigationAnimation: NavigationRouter.NavigationAnimation = .default
     ) {
        let navigationRouter = NavigationRouter(
@@ -58,10 +53,7 @@ extension WindowNavigationRouter {
         
         self.init(
             window: window,
-            navigationRouter: navigationRouter,
-            presentationStyle: presentationStyle,
-            transitionStyle: transitionStyle,
-            navigationAnimation: navigationAnimation
+            navigationRouter: navigationRouter
         )
     }
 }
