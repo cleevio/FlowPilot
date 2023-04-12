@@ -5,6 +5,7 @@
 //  Created by Lukáš Valenta on 28.12.2022.
 //
 
+#if os(iOS)
 import Foundation
 import UIKit
 import CleevioRouters
@@ -62,3 +63,4 @@ extension FloatingPanelNavigationRouter {
         )
     }
 }
+#endif

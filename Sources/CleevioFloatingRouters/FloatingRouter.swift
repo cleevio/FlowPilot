@@ -5,6 +5,7 @@
 //  Created by Lukáš Valenta on 28.12.2022.
 //
 
+#if os(iOS)
 import CleevioRouters
 import FloatingPanel
 import UIKit
@@ -39,3 +40,4 @@ open class FloatingPanelRouter: CleevioRouters.Router {
         completion?()
     }
 }
+#endif

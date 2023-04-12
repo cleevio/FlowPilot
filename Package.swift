@@ -24,7 +24,10 @@ let package = Package(
             dependencies: [
                 "CleevioCore"
             ]),
-        .target(name: "CleevioFloatingRouters", dependencies: ["CleevioRouters", "FloatingPanel"]),
+        .target(name: "CleevioFloatingRouters", dependencies: [
+            "CleevioRouters",
+            .product(name: "FloatingPanel", package: "FloatingPanel", condition: .when(platforms: [.iOS, .macCatalyst]))
+        ]),
         .testTarget(
             name: "CleevioRoutersTests",
             dependencies: ["CleevioRouters"]),

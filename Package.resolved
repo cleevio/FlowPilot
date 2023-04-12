@@ -1,23 +1,25 @@
 {
-  "pins" : [
-    {
-      "identity" : "cleeviocore",
-      "kind" : "remoteSourceControl",
-      "location" : "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore",
-      "state" : {
-        "revision" : "90da629abb47cee15699394272776960da2598cc",
-        "version" : "1.0.0"
+  "object": {
+    "pins": [
+      {
+        "package": "CleevioCore",
+        "repositoryURL": "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore",
+        "state": {
+          "branch": null,
+          "revision": "b7c3a7ead803933f75633384acd1686714ebfbd3",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "FloatingPanel",
+        "repositoryURL": "https://github.com/scenee/FloatingPanel",
+        "state": {
+          "branch": null,
+          "revision": "2a29cb5b3ecf4beb67cf524a030dd74a11b956c4",
+          "version": "2.6.1"
+        }
       }
-    },
-    {
-      "identity" : "floatingpanel",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scenee/FloatingPanel",
-      "state" : {
-        "revision" : "2a29cb5b3ecf4beb67cf524a030dd74a11b956c4",
-        "version" : "2.6.1"
-      }
-    }
-  ],
-  "version" : 2
+    ]
+  },
+  "version": 1
 }

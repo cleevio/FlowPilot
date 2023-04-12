@@ -4,12 +4,10 @@
 //  Created by Thành Đỗ Long on 17.03.2021.
 //
 
+#if os(iOS)
 import UIKit
 import SwiftUI
-
-#if !COCOAPODS
 import CleevioCore
-#endif
 
 open class NavigationRouter: NSObject, DismissHandler {
     public enum NavigationAnimation {
@@ -110,3 +108,4 @@ extension NavigationRouter: Router {
         }
     }
 }
+#endif

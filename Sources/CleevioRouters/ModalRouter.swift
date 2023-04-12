@@ -4,11 +4,9 @@
 //  Created by Thành Đỗ Long on 24.03.2021.
 //
 
+#if os(iOS)
 import UIKit
-
-#if !COCOAPODS
 import CleevioCore
-#endif
 
 @available(iOS 15.0, *)
 public struct UISheetPresentationControllerOptions {
@@ -155,3 +153,4 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         dismissPublisher.send(completion: .finished)
     }
 }
+#endif

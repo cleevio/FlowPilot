@@ -4,11 +4,9 @@
 //  Created by Thành Đỗ Long on 24.03.2021.
 //
 
+#if os(iOS)
 import UIKit
-
-#if !COCOAPODS
 import CleevioCore
-#endif
 
 open class ModalNavigationRouter: ModalRouter {
 
@@ -106,3 +104,4 @@ extension ModalNavigationRouter {
         )
     }
 }
+#endif

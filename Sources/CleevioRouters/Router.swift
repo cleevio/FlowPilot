@@ -4,12 +4,10 @@
 //  Created by Thành Đỗ Long on 17.03.2021.
 //
 
+#if os(iOS)
 import UIKit
 import Combine
-
-#if !COCOAPODS
 import CleevioCore
-#endif
 
 public enum RouterResult<T> {
     case dismiss
@@ -59,6 +57,7 @@ public protocol Router: AnyObject, DismissHandler {
 }
 
 public extension Router {
+    @inlinable
     func dismiss(animated: Bool) {
         self.dismiss(animated: animated, completion: nil)
     }
@@ -81,3 +80,4 @@ public extension Publisher where Failure == Never {
             .eraseToAnyPublisher()
     }
 }
+#endif
