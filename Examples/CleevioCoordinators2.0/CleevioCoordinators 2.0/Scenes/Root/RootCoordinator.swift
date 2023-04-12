@@ -14,6 +14,8 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
     private let cancelBag = CancelBag()
     
     override func start() {
+        super.start()
+
         let viewModel = RootViewModel()
         let viewController = BaseHostingController(rootView: RootView(viewModel: viewModel))
         

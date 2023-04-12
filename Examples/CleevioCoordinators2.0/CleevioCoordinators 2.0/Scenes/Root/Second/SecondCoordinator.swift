@@ -12,6 +12,8 @@ final class SecondCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
     private let cancelBag = CancelBag()
     
     override func start() {
+        super.start()
+
         let viewModel = SecondViewModel()
         let viewController = BaseHostingController(rootView: SecondView(viewModel: viewModel))
         

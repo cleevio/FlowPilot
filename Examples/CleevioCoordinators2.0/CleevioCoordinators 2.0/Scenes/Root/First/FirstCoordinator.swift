@@ -26,6 +26,7 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
     }
     
     override func start() {
+        super.start()
         let viewModel = FirstViewModel(count: counter)
         let viewController = BaseHostingController(rootView: FirstView(viewModel: viewModel))
         
@@ -56,7 +57,7 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
         coordinator.start()
     }
 
-    func onDeinit(of coordinator: Coordinator) {
+    override func onDeinit(of coordinator: Coordinator) {
         
     }
 
