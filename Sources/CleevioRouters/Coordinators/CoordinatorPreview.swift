@@ -122,7 +122,7 @@ open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate {
         CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router, animated: true).start()
     }
 
-    public func setParentCoordinator(of coordinator: Coordinator) {
+    public func onCoordinationStarted(of coordinator: Coordinator) {
         
     }
 }

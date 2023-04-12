@@ -58,6 +58,11 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
         self.delegate = delegate
     }
 
+    open override func setDelegate(_ delegate: some CoordinatorEventDelegate) {
+        assertionFailure("Called set delegate with only CoordinatorEventDelegate and not RouterEventDelegate")
+        super.setDelegate(delegate)
+    }
+
     /**
      Initializes a new router coordinator.
      

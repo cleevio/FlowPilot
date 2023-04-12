@@ -26,9 +26,9 @@ public protocol CoordinatorEventDelegate: AnyObject {
     func onDeinit(of coordinator: Coordinator)
 
     /// Notifies the delegate that a parent coordinator has been set.
-       ///
-       /// - Parameter coordinator: The parent coordinator that has been set.
-       func onSetParentCoordinator(of coordinator: Coordinator)
+    ///
+    /// - Parameter coordinator: The parent coordinator that has been set.
+    func onCoordinationStarted(of coordinator: Coordinator)
 }
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
@@ -94,20 +94,18 @@ open class Coordinator: CoordinatorEventDelegate {
 
     /// Starts the coordinator. Subclasses must provide an implementation of this method.
     open func start() {
-        fatalError("Implementation of start is required")
+        delegate?.onCoordinationStarted(of: self)
     }
-}
 
-extension CoordinatorEventDelegate where Self: Coordinator {
     /// Called on a child coordinator deinit
-    public func onDeinit(of coordinator: Coordinator) {
+    open func onDeinit(of coordinator: Coordinator) {
         removeChildCoordinator(coordinator)
     }
 
     /// Sets the parent coordinator of a child coordinator.
     ///
     /// - Parameter coordinator: The child coordinator to set the parent coordinator for.
-    public func onSetParentCoordinator(of coordinator: Coordinator) {
+    open func onCoordinationStarted(of coordinator: Coordinator) {
         self.childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
     }
 }
