@@ -16,7 +16,7 @@ final class CoordinatorTests: XCTestCase {
         XCTAssertEqual(coordinator.childCoordinators.count, 0)
 
         // Add child coordinator
-        coordinator.onSetParentCoordinator(of: childCoordinator)
+        coordinator.onCoordinationStarted(of: childCoordinator)
 
         // Verify child coordinator was added
         XCTAssertEqual(coordinator.childCoordinators.count, 1)
@@ -97,7 +97,7 @@ final class CoordinatorTests: XCTestCase {
             // Test childcoordinator deinit
             autoreleasepool {
                 let childCoordinator = Coordinator(delegate: delegate)
-                coordinator.onSetParentCoordinator(of: childCoordinator)
+                coordinator.onCoordinationStarted(of: childCoordinator)
                 
                 // Test onDeinit delegate method is called
                 XCTAssertFalse(delegate.onDeinitCalled)
@@ -117,13 +117,13 @@ final class CoordinatorTests: XCTestCase {
 
 class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
     var onDeinitCalled = false
-    var onSetParentCoordinatorCalled = false
+    var onCoordinationStartedCalled = false
 
     func onDeinit(of coordinator: Coordinator) {
         onDeinitCalled = true
     }
 
-    func onSetParentCoordinator(of coordinator: Coordinator) {
-        onSetParentCoordinatorCalled = true
+    func onCoordinationStarted(of coordinator: Coordinator) {
+        onCoordinationStartedCalled = true
     }
 }

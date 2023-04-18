@@ -37,7 +37,7 @@ final class RouterCoordinatorTests: XCTestCase {
             // Test childcoordinator deinit
             autoreleasepool {
                 let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true, delegate: delegate)
-                coordinator.onSetParentCoordinator(of: childCoordinator)
+                coordinator.onCoordinationStarted(of: childCoordinator)
                 
                 // Test onDeinit delegate method is called
                 XCTAssertFalse(delegate.onDeinitCalled)
