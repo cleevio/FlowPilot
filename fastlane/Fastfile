@@ -4,7 +4,6 @@ import_from_git(
   version: "~> 2.0.0"
 )
 
-
 CONFIG = FastlaneConfig.new(
     unit_tests_build_configuration: "Debug",
     deployments: {
