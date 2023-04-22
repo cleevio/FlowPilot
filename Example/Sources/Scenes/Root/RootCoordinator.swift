@@ -1,6 +1,6 @@
 //
 //  RootCoordinator.swift
-//  CleevioCoordinators 2.0
+//  CleevioCoordinators
 //
 //  Created by Lukáš Valenta on 04.04.2023.
 //
@@ -14,8 +14,6 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
     private let cancelBag = CancelBag()
     
     override func start() {
-        super.start()
-
         let viewModel = RootViewModel()
         let viewController = BaseHostingController(rootView: RootView(viewModel: viewModel))
         
@@ -36,15 +34,15 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
     }
 
     func showFirstCoordinator() {
-        let coordinator = FirstCoordinator(count: 0, router: router, animated: animated, delegate: self)
+        let coordinator = FirstCoordinator(count: 0, router: router, animated: animated)
         
-        coordinator.start()
+        coordinate(to: coordinator)
+        coordinator.delegate = self
     }
 
     func showSecondCoordinator() {
-        let coordinator = SecondCoordinator(router: router, animated: animated, delegate: self)
-        
-        coordinator.start()
+        let coordinator = SecondCoordinator(router: router, animated: animated)
+        coordinate(to: coordinator)
     }
 }
 

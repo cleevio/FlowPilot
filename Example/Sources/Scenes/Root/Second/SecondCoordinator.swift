@@ -1,6 +1,6 @@
 //
 //  SecondCoordinator.swift
-//  CleevioCoordinators 2.0
+//  CleevioCoordinators
 //
 //  Created by Lukáš Valenta on 04.04.2023.
 //
@@ -12,8 +12,6 @@ final class SecondCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
     private let cancelBag = CancelBag()
     
     override func start() {
-        super.start()
-
         let viewModel = SecondViewModel()
         let viewController = BaseHostingController(rootView: SecondView(viewModel: viewModel))
         

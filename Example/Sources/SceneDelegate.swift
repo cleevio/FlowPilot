@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  CleevioCoordinators 2.0
+//  CleevioCoordinators
 //
 //  Created by Lukáš Valenta on 04.04.2023.
 //

@@ -42,7 +42,6 @@ fastlane/builds/*
 fastlabe/certs/*
 .bundle/*
 bundle/*
-*.xcodeproj
 
 ### macOS ###
 # General
