@@ -14,7 +14,6 @@ protocol FirstCoordinatorDelegate: AnyObject {
 }
 
 final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
-    private let cancelBag = CancelBag()
     private let counter: Int
 
     public weak var delegate: FirstCoordinatorDelegate?
@@ -28,7 +27,7 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
         let viewModel = FirstViewModel(count: counter)
         let viewController = BaseHostingController(rootView: FirstView(viewModel: viewModel))
         
-        self.present(viewController: viewController)
+        present(viewController: viewController)
         
         viewModel.route
             .sink(receiveValue: { [weak self] route in

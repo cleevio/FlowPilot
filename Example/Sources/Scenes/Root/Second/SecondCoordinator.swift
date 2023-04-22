@@ -9,13 +9,12 @@ import Foundation
 import CleevioCore
 
 final class SecondCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
-    private let cancelBag = CancelBag()
     
     override func start() {
         let viewModel = SecondViewModel()
         let viewController = BaseHostingController(rootView: SecondView(viewModel: viewModel))
         
-        self.present(viewController: viewController)
+        present(viewController: viewController)
         
         viewModel.route
             .sink(receiveValue: { [weak self] route in

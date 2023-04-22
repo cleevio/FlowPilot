@@ -12,6 +12,8 @@ import CleevioCore
 typealias Router = CleevioRouters.Router
 
 class BaseCoordinator<RouterType: Router>: RouterCoordinator<RouterType> {
+    let cancelBag = CancelBag()
+
     deinit {
         print("BaseCoordinator deinit")
     }
