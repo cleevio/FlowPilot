@@ -36,7 +36,8 @@ public struct CoordinatorPreview: View {
         self.baseViewController = baseViewController
         let coordinator = coordinator(router)
         self.delegate = .init(router: .init(parentViewController: baseViewController))
-        coordinator.setDelegate(delegate)
+        coordinator.routerEventDelegate = delegate
+        coordinator.coordinatorEventDelegate = delegate
         coordinator.start()
     }
 
@@ -103,7 +104,9 @@ open class CoordinatorPreviewCoordinator<RouterType: Router>: RouterCoordinator<
  - Parameters:
      - router: A `RouterType` that conforms to the `Router` protocol.
  */
-open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate {
+open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate, CoordinatorEventDelegate {
+    public weak var routerEventDelegate: RouterEventDelegate?
+    
     let router: RouterType
 
     public init(router: RouterType) {

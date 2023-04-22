@@ -33,37 +33,29 @@ public protocol CoordinatorEventDelegate: AnyObject {
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
 open class Coordinator: CoordinatorEventDelegate {
-    /// Dictionary that stores the child coordinators.
+
+    /// A dictionary that stores the child coordinators.
     public fileprivate(set) final var childCoordinators: [HashableType<Coordinator>: WeakBox<Coordinator>] = [:]
 
+    /// The unique identifier for the coordinator.
     private var id = UUID()
 
-    /// The view controller that this coordinator manages. Lifetime of this Coordinator is tied on lifetime of the ViewController.
+    /// The view controllers that this coordinator manages. The lifetime of this `Coordinator` object is tied to the lifetime of the view controllers.
     public private(set) final var viewControllers: WeakArray<PlatformViewController> = .init([])
 
-    private weak var delegate: CoordinatorEventDelegate?
+    /// The delegate that receives events related to the coordinator.
+    public weak var coordinatorEventDelegate: CoordinatorEventDelegate?
 
-    /// Initializes a new instance of the `Coordinator` class with an optional delegate.
-    ///
-    /// - Parameter delegate: An optional `CoordinatorEventDelegate` to set as the delegate.
-    public init(delegate: CoordinatorEventDelegate? = nil) {
-        self.delegate = delegate
-    }
+    /// Initializes a new instance of the `Coordinator` class.
+    public init() { }
 
     deinit {
-        delegate?.onDeinit(of: self)
+        coordinatorEventDelegate?.onDeinit(of: self)
     }
 
-    /// Sets a delegate of type CoordinatorEventDelegate that is called when the coordinator is deallocated.
+    /// Sets the associated `PlatformViewController` whose lifecycle determines the lifecycle of the coordinator.
     ///
-    /// - Parameter delegate: The delegate to set.
-    open func setDelegate(_ delegate: some CoordinatorEventDelegate) {
-        self.delegate = delegate
-    }
-
-    /// Sets an associated ViewController whose lifecycle determines the lifecycle of the coordinator
-    ///
-    /// - Parameter viewController: The associated PlatformViewController
+    /// - Parameter viewController: The associated `PlatformViewController`.
     public final func setAssociatedViewController(_ viewController: PlatformViewController) {
         setAssociatedObject(base: viewController, key: &id, value: self)
         viewControllers.append(viewController)
@@ -74,7 +66,7 @@ open class Coordinator: CoordinatorEventDelegate {
     /// - Parameter type: The type of the child coordinator to return.
     /// - Returns: The child coordinator of the specified type, or `nil` if it doesn't exist.
     public final func childCoordinator<T: Coordinator>(of type: T.Type = T.self) -> T? {
-        return childCoordinators[type]?.unbox as? T
+        childCoordinators[type]?.unbox as? T
     }
 
     /// Removes the child coordinator of the specified type.
@@ -94,18 +86,35 @@ open class Coordinator: CoordinatorEventDelegate {
 
     /// Starts the coordinator. Subclasses must provide an implementation of this method.
     open func start() {
-        delegate?.onCoordinationStarted(of: self)
+        fatalError("Start should always be implemented")
     }
 
-    /// Called on a child coordinator deinit
+    /**
+     Coordinates with child coordinator, setting this coordinator as the parent of the child coordinator.
+
+     - Parameter coordinator: The child coordinator to coordinate with.
+
+     When a coordinator is coordinated to, it becomes a child coordinator of this coordinator, and is stored weakly in the `childCoordinators` array.
+     */
+    open func coordinate(to coordinator: some Coordinator) {
+        onCoordinationStarted(of: coordinator)
+        coordinator.start()
+        coordinator.coordinatorEventDelegate = self
+    }
+
+    // MARK: CoordinatorEventDelegate
+
+    /// Notifies the delegate that the specified coordinator has been deallocated.
+    ///
+    /// - Parameter coordinator: The coordinator that has been deallocated.
     open func onDeinit(of coordinator: Coordinator) {
         removeChildCoordinator(coordinator)
     }
 
-    /// Sets the parent coordinator of a child coordinator.
+    /// Notifies the delegate that a parent coordinator has been set.
     ///
-    /// - Parameter coordinator: The child coordinator to set the parent coordinator for.
+    /// - Parameter coordinator: The parent coordinator that has been set.
     open func onCoordinationStarted(of coordinator: Coordinator) {
-        self.childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
+        childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
     }
 }

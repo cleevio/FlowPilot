@@ -13,7 +13,9 @@ final class RouterCoordinatorTests: XCTestCase {
     func testDismiss() {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
-        let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true, delegate: delegate)
+        let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+        coordinator.routerEventDelegate = delegate
+        coordinator.coordinatorEventDelegate = delegate
         
         // Test onDismiss delegate method is called
         XCTAssertFalse(delegate.onDismissCalled)
@@ -32,12 +34,16 @@ final class RouterCoordinatorTests: XCTestCase {
         
         // Test coordinator deinit
         autoreleasepool {
-            let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true, delegate: delegate)
+            let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+            coordinator.routerEventDelegate = delegate
+            coordinator.coordinatorEventDelegate = delegate
             
             // Test childcoordinator deinit
             autoreleasepool {
-                let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true, delegate: delegate)
-                coordinator.onCoordinationStarted(of: childCoordinator)
+                let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+                coordinator.coordinate(to: childCoordinator)
+                childCoordinator.routerEventDelegate = delegate
+                childCoordinator.coordinatorEventDelegate = delegate
                 
                 // Test onDeinit delegate method is called
                 XCTAssertFalse(delegate.onDeinitCalled)
@@ -57,14 +63,38 @@ final class RouterCoordinatorTests: XCTestCase {
     func testDismissOfChildCoordinator() {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
-        let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true, delegate: delegate)
-        let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true, delegate: coordinator)
+        let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+        coordinator.routerEventDelegate = delegate
+        coordinator.coordinatorEventDelegate = delegate
+        let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+        childCoordinator.routerEventDelegate = coordinator
+        childCoordinator.coordinatorEventDelegate = coordinator
 
         // Test onDismiss delegate method is called
         XCTAssertFalse(router.dismissCalled)
         childCoordinator.dismiss()
         XCTAssertTrue(router.dismissCalled)
         XCTAssertFalse(delegate.onDismissedByRouterCalled)
+    }
+
+    func testCoordinate() {
+        let router = MockRouter()
+        let delegate = MockRouterEventDelegate()
+        
+        autoreleasepool {
+            let coordinator = RouterCoordinator(router: router, animated: true)
+            coordinator.routerEventDelegate = delegate
+            coordinator.coordinatorEventDelegate = delegate
+            
+            let childCoordinator = RouterCoordinator(router: router, animated: true)
+            coordinator.coordinate(to: childCoordinator)
+            
+            XCTAssertFalse(delegate.onDeinitCalled)
+            XCTAssertTrue(childCoordinator.coordinatorEventDelegate === coordinator)
+            XCTAssertTrue(childCoordinator.routerEventDelegate === coordinator)
+        }
+        
+        XCTAssertTrue(delegate.onDeinitCalled)
     }
 }
 
@@ -80,15 +110,21 @@ class MockRouter: Router {
     }
 }
 
-class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate {
+class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate {    
     var onDismissedByRouterCalled = false
     var onDismissCalled = false
 
-    func onDismiss(of coordinator: Coordinator, router: some Router) {
+    func onDismiss(of coordinator: CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
         onDismissCalled = true
     }
     
-    func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
+    func onDismissedByRouter(of coordinator: CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
         onDismissedByRouterCalled = true
+    }
+}
+
+open class RouterCoordinator<RouterType: Router>: CleevioRouters.RouterCoordinator<RouterType> {
+    override open func start() {
+        
     }
 }
