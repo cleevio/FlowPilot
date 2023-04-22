@@ -49,18 +49,6 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
         coordinator.delegate = self
         coordinate(to: coordinator)
     }
-
-    override func onDeinit(of coordinator: Coordinator) {
-        
-    }
-
-    override func onDismiss(of coordinator: Coordinator, router: some Router) {
-        router.dismiss(animated: animated)
-    }
-
-    override func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
-        
-    }
 }
 
 extension FirstCoordinator: FirstCoordinatorDelegate {

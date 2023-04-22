@@ -78,17 +78,6 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
     }
 
     /**
-     Called when a coordinator is dismissed by the router, and removes the coordinator from its parent.
-     
-     - Parameters:
-        - coordinator: The coordinator being dismissed.
-        - router: The router dismissing the coordinator.
-     */
-    open func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
-        removeChildCoordinator(coordinator)
-    }
-
-    /**
      Presents a view controller using the router, and sets up a subscription to the view controller's `dismissPublisher`.
      
      - Parameters:
@@ -118,17 +107,6 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
     }
 
     /**
-     Called when a coordinator is dismissed, and dismisses the coordinator using the router.
-     
-     - Parameters:
-        - coordinator: The coordinator being dismissed.
-        - router: The router dismissing the coordinator.
-     */
-    open func onDismiss(of coordinator: Coordinator, router: some Router) {
-        router.dismiss(animated: animated)
-    }
-
-    /**
      Coordinates with child coordinator, setting this coordinator as the parent of the child coordinator.
 
      - Parameter coordinator: The child coordinator to coordinate with.
@@ -142,5 +120,29 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
     open func coordinate(to coordinator: some RouterCoordinator) {
         super.coordinate(to: coordinator as Coordinator)
         coordinator.routerEventDelegate = self
+    }
+
+    // MARK: RouterEventDelegate
+
+    /**
+     Called when a coordinator is dismissed, and dismisses the coordinator using the router.
+     
+     - Parameters:
+        - coordinator: The coordinator being dismissed.
+        - router: The router dismissing the coordinator.
+     */
+    open func onDismiss(of coordinator: Coordinator, router: some Router) {
+        router.dismiss(animated: animated)
+    }
+
+    /**
+     Called when a coordinator is dismissed by the router, and removes the coordinator from its parent.
+     
+     - Parameters:
+        - coordinator: The coordinator being dismissed.
+        - router: The router dismissing the coordinator.
+     */
+    open func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
+        removeChildCoordinator(coordinator)
     }
 }
