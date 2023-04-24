@@ -33,14 +33,14 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
     }
 
     func showFirstCoordinator() {
-        let coordinator = FirstCoordinator(count: 0, router: router, animated: animated)
+        let coordinator = FirstCoordinator(count: 0, router: router)
         
         coordinate(to: coordinator)
         coordinator.delegate = self
     }
 
     func showSecondCoordinator() {
-        let coordinator = SecondCoordinator(router: router, animated: animated)
+        let coordinator = SecondCoordinator(router: router)
         coordinate(to: coordinator)
     }
 }

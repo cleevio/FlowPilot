@@ -31,7 +31,7 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         CoordinatorPreview { router in
-            RootCoordinator(router: router, animated: true)
+            RootCoordinator(router: router)
         }
     }
 }

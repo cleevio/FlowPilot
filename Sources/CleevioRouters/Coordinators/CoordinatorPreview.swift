@@ -82,9 +82,9 @@ public enum CoordinatorPreviewResultType {
 open class CoordinatorPreviewCoordinator<RouterType: Router>: RouterCoordinator<RouterType> {
     private let type: CoordinatorPreviewResultType
     
-    public init(type: CoordinatorPreviewResultType, router: RouterType, animated: Bool) {
+    public init(type: CoordinatorPreviewResultType, router: RouterType) {
         self.type = type
-        super.init(router: router, animated: animated)
+        super.init(router: router)
     }
     
     open override func start() {
@@ -114,15 +114,15 @@ open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate, Coord
     }
 
     public func onDeinit(of coordinator: Coordinator) {
-        CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router, animated: true).start()
+        CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router).start()
     }
 
     public func onDismiss(of coordinator: Coordinator, router: some Router) {
-        CoordinatorPreviewCoordinator(type: .dismiss, router: self.router, animated: true).start()
+        CoordinatorPreviewCoordinator(type: .dismiss, router: self.router).start()
     }
 
     public func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
-        CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router, animated: true).start()
+        CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router).start()
     }
 
     public func onCoordinationStarted(of coordinator: Coordinator) {

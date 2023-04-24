@@ -31,6 +31,22 @@ public protocol RouterEventDelegate: AnyObject {
      */
     func onDismissedByRouter(of coordinator: Coordinator, router: some Router)
 
+    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: Coordinator) -> Bool
+
+    func isDismissAnimated(of coordinator: Coordinator, router: some Router) -> Bool
+}
+
+@available(macOS 10.15, *)
+public extension RouterEventDelegate {
+    @inlinable
+    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: Coordinator) -> Bool {
+        true
+    }
+
+    @inlinable
+    func isDismissAnimated(of coordinator: Coordinator, router: some Router) -> Bool {
+        true
+    }
 }
 
 @available(macOS 10.15, *)
@@ -39,11 +55,6 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
      The router used by this coordinator.
      */
     final public var router: RouterType
-
-    /**
-     Whether or not transitions are animated.
-     */
-    final public var animated: Bool
 
     public weak var routerEventDelegate: RouterEventDelegate?
     
@@ -57,9 +68,8 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
         - animated: Whether or not transitions are animated.
         - delegate: An optional `RouterEventDelegate` to set as the delegate.
      */
-    public init(router: RouterType, animated: Bool) {
+    public init(router: RouterType) {
         self.router = router
-        self.animated = animated
         super.init()
     }
 
@@ -91,7 +101,7 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
             })
             .store(in: cancelBag)
         
-        self.present(viewController: viewController as PlatformViewController)
+        present(viewController: viewController as PlatformViewController)
     }
 
     /**
@@ -103,7 +113,7 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
     open func present<T: PlatformViewController>(viewController: T) {
         setAssociatedViewController(viewController)
         
-        router.present(viewController, animated: animated)
+        router.present(viewController, animated: routerEventDelegate?.isPresentAnimated(of: viewController, on: router, coordinator: self) ?? true)
     }
 
     /**
@@ -132,7 +142,7 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
         - router: The router dismissing the coordinator.
      */
     open func onDismiss(of coordinator: Coordinator, router: some Router) {
-        router.dismiss(animated: animated)
+        router.dismiss(animated: routerEventDelegate?.isDismissAnimated(of: self, router: router) ?? true)
     }
 
     /**

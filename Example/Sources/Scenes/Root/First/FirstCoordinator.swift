@@ -18,9 +18,9 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
 
     public weak var delegate: FirstCoordinatorDelegate?
 
-    init(count: Int, router: RouterType, animated: Bool) {
+    init(count: Int, router: RouterType) {
         self.counter = count + 1
-        super.init(router: router, animated: animated)
+        super.init(router: router)
     }
     
     override func start() {
@@ -45,7 +45,7 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
     }
 
     func showFirstCoordinator() {
-        let coordinator = FirstCoordinator(count: counter, router: router, animated: animated)
+        let coordinator = FirstCoordinator(count: counter, router: router)
         coordinator.delegate = self
         coordinate(to: coordinator)
     }
@@ -54,7 +54,7 @@ final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
 extension FirstCoordinator: FirstCoordinatorDelegate {
     func showSecondTap() {
         guard let viewController = viewControllers.first??.navigationController else { return }
-        let coordinator = SecondCoordinator(router: ModalRouter(parentViewController: viewController), animated: animated)
+        let coordinator = SecondCoordinator(router: ModalRouter(parentViewController: viewController))
         
         coordinate(to: coordinator)
     }

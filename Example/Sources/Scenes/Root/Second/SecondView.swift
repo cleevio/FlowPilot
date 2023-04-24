@@ -24,7 +24,7 @@ struct SecondView: View {
 struct SecondView_Previews: PreviewProvider {
     static var previews: some View {
         CoordinatorPreview { router in
-            SecondCoordinator(router: router, animated: true)
+            SecondCoordinator(router: router)
         }
     }
 }

@@ -13,7 +13,7 @@ final class RouterCoordinatorTests: XCTestCase {
     func testDismiss() {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
-        let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+        let coordinator = RouterCoordinator<MockRouter>(router: router)
         coordinator.routerEventDelegate = delegate
         coordinator.coordinatorEventDelegate = delegate
         
@@ -34,13 +34,13 @@ final class RouterCoordinatorTests: XCTestCase {
         
         // Test coordinator deinit
         autoreleasepool {
-            let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+            let coordinator = RouterCoordinator<MockRouter>(router: router)
             coordinator.routerEventDelegate = delegate
             coordinator.coordinatorEventDelegate = delegate
             
             // Test childcoordinator deinit
             autoreleasepool {
-                let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+                let childCoordinator = RouterCoordinator<MockRouter>(router: router)
                 coordinator.coordinate(to: childCoordinator)
                 childCoordinator.routerEventDelegate = delegate
                 childCoordinator.coordinatorEventDelegate = delegate
@@ -63,10 +63,10 @@ final class RouterCoordinatorTests: XCTestCase {
     func testDismissOfChildCoordinator() {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
-        let coordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+        let coordinator = RouterCoordinator<MockRouter>(router: router)
         coordinator.routerEventDelegate = delegate
         coordinator.coordinatorEventDelegate = delegate
-        let childCoordinator = RouterCoordinator<MockRouter>(router: router, animated: true)
+        let childCoordinator = RouterCoordinator<MockRouter>(router: router)
         childCoordinator.routerEventDelegate = coordinator
         childCoordinator.coordinatorEventDelegate = coordinator
 
@@ -82,11 +82,11 @@ final class RouterCoordinatorTests: XCTestCase {
         let delegate = MockRouterEventDelegate()
         
         autoreleasepool {
-            let coordinator = RouterCoordinator(router: router, animated: true)
+            let coordinator = RouterCoordinator(router: router)
             coordinator.routerEventDelegate = delegate
             coordinator.coordinatorEventDelegate = delegate
             
-            let childCoordinator = RouterCoordinator(router: router, animated: true)
+            let childCoordinator = RouterCoordinator(router: router)
             coordinator.coordinate(to: childCoordinator)
             
             XCTAssertFalse(delegate.onDeinitCalled)
@@ -96,11 +96,38 @@ final class RouterCoordinatorTests: XCTestCase {
         
         XCTAssertTrue(delegate.onDeinitCalled)
     }
+
+    func testRouterPresent() {
+        func presentHelper(viewController: PlatformViewController, expectedResult: Bool) {
+            let expectation = expectation(description: "Expecting animation result")
+
+            let router = MockRouter()
+            router.onPresent = { viewControllerToBePresent, animated in
+                XCTAssertEqual(animated, expectedResult)
+                XCTAssertTrue(viewControllerToBePresent === viewController)
+                expectation.fulfill()
+            }
+
+            let delegate = MockRouterEventDelegate()
+            delegate.animatePresent = expectedResult
+            let coordinator = RouterCoordinator(router: router)
+            coordinator.routerEventDelegate = delegate
+
+            coordinator.present(viewController: viewController)
+            
+            wait(for: [expectation], timeout: 0.1)
+        }
+
+        [true, false].forEach {
+            presentHelper(viewController: .init(), expectedResult: $0)
+        }
+    }
 }
 
 class MockRouter: Router {
     var dismissCalled = false
     var onPresent: ((PlatformViewController, Bool) -> Void)?
+
     func dismiss(animated: Bool, completion: (() -> Void)?) {
         dismissCalled = true
     }
@@ -113,6 +140,8 @@ class MockRouter: Router {
 class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate {    
     var onDismissedByRouterCalled = false
     var onDismissCalled = false
+    var animatePresent = true
+    var animateDismiss = true
 
     func onDismiss(of coordinator: CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
         onDismissCalled = true
@@ -120,6 +149,14 @@ class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate
     
     func onDismissedByRouter(of coordinator: CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
         onDismissedByRouterCalled = true
+    }
+
+    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: CleevioRouters.Coordinator) -> Bool {
+        animatePresent
+    }
+    
+    func isDismissAnimated(of coordinator: Coordinator, router: some Router) -> Bool {
+        animateDismiss
     }
 }
 

@@ -5,9 +5,9 @@
         "package": "CleevioCore",
         "repositoryURL": "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore",
         "state": {
-          "branch": "feature/new-coordinators",
-          "revision": "b4d43370bded616b14c4bb83adcdc9a04142c308",
-          "version": null
+          "branch": null,
+          "revision": "176a1ac517a001a3fc31a75f656bb8c1ed11e854",
+          "version": "2.0.0"
         }
       },
       {

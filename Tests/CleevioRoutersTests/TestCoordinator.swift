@@ -20,6 +20,7 @@ final class SecondCoordinator<RouterType: Router>: RouterCoordinator<RouterType>
 }
 
 
+#if os(iOS)
 final class TestCoordinator<RouterType: Router>: RouterCoordinator<RouterType>, SecondCoordinatorDelegate {
     func logoutTapped() {
         
@@ -27,8 +28,9 @@ final class TestCoordinator<RouterType: Router>: RouterCoordinator<RouterType>, 
     
     func showCoordinator() {
         let navigationRouter = NavigationRouter(navigationController: .init())
-        let a = SecondCoordinator(router: navigationRouter, animated: true)
+        let a = SecondCoordinator(router: navigationRouter)
         self.coordinate(to: a)
         a.delegate = self
     }
 }
+#endif

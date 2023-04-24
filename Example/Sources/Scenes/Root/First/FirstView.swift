@@ -31,7 +31,7 @@ struct FirstView: View {
 struct FirstView_Previews: PreviewProvider {
     static var previews: some View {
         CoordinatorPreview { router in
-            FirstCoordinator(count: 0, router: router, animated: true)
+            FirstCoordinator(count: 0, router: router)
         }
     }
 }
