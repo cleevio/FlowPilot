@@ -13,7 +13,7 @@ final class RouterCoordinatorTests: XCTestCase {
     func testDismiss() {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
-        let coordinator = RouterCoordinator<MockRouter>(router: router)
+        let coordinator = RouterCoordinator(router: router)
         coordinator.routerEventDelegate = delegate
         coordinator.coordinatorEventDelegate = delegate
         
@@ -34,13 +34,13 @@ final class RouterCoordinatorTests: XCTestCase {
         
         // Test coordinator deinit
         autoreleasepool {
-            let coordinator = RouterCoordinator<MockRouter>(router: router)
+            let coordinator = RouterCoordinator(router: router)
             coordinator.routerEventDelegate = delegate
             coordinator.coordinatorEventDelegate = delegate
             
             // Test childcoordinator deinit
             autoreleasepool {
-                let childCoordinator = RouterCoordinator<MockRouter>(router: router)
+                let childCoordinator = RouterCoordinator(router: router)
                 coordinator.coordinate(to: childCoordinator)
                 childCoordinator.routerEventDelegate = delegate
                 childCoordinator.coordinatorEventDelegate = delegate
@@ -49,7 +49,7 @@ final class RouterCoordinatorTests: XCTestCase {
                 XCTAssertFalse(delegate.onDeinitCalled)
             }
             
-            coordinator.removeChildCoordinator(of: RouterCoordinator<MockRouter>.self)
+            coordinator.removeChildCoordinator(of: RouterCoordinator.self)
             XCTAssertTrue(delegate.onDeinitCalled)
             
             // Set onDeinitCalled to false to check coordinator deinit when it's released
@@ -63,10 +63,10 @@ final class RouterCoordinatorTests: XCTestCase {
     func testDismissOfChildCoordinator() {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
-        let coordinator = RouterCoordinator<MockRouter>(router: router)
+        let coordinator = RouterCoordinator(router: router)
         coordinator.routerEventDelegate = delegate
         coordinator.coordinatorEventDelegate = delegate
-        let childCoordinator = RouterCoordinator<MockRouter>(router: router)
+        let childCoordinator = RouterCoordinator(router: router)
         childCoordinator.routerEventDelegate = coordinator
         childCoordinator.coordinatorEventDelegate = coordinator
 
@@ -160,7 +160,7 @@ class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate
     }
 }
 
-open class RouterCoordinator<RouterType: Router>: CleevioRouters.RouterCoordinator<RouterType> {
+open class RouterCoordinator: CleevioRouters.RouterCoordinator {
     override open func start() {
         
     }

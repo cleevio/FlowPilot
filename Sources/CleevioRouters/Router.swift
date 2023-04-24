@@ -37,6 +37,17 @@ public extension Router {
     func dismiss(animated: Bool) {
         self.dismiss(animated: animated, completion: nil)
     }
+
+    /**
+     Returns wrapped `self` as an instance of `AnyRouter`.
+     
+     - Returns: An instance of `AnyRouter`.
+     
+     - Note: This method is used to erase the specific type of router being used and return an instance of `AnyRouter` instead. This can be useful for scenarios where you need to hide the specific implementation details of the router.
+     */
+    func eraseToAnyRouter() -> AnyRouter {
+        AnyRouter(presentAction: present(_:animated:), dismissAction: dismiss(animated:completion:))
+    }
 }
 
 #if os(iOS)

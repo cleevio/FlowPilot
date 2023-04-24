@@ -13,12 +13,12 @@ protocol FirstCoordinatorDelegate: AnyObject {
     func showSecondTap()
 }
 
-final class FirstCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
+final class FirstCoordinator: BaseCoordinator {
     private let counter: Int
 
     public weak var delegate: FirstCoordinatorDelegate?
 
-    init(count: Int, router: RouterType) {
+    init(count: Int, router: some Router) {
         self.counter = count + 1
         super.init(router: router)
     }

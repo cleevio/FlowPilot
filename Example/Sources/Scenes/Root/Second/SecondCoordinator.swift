@@ -8,7 +8,7 @@
 import Foundation
 import CleevioCore
 
-final class SecondCoordinator<RouterType: Router>: BaseCoordinator<RouterType> {
+final class SecondCoordinator: BaseCoordinator {
     
     override func start() {
         let viewModel = SecondViewModel()

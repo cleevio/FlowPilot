@@ -30,7 +30,7 @@ public struct CoordinatorPreview: View {
     let baseViewController: UIViewController
     let delegate: PreviewRouterDelegate<ModalRouter>
 
-    public init(coordinator: (NavigationRouter) -> RouterCoordinator<NavigationRouter>) {
+    public init(coordinator: (NavigationRouter) -> RouterCoordinator) {
         let baseViewController = UINavigationController()
         let router = NavigationRouter(navigationController: baseViewController)
         self.baseViewController = baseViewController
@@ -79,10 +79,10 @@ public enum CoordinatorPreviewResultType {
      - animated: A boolean indicating whether to animate the presentation of the view controller.
  */
 @available(macOS 11.0, *)
-open class CoordinatorPreviewCoordinator<RouterType: Router>: RouterCoordinator<RouterType> {
+open class CoordinatorPreviewCoordinator: RouterCoordinator {
     private let type: CoordinatorPreviewResultType
     
-    public init(type: CoordinatorPreviewResultType, router: RouterType) {
+    public init(type: CoordinatorPreviewResultType, router: some Router) {
         self.type = type
         super.init(router: router)
     }

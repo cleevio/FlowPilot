@@ -10,8 +10,14 @@ import SwiftUI
 import CleevioCore
 import CleevioRouters
 
-final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoordinator<RouterType> {
-    
+final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoordinator {
+    private let navigationRouter: RouterType
+
+    init(router: RouterType) {
+        self.navigationRouter = router
+        super.init(router: router)
+    }
+
     override func start() {
         let viewModel = RootViewModel()
         let viewController = BaseHostingController(rootView: RootView(viewModel: viewModel))
@@ -47,11 +53,11 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
 
 extension RootCoordinator: FirstCoordinatorDelegate {
     func showSecondTap() {
-        var viewControllers: [UIViewController] = [router.navigationRouterWrapper.navigationRouter.navigationController.viewControllers.first!]
+        var viewControllers: [UIViewController] = [navigationRouter.navigationRouterWrapper.navigationRouter.navigationController.viewControllers.first!]
         showSecondCoordinator()
-        
-        viewControllers.append(router.navigationRouterWrapper.navigationRouter.navigationController.viewControllers.last!)
-        
-        router.navigationRouterWrapper.navigationRouter.navigationController.setViewControllers(viewControllers, animated: true)
+
+        viewControllers.append(navigationRouter.navigationRouterWrapper.navigationRouter.navigationController.viewControllers.last!)
+
+        navigationRouter.navigationRouterWrapper.navigationRouter.navigationController.setViewControllers(viewControllers, animated: true)
     }
 }

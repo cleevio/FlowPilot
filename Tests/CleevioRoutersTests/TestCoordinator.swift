@@ -12,7 +12,7 @@ protocol SecondCoordinatorDelegate: AnyObject {
     func logoutTapped()
 }
 
-final class SecondCoordinator<RouterType: Router>: RouterCoordinator<RouterType> {
+final class SecondCoordinator: RouterCoordinator {
     public weak var delegate: SecondCoordinatorDelegate?
     
     override func start() {
@@ -21,7 +21,7 @@ final class SecondCoordinator<RouterType: Router>: RouterCoordinator<RouterType>
 
 
 #if os(iOS)
-final class TestCoordinator<RouterType: Router>: RouterCoordinator<RouterType>, SecondCoordinatorDelegate {
+final class TestCoordinator<RouterType: Router>: RouterCoordinator, SecondCoordinatorDelegate {
     func logoutTapped() {
         
     }

@@ -36,6 +36,18 @@ public protocol RouterEventDelegate: AnyObject {
     func isDismissAnimated(of coordinator: Coordinator, router: some Router) -> Bool
 }
 
+public extension RouterEventDelegate {
+    @inlinable
+    func animatedPresent(of viewController: some PlatformViewController, on router: some Router, coordinator: Coordinator) -> Bool {
+        true
+    }
+
+    @inlinable
+    func animatedDismiss(of coordinator: Coordinator, router: some Router) -> Bool {
+        true
+    }
+}
+
 @available(macOS 10.15, *)
 public extension RouterEventDelegate {
     @inlinable
@@ -50,11 +62,11 @@ public extension RouterEventDelegate {
 }
 
 @available(macOS 10.15, *)
-open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelegate {
+open class RouterCoordinator: Coordinator, RouterEventDelegate {
     /**
      The router used by this coordinator.
      */
-    final public var router: RouterType
+    final public var router: AnyRouter
 
     public weak var routerEventDelegate: RouterEventDelegate?
     
@@ -68,8 +80,8 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
         - animated: Whether or not transitions are animated.
         - delegate: An optional `RouterEventDelegate` to set as the delegate.
      */
-    public init(router: RouterType) {
-        self.router = router
+    public init(router: some Router) {
+        self.router = router.eraseToAnyRouter()
         super.init()
     }
 
@@ -127,9 +139,11 @@ open class RouterCoordinator<RouterType: Router>: Coordinator, RouterEventDelega
 
      Subclasses should override this method to coordinate with their child coordinators.
      */
-    open func coordinate(to coordinator: some RouterCoordinator) {
-        super.coordinate(to: coordinator as Coordinator)
-        coordinator.routerEventDelegate = self
+    override open func coordinate(to coordinator: some Coordinator) {
+        super.coordinate(to: coordinator)
+        if let routerCoordinator = coordinator as? RouterCoordinator {
+            routerCoordinator.routerEventDelegate = self
+        }
     }
 
     // MARK: RouterEventDelegate
