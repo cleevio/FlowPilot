@@ -123,11 +123,11 @@ class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
     var onDeinitCalled = false
     var onCoordinationStartedCalled = false
 
-    func onDeinit(of coordinator: CleevioRouters.Coordinator) {
+    func onDeinit(of coordinator: some CleevioRouters.Coordinator) {
         onDeinitCalled = true
     }
 
-    func onCoordinationStarted(of coordinator: CleevioRouters.Coordinator) {
+    func onCoordinationStarted(of coordinator: some CleevioRouters.Coordinator) {
         onCoordinationStartedCalled = true
     }
 }

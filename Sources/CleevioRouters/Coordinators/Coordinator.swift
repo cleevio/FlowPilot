@@ -23,12 +23,12 @@ public protocol CoordinatorEventDelegate: AnyObject {
     /// Notifies the delegate that the specified coordinator has been deallocated.
     ///
     /// - Parameter coordinator: The coordinator that has been deallocated.
-    func onDeinit(of coordinator: Coordinator)
+    func onDeinit(of coordinator: some Coordinator)
 
     /// Notifies the delegate that a parent coordinator has been set.
     ///
     /// - Parameter coordinator: The parent coordinator that has been set.
-    func onCoordinationStarted(of coordinator: Coordinator)
+    func onCoordinationStarted(of coordinator: some Coordinator)
 }
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
@@ -107,14 +107,14 @@ open class Coordinator: CoordinatorEventDelegate {
     /// Notifies the delegate that the specified coordinator has been deallocated.
     ///
     /// - Parameter coordinator: The coordinator that has been deallocated.
-    open func onDeinit(of coordinator: Coordinator) {
+    open func onDeinit(of coordinator: some Coordinator) {
         removeChildCoordinator(coordinator)
     }
 
     /// Notifies the delegate that a parent coordinator has been set.
     ///
     /// - Parameter coordinator: The parent coordinator that has been set.
-    open func onCoordinationStarted(of coordinator: Coordinator) {
+    open func onCoordinationStarted(of coordinator: some Coordinator) {
         childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
     }
 }

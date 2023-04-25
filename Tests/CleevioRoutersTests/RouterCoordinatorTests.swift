@@ -143,19 +143,19 @@ class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate
     var animatePresent = true
     var animateDismiss = true
 
-    func onDismiss(of coordinator: CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
+    func onDismiss(of coordinator: some CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
         onDismissCalled = true
     }
     
-    func onDismissedByRouter(of coordinator: CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
+    func onDismissedByRouter(of coordinator: some CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
         onDismissedByRouterCalled = true
     }
 
-    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: CleevioRouters.Coordinator) -> Bool {
+    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: some CleevioRouters.Coordinator) -> Bool {
         animatePresent
     }
     
-    func isDismissAnimated(of coordinator: Coordinator, router: some Router) -> Bool {
+    func isDismissAnimated(of coordinator: some Coordinator, router: some Router) -> Bool {
         animateDismiss
     }
 }

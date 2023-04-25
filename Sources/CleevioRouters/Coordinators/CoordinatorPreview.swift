@@ -113,19 +113,19 @@ open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate, Coord
         self.router = router
     }
 
-    public func onDeinit(of coordinator: Coordinator) {
+    public func onDeinit(of coordinator: some Coordinator) {
         CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router).start()
     }
 
-    public func onDismiss(of coordinator: Coordinator, router: some Router) {
+    public func onDismiss(of coordinator: some Coordinator, router: some Router) {
         CoordinatorPreviewCoordinator(type: .dismiss, router: self.router).start()
     }
 
-    public func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
+    public func onDismissedByRouter(of coordinator: some Coordinator, router: some Router) {
         CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router).start()
     }
 
-    public func onCoordinationStarted(of coordinator: Coordinator) {
+    public func onCoordinationStarted(of coordinator: some Coordinator) {
         
     }
 }

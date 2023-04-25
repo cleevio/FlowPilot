@@ -14,13 +14,23 @@ A delegate protocol for router events.
 @available(macOS 10.15, *)
 public protocol RouterEventDelegate: AnyObject {
     /**
+     Called when the router should present a coordinator.
+     
+     - Parameters:
+        - coordinator: The coordinator that is presented.
+        - router: The router presenting the coordinator.
+        - viewController: The ViewController to be presented.
+     */
+    func onPresent(of viewController: some PlatformViewController, on router: some Router, coordinator: some Coordinator)
+
+    /**
      Called when the router should dismiss a coordinator.
      
      - Parameters:
         - coordinator: The coordinator to be dismissed.
         - router: The router dismissing the coordinator.
      */
-    func onDismiss(of coordinator: Coordinator, router: some Router)
+    func onDismiss(of coordinator: some Coordinator, router: some Router)
 
     /**
      Called when a coordinator is dismissed by the router.
@@ -29,34 +39,34 @@ public protocol RouterEventDelegate: AnyObject {
         - coordinator: The coordinator that is dismissed.
         - router: The router dismissing the coordinator.
      */
-    func onDismissedByRouter(of coordinator: Coordinator, router: some Router)
+    func onDismissedByRouter(of coordinator: some Coordinator, router: some Router)
 
     func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: Coordinator) -> Bool
 
-    func isDismissAnimated(of coordinator: Coordinator, router: some Router) -> Bool
-}
-
-public extension RouterEventDelegate {
-    @inlinable
-    func animatedPresent(of viewController: some PlatformViewController, on router: some Router, coordinator: Coordinator) -> Bool {
-        true
-    }
-
-    @inlinable
-    func animatedDismiss(of coordinator: Coordinator, router: some Router) -> Bool {
-        true
-    }
+    func isDismissAnimated(of coordinator: some Coordinator, router: some Router) -> Bool
 }
 
 @available(macOS 10.15, *)
 public extension RouterEventDelegate {
+    /**
+     Called when the router should present a coordinator.
+     
+     - Parameters:
+        - coordinator: The coordinator that is presented.
+        - router: The router presenting the coordinator.
+        - viewController: The ViewController to be presented.
+     */
+    func onPresent(of viewController: some PlatformViewController, on router: some Router, coordinator: some Coordinator) {
+        router.present(viewController, animated: isPresentAnimated(of: viewController, on: router, coordinator: coordinator))
+    }
+
     @inlinable
-    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: Coordinator) -> Bool {
+    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: some Coordinator) -> Bool {
         true
     }
 
     @inlinable
-    func isDismissAnimated(of coordinator: Coordinator, router: some Router) -> Bool {
+    func isDismissAnimated(of coordinator: some Coordinator, router: some Router) -> Bool {
         true
     }
 }
@@ -122,10 +132,10 @@ open class RouterCoordinator: Coordinator, RouterEventDelegate {
      - Parameters:
         - viewController: The view controller to present.
      */
-    open func present<T: PlatformViewController>(viewController: T) {
+    open func present(viewController: some  PlatformViewController) {
         setAssociatedViewController(viewController)
         
-        router.present(viewController, animated: routerEventDelegate?.isPresentAnimated(of: viewController, on: router, coordinator: self) ?? true)
+        routerEventDelegate?.onPresent(of: viewController, on: router, coordinator: self) ?? onPresent(of: viewController, on: router, coordinator: self)
     }
 
     /**
@@ -155,8 +165,8 @@ open class RouterCoordinator: Coordinator, RouterEventDelegate {
         - coordinator: The coordinator being dismissed.
         - router: The router dismissing the coordinator.
      */
-    open func onDismiss(of coordinator: Coordinator, router: some Router) {
-        router.dismiss(animated: routerEventDelegate?.isDismissAnimated(of: self, router: router) ?? true)
+    open func onDismiss(of coordinator: some Coordinator, router: some Router) {
+        router.dismiss(animated: isDismissAnimated(of: self, router: router))
     }
 
     /**
@@ -166,7 +176,19 @@ open class RouterCoordinator: Coordinator, RouterEventDelegate {
         - coordinator: The coordinator being dismissed.
         - router: The router dismissing the coordinator.
      */
-    open func onDismissedByRouter(of coordinator: Coordinator, router: some Router) {
+    open func onDismissedByRouter(of coordinator: some Coordinator, router: some Router) {
         removeChildCoordinator(coordinator)
+    }
+
+    /**
+     Called when the router should present a coordinator.
+     
+     - Parameters:
+        - coordinator: The coordinator that is presented.
+        - router: The router presenting the coordinator.
+        - viewController: The ViewController to be presented.
+     */
+    open func onPresent(of viewController: some PlatformViewController, on router: some Router, coordinator: some Coordinator) {
+        router.present(viewController, animated: isPresentAnimated(of: viewController, on: router, coordinator: self))
     }
 }
