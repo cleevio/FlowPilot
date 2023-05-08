@@ -10,9 +10,10 @@ import CleevioCore
 import CleevioRouters
 
 protocol FirstCoordinatorDelegate: AnyObject {
-    func showSecondTap()
+    @MainActor func showSecondTap()
 }
 
+@MainActor
 final class FirstCoordinator: BaseCoordinator {
     private let counter: Int
 

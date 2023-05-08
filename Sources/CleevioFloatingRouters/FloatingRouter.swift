@@ -11,18 +11,21 @@ import FloatingPanel
 import UIKit
 import CleevioCore
 
+@MainActor
 open class FloatingPanelRouter: CleevioRouters.Router {
     public let parentViewController: UIViewController
     public let floatingPanelController: FloatingPanelController
         
+    @inlinable
     public init(
         parentViewController: UIViewController,
         layout: FloatingPanelLayout,
-        floatingPanelController: FloatingPanelController = .init()
+        floatingPanelController: FloatingPanelController? = nil
     ) {
         self.parentViewController = parentViewController
-        self.floatingPanelController = floatingPanelController
+        let floatingPanelController = floatingPanelController ?? .init()
         floatingPanelController.layout = layout
+        self.floatingPanelController = floatingPanelController
     }
 
     public let dismissPublisher: ActionSubject<Void> = .init()
@@ -34,7 +37,8 @@ open class FloatingPanelRouter: CleevioRouters.Router {
         
         floatingPanelController.set(contentViewController: viewController)
     }
-    
+ 
+    @inlinable
     public func dismiss(animated: Bool, completion: (() -> Void)?) {
         floatingPanelController.set(contentViewController: nil)
         completion?()

@@ -12,13 +12,16 @@ import Foundation
  
  - Note: This class conforms to the `Router` protocol, which defines the basic functionality for presenting and dismissing view controllers. The `AnyRouter` class can be used to hide the specific type of router being used, while still providing the same interface for presenting and dismissing view controllers.
  */
+@MainActor
 final public class AnyRouter: Router {
     
     /// The closure to invoke when presenting a view controller.
-    private var presentAction: (PlatformViewController, Bool) -> Void
+    @usableFromInline
+    let presentAction: (PlatformViewController, Bool) -> Void
     
     /// The closure to invoke when dismissing a view controller.
-    private var dismissAction: (Bool, (() -> Void)?) -> Void
+    @usableFromInline
+    let dismissAction: (Bool, (() -> Void)?) -> Void
 
     /**
      Initializes a new instance of `AnyRouter` with the given presentation and dismissal actions.
@@ -29,6 +32,7 @@ final public class AnyRouter: Router {
      
      - Note: Both `presentAction` and `dismissAction` closures are stored as properties to be used later when presenting or dismissing a view controller. The closures should take into account the platform-specific APIs when performing their respective actions.
      */
+    @inlinable
     init(presentAction: @escaping (PlatformViewController, Bool) -> Void,
          dismissAction: @escaping (Bool, (() -> Void)?) -> Void) {
         self.presentAction = presentAction
@@ -44,6 +48,7 @@ final public class AnyRouter: Router {
      
      - Note: This method delegates to the `presentAction` closure provided during initialization, passing in the given view controller and the `animated` value. The closure should use the appropriate platform-specific API to present the view controller.
      */
+    @inlinable
     public func present(_ viewController: PlatformViewController, animated: Bool) {
         presentAction(viewController, animated)
     }
@@ -57,6 +62,7 @@ final public class AnyRouter: Router {
      
      - Note: This method delegates to the `dismissAction` closure provided during initialization, passing in the `animated` value and the `completion` closure if one is provided. The closure should use the appropriate platform-specific API to dismiss the view controller.
      */
+    @inlinable
     public func dismiss(animated: Bool, completion: (() -> Void)?) {
         dismissAction(animated, completion)
     }
@@ -69,7 +75,7 @@ final public class AnyRouter: Router {
      - Note: This method is used to erase the specific type of router being used and return an instance of `AnyRouter` instead. This can be useful for scenarios where you need to hide the specific implementation details of the router.
      */
     @inlinable
-    func eraseToAnyRouter() -> AnyRouter {
+    public func eraseToAnyRouter() -> AnyRouter {
         self
     }
 }

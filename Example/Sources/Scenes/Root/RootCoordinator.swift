@@ -10,6 +10,7 @@ import SwiftUI
 import CleevioCore
 import CleevioRouters
 
+@MainActor
 final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoordinator {
     private let navigationRouter: RouterType
 

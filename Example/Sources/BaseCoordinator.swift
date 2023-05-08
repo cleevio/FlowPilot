@@ -11,6 +11,7 @@ import CleevioCore
 
 typealias Router = CleevioRouters.Router
 
+@MainActor
 class BaseCoordinator: RouterCoordinator {
     let cancelBag = CancelBag()
 

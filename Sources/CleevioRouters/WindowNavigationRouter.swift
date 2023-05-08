@@ -9,6 +9,7 @@
 import UIKit
 import CleevioCore
 
+@MainActor
 open class WindowNavigationRouter: WindowRouter {
     // MARK: - Instance Properties
 
@@ -41,14 +42,15 @@ open class WindowNavigationRouter: WindowRouter {
 }
 
 extension WindowNavigationRouter {
+    @MainActor
     convenience public init(
         window: UIWindow,
-        navigationController: UINavigationController = .init(),
+        navigationController: UINavigationController? = nil,
         navigationAnimation: NavigationRouter.NavigationAnimation = .default
     ) {
        let navigationRouter = NavigationRouter(
-            navigationController: navigationController,
-            animation: navigationAnimation
+        navigationController: navigationController ?? .init(),
+        animation: navigationAnimation
         )
         
         self.init(

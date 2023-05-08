@@ -19,19 +19,20 @@ public typealias PlatformViewController = NSViewController
 #endif
 
 /// The `CoordinatorEventDelegate` protocol defines a method that is called when a coordinator is deallocated.
-public protocol CoordinatorEventDelegate: AnyObject {
+public protocol CoordinatorEventDelegate: AnyObject, Sendable {
     /// Notifies the delegate that the specified coordinator has been deallocated.
     ///
     /// - Parameter coordinator: The coordinator that has been deallocated.
-    func onDeinit(of coordinator: some Coordinator)
+    func onDeinit<T: Coordinator>(of type: T.Type)
 
     /// Notifies the delegate that a parent coordinator has been set.
     ///
     /// - Parameter coordinator: The parent coordinator that has been set.
-    func onCoordinationStarted(of coordinator: some Coordinator)
+    @MainActor func onCoordinationStarted(of coordinator: some Coordinator)
 }
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
+@MainActor
 open class Coordinator: CoordinatorEventDelegate {
 
     /// A dictionary that stores the child coordinators.
@@ -50,7 +51,7 @@ open class Coordinator: CoordinatorEventDelegate {
     public init() { }
 
     deinit {
-        coordinatorEventDelegate?.onDeinit(of: self)
+        coordinatorEventDelegate?.onDeinit(of: type(of: self))
     }
 
     /// Sets the associated `PlatformViewController` whose lifecycle determines the lifecycle of the coordinator.
@@ -85,6 +86,7 @@ open class Coordinator: CoordinatorEventDelegate {
     }
 
     /// Starts the coordinator. Subclasses must provide an implementation of this method.
+    @inlinable
     open func start() {
         fatalError("Start should always be implemented")
     }
@@ -96,6 +98,7 @@ open class Coordinator: CoordinatorEventDelegate {
 
      When a coordinator is coordinated to, it becomes a child coordinator of this coordinator, and is stored weakly in the `childCoordinators` array.
      */
+    @inlinable
     open func coordinate(to coordinator: some Coordinator) {
         onCoordinationStarted(of: coordinator)
         coordinator.start()
@@ -107,8 +110,9 @@ open class Coordinator: CoordinatorEventDelegate {
     /// Notifies the delegate that the specified coordinator has been deallocated.
     ///
     /// - Parameter coordinator: The coordinator that has been deallocated.
-    open func onDeinit(of coordinator: some Coordinator) {
-        removeChildCoordinator(coordinator)
+    @inlinable
+    open func onDeinit<T: Coordinator>(of type: T.Type) {
+        removeChildCoordinator(of: type)
     }
 
     /// Notifies the delegate that a parent coordinator has been set.

@@ -10,6 +10,7 @@ import UIKit
 import CleevioCore
 
 /// A router that creates a new window with a specified window level and displays it on the screen.
+@MainActor
 open class WindowLevelRouter: WindowRouter {
     
     /// Initializes and returns a new `WindowLevelRouter` object with the specified window scene and level.
@@ -70,11 +71,11 @@ open class WindowLevelNavigationRouter: WindowNavigationRouter {
     public convenience init(
         windowScene: UIWindowScene,
         level: UIWindow.Level = .init(2),
-        navigationController: UINavigationController = .init(),
+        navigationController: UINavigationController? = nil,
         navigationAnimation: NavigationRouter.NavigationAnimation = .default
     ) {
         let navigationRouter = NavigationRouter(
-            navigationController: navigationController,
+            navigationController: navigationController ?? .init(),
             animation: navigationAnimation
         )
         
@@ -110,11 +111,11 @@ open class WindowLevelNavigationRouter: WindowNavigationRouter {
     convenience public init?(
         fromWindow window: UIWindow?,
         levelAddition: CGFloat = 1,
-        navigationController: UINavigationController = .init(),
+        navigationController: UINavigationController? = nil,
         navigationAnimation: NavigationRouter.NavigationAnimation = .default
     ) {
        let navigationRouter = NavigationRouter(
-            navigationController: navigationController,
+            navigationController: navigationController ?? .init(),
             animation: navigationAnimation
         )
         

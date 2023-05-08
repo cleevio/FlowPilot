@@ -8,6 +8,7 @@
 import UIKit
 import CleevioCore
 
+@MainActor
 open class ModalNavigationRouter: ModalRouter {
 
     // MARK: - Instance Properties
@@ -64,16 +65,17 @@ open class ModalNavigationRouter: ModalRouter {
 }
 
 extension ModalNavigationRouter {
+    @MainActor
     convenience public init(
         parentViewController: UIViewController,
-        navigationController: UINavigationController = .init(),
+        navigationController: UINavigationController? = nil,
         presentationStyle: UIModalPresentationStyle = .automatic,
         transitionStyle: UIModalTransitionStyle? = nil,
         configuration: ModalConfiguration? = nil,
         navigationAnimation: NavigationRouter.NavigationAnimation = .default
     ) {
-       let navigationRouter = NavigationRouter(
-            navigationController: navigationController,
+        let navigationRouter = NavigationRouter(
+            navigationController: navigationController ?? .init(),
             animation: navigationAnimation
         )
         
@@ -83,24 +85,6 @@ extension ModalNavigationRouter {
             transitionStyle: transitionStyle,
             modalConfiguration: configuration,
             navigationRouter: navigationRouter
-        )
-    }
-
-    convenience public init(
-        parentViewController: UIViewController,
-        navigationController: UINavigationController? = nil,
-        presentationStyle: UIModalPresentationStyle = .automatic,
-        transitionStyle: UIModalTransitionStyle? = nil,
-        configuration: ModalConfiguration? = nil,
-        navigationAnimation: NavigationRouter.NavigationAnimation = .default
-    ) {
-        self.init(
-            parentViewController: parentViewController,
-            navigationController: navigationController ?? .init(),
-            presentationStyle: presentationStyle,
-            transitionStyle: transitionStyle,
-            configuration: configuration,
-            navigationAnimation: navigationAnimation
         )
     }
 }

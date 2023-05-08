@@ -8,10 +8,12 @@
 import Foundation
 import CleevioRouters
 
+@MainActor
 protocol SecondCoordinatorDelegate: AnyObject {
     func logoutTapped()
 }
 
+@MainActor
 final class SecondCoordinator: RouterCoordinator {
     public weak var delegate: SecondCoordinatorDelegate?
     
@@ -21,6 +23,7 @@ final class SecondCoordinator: RouterCoordinator {
 
 
 #if os(iOS)
+@MainActor
 final class TestCoordinator<RouterType: Router>: RouterCoordinator, SecondCoordinatorDelegate {
     func logoutTapped() {
         

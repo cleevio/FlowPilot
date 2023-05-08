@@ -9,6 +9,7 @@ import XCTest
 import CleevioRouters
 import CleevioCore
 
+@MainActor
 final class RouterCoordinatorTests: XCTestCase {
     func testDismiss() {
         let router = MockRouter()

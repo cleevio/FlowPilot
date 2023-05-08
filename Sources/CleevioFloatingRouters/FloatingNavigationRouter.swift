@@ -11,13 +11,14 @@ import UIKit
 import CleevioRouters
 import FloatingPanel
 
+@MainActor
 open class FloatingPanelNavigationRouter: FloatingPanelRouter {
     let navigationRouterWrapper: NavigationRouterWrapper
     
     public init(
         parentViewController: UIViewController,
         layout: FloatingPanelLayout,
-        floatingPanelController: FloatingPanelController = .init(),
+        floatingPanelController: FloatingPanelController? = nil,
         navigationRouter: NavigationRouter
     ) {
         self.navigationRouterWrapper = NavigationRouterWrapper(navigationRouter: navigationRouter)
@@ -45,13 +46,13 @@ extension FloatingPanelNavigationRouter {
     convenience public init(
         parentViewController: UIViewController,
         layout: FloatingPanelLayout,
-        floatingPanelController: FloatingPanelController = .init(),
-        navigationController: UINavigationController = UINavigationController(),
+        floatingPanelController: FloatingPanelController? = nil,
+        navigationController: UINavigationController? = nil,
         navigationAnimation: NavigationRouter.NavigationAnimation = .default
     ) {
         
         let navigationRouter = NavigationRouter(
-            navigationController: navigationController,
+            navigationController: navigationController ?? .init(),
             animation: navigationAnimation
         )
 

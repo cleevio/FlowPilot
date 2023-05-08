@@ -9,22 +9,24 @@ import UIKit
 import CleevioCore
 
 @available(iOS 15.0, *)
+@MainActor
 public struct UISheetPresentationControllerOptions {
     public var detents: [UISheetPresentationController.Detent] = [.large()]
     public var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? = nil
     public var prefersGrabberVisible: Bool
     
     public init(
-        detents: [UISheetPresentationController.Detent] = [.large()],
+        detents: [UISheetPresentationController.Detent]? = nil,
         selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? = nil,
         prefersGrabberVisible: Bool
     ) {
-        self.detents = detents
+        self.detents = detents ?? [.large()]
         self.selectedDetentIdentifier = selectedDetentIdentifier
         self.prefersGrabberVisible = prefersGrabberVisible
     }
 }
 
+@MainActor
 open class ModalConfiguration {
     final public let onDismiss: (() -> ())?
     final public let dismissImage: DismissImage?
@@ -52,6 +54,7 @@ open class ModalConfiguration {
 }
 
 @available(iOS 15.0, *)
+@MainActor
 final public class ModalSheetConfiguration: ModalConfiguration {
     public let sheetPresentationOptions: UISheetPresentationControllerOptions?
 
@@ -65,6 +68,7 @@ final public class ModalSheetConfiguration: ModalConfiguration {
     }
 }
 
+@MainActor
 open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate, DismissHandler, Router {
 
     // MARK: - Instance Properties

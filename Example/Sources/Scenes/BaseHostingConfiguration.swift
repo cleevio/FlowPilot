@@ -9,5 +9,6 @@ import Foundation
 import CleevioCore
 import SwiftUI
 
+@MainActor
 final class BaseHostingController<RootView: View>: CleevioCore.BaseUIHostingController<RootView> {
 }

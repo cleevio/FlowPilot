@@ -3,6 +3,12 @@
 
 import PackageDescription
 
+let swiftSettings = [SwiftSetting.unsafeFlags([
+    "-Xfrontend", "-strict-concurrency=complete",
+    "-Xfrontend", "-warn-concurrency",
+    "-Xfrontend", "-enable-actor-data-race-checks",
+])]
+
 let package = Package(
     name: "CleevioRoutersLibrary",
     platforms: [
@@ -24,13 +30,19 @@ let package = Package(
             name: "CleevioRouters",
             dependencies: [
                 .product(name: "CleevioCore", package: "CleevioCore")
-            ]),
+            ],
+            swiftSettings: swiftSettings
+        ),
         .target(name: "CleevioFloatingRouters", dependencies: [
             "CleevioRouters",
             .product(name: "FloatingPanel", package: "FloatingPanel", condition: .when(platforms: [.iOS, .macCatalyst]))
-        ]),
+        ],
+                swiftSettings: swiftSettings
+               ),
         .testTarget(
             name: "CleevioRoutersTests",
-            dependencies: ["CleevioRouters"]),
+            dependencies: ["CleevioRouters"],
+            swiftSettings: swiftSettings
+        ),
     ]
 )

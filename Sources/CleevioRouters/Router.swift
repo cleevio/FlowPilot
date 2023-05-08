@@ -16,14 +16,23 @@ public protocol Router: AnyObject {
     /// - Parameters:
     ///   - viewController: The view controller to present.
     ///   - animated: A Boolean value that indicates whether the presentation should be animated.
-    func present(_ viewController: PlatformViewController, animated: Bool)
+    @MainActor func present(_ viewController: PlatformViewController, animated: Bool)
 
     /// Dismisses a view controller.
     ///
     /// - Parameters:
     ///   - animated: A Boolean value that indicates whether the dismissal should be animated.
     ///   - completion: The block to execute after the dismissal finishes. This block has no return value and takes no parameters.
-    func dismiss(animated: Bool, completion: (() -> Void)?)
+    @MainActor func dismiss(animated: Bool, completion: (() -> Void)?)
+
+    /**
+     Returns wrapped `self` as an instance of `AnyRouter`.
+     
+     - Returns: An instance of `AnyRouter`.
+     
+     - Note: This method is used to erase the specific type of router being used and return an instance of `AnyRouter` instead. This can be useful for scenarios where you need to hide the specific implementation details of the router.
+     */
+    @MainActor func eraseToAnyRouter() -> AnyRouter
 }
 
 @available(macOS 10.15, *)
@@ -34,17 +43,13 @@ public extension Router {
     ///
     /// - Parameter animated: A Boolean value that indicates whether the dismissal should be animated.
     @inlinable
+    @MainActor
     func dismiss(animated: Bool) {
         self.dismiss(animated: animated, completion: nil)
     }
 
-    /**
-     Returns wrapped `self` as an instance of `AnyRouter`.
-     
-     - Returns: An instance of `AnyRouter`.
-     
-     - Note: This method is used to erase the specific type of router being used and return an instance of `AnyRouter` instead. This can be useful for scenarios where you need to hide the specific implementation details of the router.
-     */
+    @inlinable
+    @MainActor
     func eraseToAnyRouter() -> AnyRouter {
         AnyRouter(presentAction: present(_:animated:), dismissAction: dismiss(animated:completion:))
     }
@@ -54,7 +59,7 @@ public extension Router {
 /// A protocol that extends the `Router` protocol with a property for accessing the `NavigationRouterWrapper` instance.
 @available(macOS 10.15, *)
 public protocol NavigationRouterWrappedRouter: Router {
-    var navigationRouterWrapper: NavigationRouterWrapper { get }
+    @MainActor var navigationRouterWrapper: NavigationRouterWrapper { get }
 }
 
 extension CleevioRouters.ModalNavigationRouter: NavigationRouterWrappedRouter { }
@@ -62,6 +67,7 @@ extension CleevioRouters.WindowNavigationRouter: NavigationRouterWrappedRouter {
 
 extension CleevioRouters.NavigationRouter: NavigationRouterWrappedRouter {
     /// Gets the `NavigationRouterWrapper` instance associated with this navigation router.
+    @inlinable
     public var navigationRouterWrapper: CleevioRouters.NavigationRouterWrapper {
         .init(navigationRouter: self)
     }

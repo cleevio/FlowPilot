@@ -8,6 +8,7 @@
 import XCTest
 import CleevioRouters
 
+@MainActor
 final class CoordinatorTests: XCTestCase {
     func testChildCoordinator() {
         let coordinator = Coordinator()
@@ -119,11 +120,12 @@ final class CoordinatorTests: XCTestCase {
     }
 }
 
-class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
+@MainActor
+class MockCoordinatorEventDelegate: CoordinatorEventDelegate {    
     var onDeinitCalled = false
     var onCoordinationStartedCalled = false
 
-    func onDeinit(of coordinator: some CleevioRouters.Coordinator) {
+    func onDeinit<T>(of type: T.Type) where T : CleevioRouters.Coordinator {
         onDeinitCalled = true
     }
 
@@ -132,6 +134,7 @@ class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
     }
 }
 
+@MainActor
 class Coordinator: CleevioRouters.Coordinator {
     override func start() {
         

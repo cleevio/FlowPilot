@@ -9,8 +9,9 @@ import UIKit
 import SwiftUI
 import CleevioCore
 
+@MainActor
 open class NavigationRouter: NSObject, DismissHandler {
-    public enum NavigationAnimation {
+    public enum NavigationAnimation: Sendable {
         case easeInEaseOut
         case `default`
     }
@@ -31,10 +32,12 @@ open class NavigationRouter: NSObject, DismissHandler {
         routerRootController = viewController
     }
     
+    @inlinable
     open var hasAnyPushedControllers: Bool {
         navigationController.viewControllers.count > 1
     }
 
+    @inlinable
     open var hasPresentedRootViewController: Bool {
         !navigationController.viewControllers.isEmpty
     }
@@ -43,7 +46,7 @@ open class NavigationRouter: NSObject, DismissHandler {
 // MARK: - Router
 
 extension NavigationRouter: Router {
-    public enum PopAction {
+    public enum PopAction: Sendable {
         /// Goes back to the very first screen in the stack.
         case toRoot
         /// Goes back to a specific screen in the stack.

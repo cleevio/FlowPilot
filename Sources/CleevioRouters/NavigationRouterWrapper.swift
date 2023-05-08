@@ -9,9 +9,11 @@
 import Foundation
 import UIKit
 
-open class NavigationRouterWrapper {
+@MainActor
+open class NavigationRouterWrapper: Sendable {
     public let navigationRouter: NavigationRouter
-    
+   
+    @inlinable
     public init(navigationRouter: NavigationRouter) {
         self.navigationRouter = navigationRouter
     }
@@ -47,7 +49,7 @@ open class NavigationRouterWrapper {
 }
 
 public extension NavigationRouterWrapper {
-    enum Action {
+    enum Action: Sendable {
         /// Pop in the stack.
         case pop(NavigationRouter.PopAction)
         /// Dismisses the most recently presented screen.

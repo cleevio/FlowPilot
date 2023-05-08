@@ -26,10 +26,11 @@ import CleevioCore
  - Returns: A view that wraps a `UIViewController`.
  */
 
+@MainActor
 public struct CoordinatorPreview: View {
     let baseViewController: UIViewController
     let delegate: PreviewRouterDelegate<ModalRouter>
-
+    
     public init(coordinator: (NavigationRouter) -> RouterCoordinator) {
         let baseViewController = UINavigationController()
         let router = NavigationRouter(navigationController: baseViewController)
@@ -40,29 +41,30 @@ public struct CoordinatorPreview: View {
         coordinator.coordinatorEventDelegate = delegate
         coordinator.start()
     }
-
-   public var body: some View {
-       UIViewControllerWrapper(viewController: baseViewController)
+    
+    public var body: some View {
+        UIViewControllerWrapper(viewController: baseViewController)
     }
-
+    
     struct UIViewControllerWrapper: UIViewControllerRepresentable {
         let viewController: UIViewController
-
+        
         func makeUIViewController(context: Context) -> some UIViewController {
             viewController
         }
-
+        
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
         }
     }
 }
 
-public enum CoordinatorPreviewResultType {
+public enum CoordinatorPreviewResultType: CustomStringConvertible {
     case dismissedByRouter
     case dismiss
     case coordinatorDeinit
-
-    var description: String {
+    
+    @inlinable
+    public var description: String {
         "\(self)"
     }
 }
@@ -80,13 +82,15 @@ public enum CoordinatorPreviewResultType {
  */
 @available(macOS 11.0, *)
 open class CoordinatorPreviewCoordinator: RouterCoordinator {
-    private let type: CoordinatorPreviewResultType
+    @usableFromInline let type: CoordinatorPreviewResultType
     
+    @inlinable
     public init(type: CoordinatorPreviewResultType, router: some Router) {
         self.type = type
         super.init(router: router)
     }
     
+    @inlinable
     open override func start() {
         let view = Text(type.description).preferredColorScheme(.dark)
         let viewController = BaseUIHostingController(rootView: view)
@@ -100,31 +104,37 @@ open class CoordinatorPreviewCoordinator: RouterCoordinator {
  
  Usage: Use a `PreviewRouterDelegate` to handle coordinator events like dismissal and deinit in a `CoordinatorPreview`. The delegate creates and starts a `CoordinatorPreviewCoordinator` with the appropriate `CoordinatorPreviewResultType` when an event occurs.
  
-
+ 
  - Parameters:
-     - router: A `RouterType` that conforms to the `Router` protocol.
+ - router: A `RouterType` that conforms to the `Router` protocol.
  */
+@MainActor
 open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate, CoordinatorEventDelegate {
     public weak var routerEventDelegate: RouterEventDelegate?
     
-    let router: RouterType
-
+    @usableFromInline let router: RouterType
+    
+    @inlinable
     public init(router: RouterType) {
         self.router = router
     }
-
-    public func onDeinit(of coordinator: some Coordinator) {
+    
+    @inlinable
+    public func onDeinit<T: Coordinator>(of type: T.Type) {
         CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router).start()
     }
-
+    
+    @inlinable
     public func onDismiss(of coordinator: some Coordinator, router: some Router) {
         CoordinatorPreviewCoordinator(type: .dismiss, router: self.router).start()
     }
-
+    
+    @inlinable
     public func onDismissedByRouter(of coordinator: some Coordinator, router: some Router) {
         CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router).start()
     }
-
+    
+    @inlinable
     public func onCoordinationStarted(of coordinator: some Coordinator) {
         
     }

@@ -8,6 +8,7 @@
 import Foundation
 import CleevioCore
 
+@MainActor
 final class SecondCoordinator: BaseCoordinator {
     
     override func start() {

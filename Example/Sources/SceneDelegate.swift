@@ -8,6 +8,7 @@
 import UIKit
 import CleevioRouters
 
+@MainActor
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     var delegate: PreviewRouterDelegate<ModalRouter>!

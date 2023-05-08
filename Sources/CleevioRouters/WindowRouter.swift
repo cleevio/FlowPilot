@@ -9,6 +9,7 @@
 import UIKit
 import CleevioCore
 
+@MainActor
 open class WindowRouter: Router {
     public var dismissPublisher: ActionSubject<Void> = .init()
     
