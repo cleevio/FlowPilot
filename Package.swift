@@ -3,11 +3,14 @@
 
 import PackageDescription
 
-let swiftSettings = [SwiftSetting.unsafeFlags([
-    "-Xfrontend", "-strict-concurrency=complete",
-    "-Xfrontend", "-warn-concurrency",
-    "-Xfrontend", "-enable-actor-data-race-checks",
-])]
+let swiftSettings: [SwiftSetting] = [
+    // Use for development to catch concurrency issues. SPM packages cannot depend on other packages that use unsafeFlags.
+//    SwiftSetting.unsafeFlags([
+//        "-Xfrontend", "-strict-concurrency=complete",
+//        "-Xfrontend", "-warn-concurrency",
+//        "-Xfrontend", "-enable-actor-data-race-checks",
+//    ])
+]
 
 let package = Package(
     name: "CleevioRoutersLibrary",
@@ -18,7 +21,8 @@ let package = Package(
         .library(
             name: "CleevioRouters",
             targets: ["CleevioRouters"]),
-        .library(name: "CleevioFloatingRouters", targets: ["CleevioFloatingRouters"])
+        .library(name: "CleevioFloatingRouters", targets: ["CleevioFloatingRouters"]),
+        .library(name: "LegacyCoordinators", targets: ["LegacyCoordinators"])
     ],
     dependencies: [
 //        .package(url: "git@github.com:cleevio/CleevioCore-iOS.git", branch: "feature/new-coordinators"), //.init(2, 0, 0, prereleaseIdentifiers: ["dev3"])
@@ -38,6 +42,11 @@ let package = Package(
             .product(name: "FloatingPanel", package: "FloatingPanel", condition: .when(platforms: [.iOS, .macCatalyst]))
         ],
                 swiftSettings: swiftSettings
+               ),
+        .target(name: "LegacyCoordinators", dependencies: [
+            "CleevioRouters",
+            .product(name: "CleevioCore", package: "CleevioCore")
+        ]
                ),
         .testTarget(
             name: "CleevioRoutersTests",
