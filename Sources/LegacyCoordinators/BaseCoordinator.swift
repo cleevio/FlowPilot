@@ -15,7 +15,6 @@ import CleevioCore
 /// Base abstract coordinator generic over the return type of the `start` method.
 @available(iOS 13.0, macOS 10.15, *)
 @available(*, deprecated, message: "It is expected to use new coordinators from now on")
-@MainActor
 open class LegacyBaseCoordinator<ResultType>: NSObject, LegacyCoordinator {
 
     /// Typealias which will allows to access a ResultType of the Coordainator by `CoordinatorName.CoordinationResult`.
@@ -64,11 +63,13 @@ open class LegacyBaseCoordinator<ResultType>: NSObject, LegacyCoordinator {
             .handleEvents(receiveOutput: { [weak self] _ in self?.free(coordinator: coordinator) })
             .eraseToAnyPublisher()
     }
-    
-    open func dismissObservable(with popHandler: PopHandler, dismissHandler: DismissHandler) -> some Publisher<Void, Never> {
+
+    open func dismissObservable(with popHandler: PopHandler, dismissHandler: DismissHandler) -> AnyPublisher<Void, Never> {
         let popped = popHandler.dismissPublisher
         let dismissed = dismissHandler.dismissPublisher
         return Publishers.Merge(popped, dismissed)
+            .first()
+            .eraseToAnyPublisher()
     }
 
     /// Starts job of the coordinator.
