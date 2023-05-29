@@ -65,7 +65,7 @@ open class LegacyBaseCoordinator<ResultType>: NSObject, LegacyCoordinator {
             .eraseToAnyPublisher()
     }
     
-    private func dismissObservable(with popHandler: PopHandler, dismissHandler: DismissHandler) -> some Publisher<Void, Never> {
+    open func dismissObservable(with popHandler: PopHandler, dismissHandler: DismissHandler) -> some Publisher<Void, Never> {
         let popped = popHandler.dismissPublisher
         let dismissed = dismissHandler.dismissPublisher
         return Publishers.Merge(popped, dismissed)
