@@ -63,13 +63,27 @@ open class LegacyBaseCoordinator<ResultType>: NSObject, LegacyCoordinator {
             .handleEvents(receiveOutput: { [weak self] _ in self?.free(coordinator: coordinator) })
             .eraseToAnyPublisher()
     }
-
+    
     open func dismissObservable(with popHandler: PopHandler, dismissHandler: DismissHandler) -> AnyPublisher<Void, Never> {
+        Future { [weak self] promise in
+            guard let self else { return }
+            Task { @MainActor in
+                self._dismissObservable(with: popHandler, dismissHandler: dismissHandler)
+                    .first()
+                    .sink(receiveCompletion: { _ in
+                        
+                    }, receiveValue: { promise(.success(())) })
+                    .store(in: self.cancelBag)
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    @MainActor
+    private func _dismissObservable(with popHandler: PopHandler, dismissHandler: DismissHandler) -> some Publisher<Void, Never> {
         let popped = popHandler.dismissPublisher
         let dismissed = dismissHandler.dismissPublisher
         return Publishers.Merge(popped, dismissed)
-            .first()
-            .eraseToAnyPublisher()
     }
 
     /// Starts job of the coordinator.
