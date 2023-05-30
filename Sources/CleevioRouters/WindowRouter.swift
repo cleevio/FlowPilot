@@ -34,14 +34,20 @@ open class WindowRouter: Router {
     }
 
     open func dismiss(animated: Bool, completion: (() -> Void)?) {
+        let window = self.window
+        func handleDismiss() {
+            window?.alpha = 0.0
+            window?.rootViewController = nil
+        }
+
         guard animated else {
-            window.alpha = 0.0
+            handleDismiss()
             completion?()
             return
         }
         
         UIView.animate(withDuration: 0.3) { [weak self] in
-            self?.window.alpha = 0.0
+            handleDismiss()
         } completion: { _ in
             completion?()
         }
