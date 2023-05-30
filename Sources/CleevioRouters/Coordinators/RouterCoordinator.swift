@@ -33,15 +33,6 @@ public protocol RouterEventDelegate: AnyObject {
      */
     @MainActor func onDismiss(of coordinator: some Coordinator, router: some Router)
 
-    /**
-     Called when a coordinator is dismissed by the router.
-     
-     - Parameters:
-        - coordinator: The coordinator that is dismissed.
-        - router: The router dismissing the coordinator.
-     */
-    @MainActor func onDismissedByRouter(of coordinator: some Coordinator, router: some Router)
-
     @MainActor func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: Coordinator) -> Bool
 
     @MainActor func isDismissAnimated(of coordinator: some Coordinator, router: some Router) -> Bool
@@ -84,8 +75,6 @@ open class RouterCoordinator: Coordinator, RouterEventDelegate {
     final public var router: AnyRouter
 
     public weak var routerEventDelegate: RouterEventDelegate?
-    
-    @usableFromInline let cancelBag = CancelBag()
 
     /**
      Initializes a new router coordinator.
@@ -107,32 +96,6 @@ open class RouterCoordinator: Coordinator, RouterEventDelegate {
     @inlinable
     open func dismiss() {
         routerEventDelegate?.onDismiss(of: self, router: router) ?? onDismiss(of: self, router: router)
-    }
-
-    /**
-     Dismisses the coordinator using the router, calling its delegate's `onDismiss` method.
-     */
-    @inlinable
-    open func dismissedByRouter() {
-        routerEventDelegate?.onDismissedByRouter(of: self, router: router)
-    }
-
-    /**
-     Presents a view controller using the router, and sets up a subscription to the view controller's `dismissPublisher`.
-     
-     - Parameters:
-        - viewController: The view controller to present.
-     */
-    @inlinable
-    final func present<T: DismissHandler & PlatformViewController>(viewController: T) {
-        viewController.dismissPublisher
-            .sink(receiveValue: { [weak self] in
-                guard let self else { return }
-                self.routerEventDelegate?.onDismissedByRouter(of: self, router: self.router)
-            })
-            .store(in: cancelBag)
-        
-        present(viewController: viewController as PlatformViewController)
     }
 
     /**
@@ -179,17 +142,6 @@ open class RouterCoordinator: Coordinator, RouterEventDelegate {
     @inlinable
     open func onDismiss(of coordinator: some Coordinator, router: some Router) {
         router.dismiss(animated: isDismissAnimated(of: self, router: router))
-    }
-
-    /**
-     Called when a coordinator is dismissed by the router, and removes the coordinator from its parent.
-     
-     - Parameters:
-        - coordinator: The coordinator being dismissed.
-        - router: The router dismissing the coordinator.
-     */
-    @inlinable
-    open func onDismissedByRouter(of coordinator: some Coordinator, router: some Router) {
         removeChildCoordinator(coordinator)
     }
 

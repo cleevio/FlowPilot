@@ -22,11 +22,6 @@ final class RouterCoordinatorTests: XCTestCase {
         XCTAssertFalse(delegate.onDismissCalled)
         coordinator.dismiss()
         XCTAssertTrue(delegate.onDismissCalled)
-        
-        // Test onDismissedByRouter delegate method is called
-        XCTAssertFalse(delegate.onDismissedByRouterCalled)
-        coordinator.dismissedByRouter()
-        XCTAssertTrue(delegate.onDismissedByRouterCalled)
     }
 
     func testDeinit() {
@@ -75,7 +70,7 @@ final class RouterCoordinatorTests: XCTestCase {
         XCTAssertFalse(router.dismissCalled)
         childCoordinator.dismiss()
         XCTAssertTrue(router.dismissCalled)
-        XCTAssertFalse(delegate.onDismissedByRouterCalled)
+        XCTAssertNil(coordinator.childCoordinator(of: RouterCoordinator.self))
     }
 
     func testCoordinate() {
@@ -139,17 +134,12 @@ class MockRouter: Router {
 }
 
 class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate {    
-    var onDismissedByRouterCalled = false
     var onDismissCalled = false
     var animatePresent = true
     var animateDismiss = true
 
     func onDismiss(of coordinator: some CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
         onDismissCalled = true
-    }
-    
-    func onDismissedByRouter(of coordinator: some CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
-        onDismissedByRouterCalled = true
     }
 
     func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: some CleevioRouters.Coordinator) -> Bool {
