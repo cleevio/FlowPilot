@@ -105,7 +105,7 @@ open class RouterCoordinator: Coordinator, RouterEventDelegate {
         - viewController: The view controller to present.
      */
     @inlinable
-    open func present(viewController: some PlatformViewController) {
+    open func present(_ viewController: some PlatformViewController) {
         setAssociatedViewController(viewController)
         
         routerEventDelegate?.onPresent(of: viewController, on: router, coordinator: self) ?? onPresent(of: viewController, on: router, coordinator: self)

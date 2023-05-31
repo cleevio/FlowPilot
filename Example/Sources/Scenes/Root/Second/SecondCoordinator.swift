@@ -15,7 +15,7 @@ final class SecondCoordinator: BaseCoordinator {
         let viewModel = SecondViewModel()
         let viewController = BaseHostingController(rootView: SecondView(viewModel: viewModel))
         
-        present(viewController: viewController)
+        present(viewController)
         
         viewModel.route
             .sink(receiveValue: { [weak self] route in

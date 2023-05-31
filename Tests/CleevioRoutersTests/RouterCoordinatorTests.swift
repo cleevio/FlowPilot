@@ -109,7 +109,7 @@ final class RouterCoordinatorTests: XCTestCase {
             let coordinator = RouterCoordinator(router: router)
             coordinator.routerEventDelegate = delegate
 
-            coordinator.present(viewController: viewController)
+            coordinator.present(viewController)
             
             wait(for: [expectation], timeout: 0.1)
         }

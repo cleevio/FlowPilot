@@ -23,7 +23,7 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
         let viewModel = RootViewModel()
         let viewController = BaseHostingController(rootView: RootView(viewModel: viewModel))
         
-        present(viewController: viewController)
+        present(viewController)
         
         viewModel.route
             .sink(receiveValue: { [weak self] route in

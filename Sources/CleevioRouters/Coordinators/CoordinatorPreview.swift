@@ -95,7 +95,7 @@ open class CoordinatorPreviewCoordinator: RouterCoordinator {
         let view = Text(type.description).preferredColorScheme(.dark)
         let viewController = BaseUIHostingController(rootView: view)
         
-        present(viewController: viewController)
+        present(viewController)
     }
 }
 
