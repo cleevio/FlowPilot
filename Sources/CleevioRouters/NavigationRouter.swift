@@ -110,5 +110,11 @@ extension NavigationRouter: Router {
             completion?()
         }
     }
+
+    @inlinable
+    public func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        navigationController.dismiss(animated: animated, completion: completion)
+        navigationController.setViewControllers([], animated: false)
+    }
 }
 #endif

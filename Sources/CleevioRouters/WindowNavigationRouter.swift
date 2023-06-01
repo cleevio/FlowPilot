@@ -39,6 +39,11 @@ open class WindowNavigationRouter: WindowRouter {
     open func perform(_ action: NavigationRouterWrapper.Action, animated: Bool, completion: (() -> Void)? = nil) {
         navigationRouterWrapper.perform(action, animated: animated, completion: completion, mainRouterDismissAction: super.dismiss)
     }
+
+    open override func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        navigationRouterWrapper.navigationRouter.dismissRouter(animated: animated, completion: nil)
+        super.dismissRouter(animated: animated, completion: completion)
+    }
 }
 
 extension WindowNavigationRouter {

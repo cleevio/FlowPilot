@@ -25,6 +25,8 @@ public protocol Router: AnyObject {
     ///   - completion: The block to execute after the dismissal finishes. This block has no return value and takes no parameters.
     @MainActor func dismiss(animated: Bool, completion: (() -> Void)?)
 
+    @MainActor func dismissRouter(animated: Bool, completion: (() -> Void)?)
+    
     /**
      Returns wrapped `self` as an instance of `AnyRouter`.
      
@@ -51,7 +53,7 @@ public extension Router {
     @inlinable
     @MainActor
     func eraseToAnyRouter() -> AnyRouter {
-        AnyRouter(presentAction: present(_:animated:), dismissAction: dismiss(animated:completion:))
+        AnyRouter(presentAction: present(_:animated:), dismissAction: dismiss(animated:completion:), dismissRouterAction: dismissRouter(animated:completion:))
     }
 }
 

@@ -43,5 +43,13 @@ open class FloatingPanelRouter: CleevioRouters.Router {
         floatingPanelController.set(contentViewController: nil)
         completion?()
     }
+
+    @inlinable
+    public func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        dismiss(animated: animated, completion: { [floatingPanelController] in
+            floatingPanelController.parent?.removeFromParent()
+            completion?()
+        })
+    }
 }
 #endif

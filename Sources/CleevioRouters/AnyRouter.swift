@@ -14,7 +14,6 @@ import Foundation
  */
 @MainActor
 final public class AnyRouter: Router {
-    
     /// The closure to invoke when presenting a view controller.
     @usableFromInline
     let presentAction: (PlatformViewController, Bool) -> Void
@@ -22,6 +21,10 @@ final public class AnyRouter: Router {
     /// The closure to invoke when dismissing a view controller.
     @usableFromInline
     let dismissAction: (Bool, (() -> Void)?) -> Void
+
+    /// The closure to invoke when dismissing the whole router
+    @usableFromInline
+    let dismissRouterAction: (Bool, (() -> Void)?) -> Void
 
     /**
      Initializes a new instance of `AnyRouter` with the given presentation and dismissal actions.
@@ -34,9 +37,11 @@ final public class AnyRouter: Router {
      */
     @inlinable
     init(presentAction: @escaping (PlatformViewController, Bool) -> Void,
-         dismissAction: @escaping (Bool, (() -> Void)?) -> Void) {
+         dismissAction: @escaping (Bool, (() -> Void)?) -> Void,
+         dismissRouterAction: @escaping (Bool, (() -> Void)?) -> Void) {
         self.presentAction = presentAction
         self.dismissAction = dismissAction
+        self.dismissRouterAction = dismissRouterAction
     }
     
     /**
@@ -77,6 +82,11 @@ final public class AnyRouter: Router {
     @inlinable
     public func eraseToAnyRouter() -> AnyRouter {
         self
+    }
+
+    @inlinable
+    public func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        dismissRouterAction(animated, completion)
     }
 }
 

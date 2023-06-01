@@ -134,9 +134,9 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         if let dismissImage = configuration?.dismissImage {
             switch dismissImage.position {
             case .navigationBarLeading:
-                viewController.navigationItem.leftBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouter))
+                viewController.navigationItem.leftBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouterObjC))
             case .navigationBarTrailing:
-                viewController.navigationItem.rightBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouter))
+                viewController.navigationItem.rightBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouterObjC))
             }
         }
     }
@@ -148,8 +148,13 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         })
     }
 
-    @objc open func dismissRouter() {
+    @objc open func dismissRouterObjC() {
         dismiss(animated: true, completion: nil)
+    }
+
+    @inlinable
+    open func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        dismiss(animated: animated, completion: completion)
     }
 
     open func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {

@@ -122,6 +122,7 @@ final class RouterCoordinatorTests: XCTestCase {
 
 class MockRouter: Router {
     var dismissCalled = false
+    var dismissRouterCalled = false
     var onPresent: ((PlatformViewController, Bool) -> Void)?
 
     func dismiss(animated: Bool, completion: (() -> Void)?) {
@@ -130,6 +131,10 @@ class MockRouter: Router {
 
     func present(_ viewController: PlatformViewController, animated: Bool) {
         onPresent?(viewController, animated)
+    }
+
+    func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        dismissRouterCalled = true
     }
 }
 
