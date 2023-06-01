@@ -1,0 +1,14 @@
+import_from_git(
+  url: "git@gitlab.cleevio.cz:cleevio-dev-ios/ci-ios.git",
+  path: "pipeline/fastlane/Fastfile",
+  version: "~> 2.0.0"
+)
+
+CONFIG = FastlaneConfig.new(
+    unit_tests_build_configuration: "Debug",
+    deployments: {
+        :devel => [
+        	SPMFramework.new()
+        ]
+    }
+)

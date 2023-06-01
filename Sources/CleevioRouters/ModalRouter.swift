@@ -9,22 +9,24 @@ import UIKit
 import CleevioCore
 
 @available(iOS 15.0, *)
+@MainActor
 public struct UISheetPresentationControllerOptions {
     public var detents: [UISheetPresentationController.Detent] = [.large()]
     public var selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? = nil
     public var prefersGrabberVisible: Bool
     
     public init(
-        detents: [UISheetPresentationController.Detent] = [.large()],
+        detents: [UISheetPresentationController.Detent]? = nil,
         selectedDetentIdentifier: UISheetPresentationController.Detent.Identifier? = nil,
         prefersGrabberVisible: Bool
     ) {
-        self.detents = detents
+        self.detents = detents ?? [.large()]
         self.selectedDetentIdentifier = selectedDetentIdentifier
         self.prefersGrabberVisible = prefersGrabberVisible
     }
 }
 
+@MainActor
 open class ModalConfiguration {
     final public let onDismiss: (() -> ())?
     final public let dismissImage: DismissImage?
@@ -52,6 +54,7 @@ open class ModalConfiguration {
 }
 
 @available(iOS 15.0, *)
+@MainActor
 final public class ModalSheetConfiguration: ModalConfiguration {
     public let sheetPresentationOptions: UISheetPresentationControllerOptions?
 
@@ -65,6 +68,7 @@ final public class ModalSheetConfiguration: ModalConfiguration {
     }
 }
 
+@MainActor
 open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate, DismissHandler, Router {
 
     // MARK: - Instance Properties
@@ -130,9 +134,9 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         if let dismissImage = configuration?.dismissImage {
             switch dismissImage.position {
             case .navigationBarLeading:
-                viewController.navigationItem.leftBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouter))
+                viewController.navigationItem.leftBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouterObjC))
             case .navigationBarTrailing:
-                viewController.navigationItem.rightBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouter))
+                viewController.navigationItem.rightBarButtonItem = .init(image: dismissImage.image, style: .plain, target: self, action: #selector(self.dismissRouterObjC))
             }
         }
     }
@@ -144,8 +148,13 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         })
     }
 
-    @objc open func dismissRouter() {
+    @objc open func dismissRouterObjC() {
         dismiss(animated: true, completion: nil)
+    }
+
+    @inlinable
+    open func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        dismiss(animated: animated, completion: completion)
     }
 
     open func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {

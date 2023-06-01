@@ -10,9 +10,10 @@ import Foundation
 import UIKit
 import FloatingPanel
 
+@MainActor
 open class FloatingPanelDelegate {
     public var parentViewController: UIViewController
-    public var floatingPanelController: FloatingPanel.FloatingPanelController
+    @MainActor public var floatingPanelController: FloatingPanel.FloatingPanelController
     public var onDrag: (() -> Void)?
     public var onFloatingPanelChange: ((FloatingPanelState) -> Void)?
     
@@ -33,11 +34,11 @@ open class FloatingPanelDelegate {
 }
 
 extension FloatingPanelDelegate: FloatingPanelControllerDelegate {
-    public func floatingPanelDidChangeState(_ fpc: FloatingPanel.FloatingPanelController) {
+    @MainActor public func floatingPanelDidChangeState(_ fpc: FloatingPanel.FloatingPanelController) {
         handleFloatingPanelState(fpc.state)
     }
     
-    public func floatingPanelWillEndDragging(
+    @MainActor public func floatingPanelWillEndDragging(
         _ fpc: FloatingPanelController,
         withVelocity velocity: CGPoint,
         targetState: UnsafeMutablePointer<FloatingPanelState>
@@ -45,7 +46,7 @@ extension FloatingPanelDelegate: FloatingPanelControllerDelegate {
         handleFloatingPanelState(targetState.pointee)
     }
     
-    public func floatingPanelWillBeginDragging(_ fpc: FloatingPanel.FloatingPanelController) {
+    @MainActor public func floatingPanelWillBeginDragging(_ fpc: FloatingPanel.FloatingPanelController) {
         onDrag?()
     }
 }

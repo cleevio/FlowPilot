@@ -8,6 +8,7 @@
 import UIKit
 import CleevioCore
 
+@MainActor
 open class ModalNavigationRouter: ModalRouter {
 
     // MARK: - Instance Properties
@@ -33,19 +34,22 @@ open class ModalNavigationRouter: ModalRouter {
     }
 
     // MARK: - Router
+    @inlinable
     open override func present(_ viewController: UIViewController, animated: Bool) {
         navigationRouterWrapper.present(viewController, animated: animated, mainRouterPresentingFunction: super.present)
     }
 
+    @inlinable
     open override func dismiss(animated: Bool, completion: (() -> Void)?) {
         navigationRouterWrapper.dismiss(animated: animated, completion: completion, mainRouterDismissingAction: super.dismiss)
     }
 
+    @inlinable
     open func perform(_ action: NavigationRouterWrapper.Action, animated: Bool, completion: (() -> Void)? = nil) {
         navigationRouterWrapper.perform(action, animated: animated, completion: completion, mainRouterDismissAction: super.dismiss)
     }
     
-    @objc open override func dismissRouter() {
+    @objc open override func dismissRouterObjC() {
         perform(.dismiss, animated: true)
     }
 
@@ -61,19 +65,25 @@ open class ModalNavigationRouter: ModalRouter {
             super.setDismissImage(on: viewController)
         }
     }
+
+    open override func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        navigationRouterWrapper.navigationRouter.dismissRouter(animated: animated, completion: nil)
+        super.dismissRouter(animated: animated, completion: completion)
+    }
 }
 
 extension ModalNavigationRouter {
+    @MainActor
     convenience public init(
         parentViewController: UIViewController,
-        navigationController: UINavigationController = .init(),
+        navigationController: UINavigationController? = nil,
         presentationStyle: UIModalPresentationStyle = .automatic,
         transitionStyle: UIModalTransitionStyle? = nil,
         configuration: ModalConfiguration? = nil,
         navigationAnimation: NavigationRouter.NavigationAnimation = .default
     ) {
-       let navigationRouter = NavigationRouter(
-            navigationController: navigationController,
+        let navigationRouter = NavigationRouter(
+            navigationController: navigationController ?? .init(),
             animation: navigationAnimation
         )
         
@@ -83,24 +93,6 @@ extension ModalNavigationRouter {
             transitionStyle: transitionStyle,
             modalConfiguration: configuration,
             navigationRouter: navigationRouter
-        )
-    }
-
-    convenience public init(
-        parentViewController: UIViewController,
-        navigationController: UINavigationController? = nil,
-        presentationStyle: UIModalPresentationStyle = .automatic,
-        transitionStyle: UIModalTransitionStyle? = nil,
-        configuration: ModalConfiguration? = nil,
-        navigationAnimation: NavigationRouter.NavigationAnimation = .default
-    ) {
-        self.init(
-            parentViewController: parentViewController,
-            navigationController: navigationController ?? .init(),
-            presentationStyle: presentationStyle,
-            transitionStyle: transitionStyle,
-            configuration: configuration,
-            navigationAnimation: navigationAnimation
         )
     }
 }

@@ -1,0 +1,4 @@
+include:
+  - project: 'cleevio-dev-ios/ci-ios'
+    ref: 2.0.0
+    file: 'pipeline/ios.yml'

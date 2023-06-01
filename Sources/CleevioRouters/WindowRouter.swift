@@ -9,6 +9,7 @@
 import UIKit
 import CleevioCore
 
+@MainActor
 open class WindowRouter: Router {
     public var dismissPublisher: ActionSubject<Void> = .init()
     
@@ -33,14 +34,24 @@ open class WindowRouter: Router {
     }
 
     open func dismiss(animated: Bool, completion: (() -> Void)?) {
+        dismissRouter(animated: animated, completion: completion)
+    }
+    
+    open func dismissRouter(animated: Bool, completion: (() -> Void)?) {
+        let window = self.window
+        func handleDismiss() {
+            window?.alpha = 0.0
+            window?.rootViewController = nil
+        }
+
         guard animated else {
-            window.alpha = 0.0
+            handleDismiss()
             completion?()
             return
         }
         
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            self?.window.alpha = 0.0
+        UIView.animate(withDuration: 0.3) {
+            handleDismiss()
         } completion: { _ in
             completion?()
         }

@@ -4,80 +4,74 @@
 //  Created by Thành Đỗ Long on 17.03.2021.
 //
 
-#if os(iOS)
-import UIKit
-import Combine
 import CleevioCore
+import Foundation
+import Combine
 
-public enum RouterResult<T> {
-    case dismiss
-    case dismissedByRouter
-    case finished(T)
+/// A protocol that defines the common behavior of a router that can present and dismiss view controllers.
+@available(macOS 10.15, *)
+public protocol Router: AnyObject {
+    /// Presents a view controller.
+    ///
+    /// - Parameters:
+    ///   - viewController: The view controller to present.
+    ///   - animated: A Boolean value that indicates whether the presentation should be animated.
+    @MainActor func present(_ viewController: PlatformViewController, animated: Bool)
+
+    /// Dismisses a view controller.
+    ///
+    /// - Parameters:
+    ///   - animated: A Boolean value that indicates whether the dismissal should be animated.
+    ///   - completion: The block to execute after the dismissal finishes. This block has no return value and takes no parameters.
+    @MainActor func dismiss(animated: Bool, completion: (() -> Void)?)
+
+    @MainActor func dismissRouter(animated: Bool, completion: (() -> Void)?)
     
-    public var value: T? {
-        guard case let .finished(value) = self else {
-            return nil
-        }
-        return value
-    }
+    /**
+     Returns wrapped `self` as an instance of `AnyRouter`.
+     
+     - Returns: An instance of `AnyRouter`.
+     
+     - Note: This method is used to erase the specific type of router being used and return an instance of `AnyRouter` instead. This can be useful for scenarios where you need to hide the specific implementation details of the router.
+     */
+    @MainActor func eraseToAnyRouter() -> AnyRouter
 }
 
-extension RouterResult {
-    func mapFinished<Result>(_ transform: (T) -> Result) -> RouterResult<Result> {
-        switch self {
-        case .finished(let value):
-            return .finished(transform(value))
-        case .dismiss:
-            return .dismiss
-        case .dismissedByRouter:
-            return .dismissedByRouter
-        }
-    }
-}
-
-extension RouterResult: Equatable {
-    public static func == (lhs: RouterResult<T>, rhs: RouterResult<T>) -> Bool {
-        switch (lhs, rhs) {
-        case (.dismiss, dismiss):
-            return true
-        case (.dismissedByRouter, .dismissedByRouter):
-            return true
-        case (.finished, .finished):
-            return true
-        default:
-            return false
-        }
-    }
-}
-
-public protocol Router: AnyObject, DismissHandler {
-    func present(_ viewController: UIViewController, animated: Bool)
-    func dismiss(animated: Bool, completion: (() -> Void)?)
-    func dismiss<T>(animated: Bool, returning result: RouterResult<T>) -> AnyPublisher<RouterResult<T>, Never>
-}
-
+@available(macOS 10.15, *)
 public extension Router {
+    /// Dismisses a view controller.
+    ///
+    /// This is a convenience method that calls `dismiss(animated:completion:)` with a `nil` completion block.
+    ///
+    /// - Parameter animated: A Boolean value that indicates whether the dismissal should be animated.
     @inlinable
+    @MainActor
     func dismiss(animated: Bool) {
         self.dismiss(animated: animated, completion: nil)
     }
-    
-    func dismiss<T>(animated: Bool, returning result: RouterResult<T>) -> AnyPublisher<RouterResult<T>, Never> {
-        Future { [weak self] promise in
-            self?.dismiss(animated: animated) {
-                promise(.success(result))
-            }
-        }
-        .eraseToAnyPublisher()
+
+    @inlinable
+    @MainActor
+    func eraseToAnyRouter() -> AnyRouter {
+        AnyRouter(presentAction: present(_:animated:), dismissAction: dismiss(animated:completion:), dismissRouterAction: dismissRouter(animated:completion:))
     }
 }
 
-public extension Publisher where Failure == Never {
-    func dismissedByRouter<T>(type: T.Type) -> AnyPublisher<RouterResult<T>, Never> {
-        self
-            .receive(on: RunLoop.main)
-            .map { _ in RouterResult<T>.dismissedByRouter }
-            .eraseToAnyPublisher()
+#if os(iOS)
+/// A protocol that extends the `Router` protocol with a property for accessing the `NavigationRouterWrapper` instance.
+@available(macOS 10.15, *)
+public protocol NavigationRouterWrappedRouter: Router {
+    @MainActor var navigationRouterWrapper: NavigationRouterWrapper { get }
+}
+
+extension CleevioRouters.ModalNavigationRouter: NavigationRouterWrappedRouter { }
+extension CleevioRouters.WindowNavigationRouter: NavigationRouterWrappedRouter { }
+
+extension CleevioRouters.NavigationRouter: NavigationRouterWrappedRouter {
+    /// Gets the `NavigationRouterWrapper` instance associated with this navigation router.
+    @inlinable
+    public var navigationRouterWrapper: CleevioRouters.NavigationRouterWrapper {
+        .init(navigationRouter: self)
     }
 }
 #endif
