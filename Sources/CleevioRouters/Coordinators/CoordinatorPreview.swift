@@ -31,8 +31,9 @@ public struct CoordinatorPreview: View {
     let baseViewController: UIViewController
     let delegate: PreviewRouterDelegate<ModalRouter>
     
-    public init(coordinator: (NavigationRouter) -> RouterCoordinator) {
-        let baseViewController = UINavigationController()
+    public init(navigationController: UINavigationController? = nil,
+                coordinator: (NavigationRouter) -> RouterCoordinator) {
+        let baseViewController = navigationController ?? UINavigationController()
         let router = NavigationRouter(navigationController: baseViewController)
         self.baseViewController = baseViewController
         let coordinator = coordinator(router)
@@ -44,6 +45,7 @@ public struct CoordinatorPreview: View {
     
     public var body: some View {
         UIViewControllerWrapper(viewController: baseViewController)
+            .edgesIgnoringSafeArea(.all)
     }
     
     struct UIViewControllerWrapper: UIViewControllerRepresentable {
