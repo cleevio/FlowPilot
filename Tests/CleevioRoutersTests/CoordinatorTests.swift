@@ -44,6 +44,7 @@ final class CoordinatorTests: XCTestCase {
             let coordinator = Coordinator()
             coordinator.coordinatorEventDelegate = delegate
 
+            XCTAssertEqual(coordinator.rootViewController, nil)
             XCTAssertEqual(coordinator.viewControllers.count, 0)
             
             // Associate view controller with coordinator
@@ -51,6 +52,7 @@ final class CoordinatorTests: XCTestCase {
             
             // Verify view controller was associated with coordinator
             XCTAssertEqual(coordinator.viewControllers.count, 1)
+            XCTAssertEqual(coordinator.rootViewController, viewController)
             
             XCTAssertFalse(delegate.onDeinitCalled)
         }
@@ -70,11 +72,13 @@ final class CoordinatorTests: XCTestCase {
             autoreleasepool {
                 let coordinator = Coordinator()
                 coordinator.coordinatorEventDelegate = delegate
-                
+                XCTAssertEqual(coordinator.rootViewController, nil)
+
                 // Associate view controller with coordinator
                 coordinator.setAssociatedViewController(viewController)
                 // Verify view controller was associated with coordinator
                 XCTAssertEqual(coordinator.viewControllers.count, 1)
+                XCTAssertEqual(coordinator.rootViewController, viewController)
                 
                 autoreleasepool {
                     let viewController2 = PlatformViewController()
@@ -82,6 +86,7 @@ final class CoordinatorTests: XCTestCase {
                     coordinator.setAssociatedViewController(viewController2)
                     // Verify view controller was associated with coordinator
                     XCTAssertEqual(coordinator.viewControllers.count, 2)
+                    XCTAssertEqual(coordinator.rootViewController, viewController)
                 }
                 
                 XCTAssertEqual(nil, coordinator.viewControllers[1], "ViewController1 should not be strongly held")

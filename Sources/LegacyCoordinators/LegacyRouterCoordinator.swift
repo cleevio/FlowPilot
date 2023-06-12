@@ -8,6 +8,7 @@
 import CleevioRouters
 import Combine
 
+#if os(iOS)
 open class LegacyRouterCoordinator<ResultType>: LegacyBaseCoordinator<RouterResult<ResultType>> {
     public typealias CoordinatingResultType = CoordinatingResult<RouterResult<ResultType>>
 
@@ -17,3 +18,4 @@ open class LegacyRouterCoordinator<ResultType>: LegacyBaseCoordinator<RouterResu
         return Empty().eraseToAnyPublisher()
     }
 }
+#endif

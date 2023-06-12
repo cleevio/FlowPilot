@@ -19,6 +19,7 @@ public typealias PlatformViewController = NSViewController
 #endif
 
 /// The `CoordinatorEventDelegate` protocol defines a method that is called when a coordinator is deallocated.
+@available(macOS 10.15, *)
 public protocol CoordinatorEventDelegate: AnyObject, Sendable {
     /// Notifies the delegate that the specified coordinator has been deallocated.
     ///
@@ -33,6 +34,7 @@ public protocol CoordinatorEventDelegate: AnyObject, Sendable {
 }
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
+@available(macOS 10.15, *)
 @MainActor
 open class Coordinator: CoordinatorEventDelegate {
 
@@ -44,6 +46,8 @@ open class Coordinator: CoordinatorEventDelegate {
 
     /// The view controllers that this coordinator manages. The lifetime of this `Coordinator` object is tied to the lifetime of the view controllers.
     public private(set) final var viewControllers: WeakArray<PlatformViewController> = .init([])
+
+    public var rootViewController: PlatformViewController? { viewControllers.first(where: { $0 != nil }) ?? nil }
 
     /// The delegate that receives events related to the coordinator.
     public weak var coordinatorEventDelegate: CoordinatorEventDelegate?
