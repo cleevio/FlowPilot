@@ -36,7 +36,7 @@ final class CoordinatorTests: XCTestCase {
         XCTAssertEqual(coordinator.childCoordinators.count, 0)
     }
 
-    func testAssociatedViewController() {
+    func testAssociatedViewController() async throws {
         let delegate = MockCoordinatorEventDelegate()
         
         autoreleasepool {
@@ -55,10 +55,13 @@ final class CoordinatorTests: XCTestCase {
             XCTAssertFalse(delegate.onDeinitCalled)
         }
         
-        XCTAssertTrue(delegate.onDeinitCalled)
+        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 10 )
+        await MainActor.run {
+            XCTAssertTrue(delegate.onDeinitCalled)
+        }
     }
 
-    func testAssociatedMultipleViewControllers() {
+    func testAssociatedMultipleViewControllers() async throws {
         let delegate = MockCoordinatorEventDelegate()
         
         autoreleasepool {
@@ -88,10 +91,13 @@ final class CoordinatorTests: XCTestCase {
             XCTAssertFalse(delegate.onDeinitCalled, "Coordinator should not be deinited when only first coordinator is deinited")
         }
         
-        XCTAssertTrue(delegate.onDeinitCalled)
+        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 10 )
+        await MainActor.run {
+            XCTAssertTrue(delegate.onDeinitCalled)
+        }
     }
     
-    func testDelegateDeinit() {
+    func testDelegateDeinit() async throws {
         let delegate = MockCoordinatorEventDelegate()
         
         // Test coordinator deinit
@@ -109,14 +115,18 @@ final class CoordinatorTests: XCTestCase {
             }
             
             coordinator.removeChildCoordinator(of: Coordinator.self)
-            XCTAssertTrue(delegate.onDeinitCalled)
+            // Following is not possible until we get synchronous deinits
+//            XCTAssertTrue(delegate.onDeinitCalled)
             
-            // Set onDeinitCalled to false to check coordinator deinit when it's released
-            delegate.onDeinitCalled = false
-            XCTAssertFalse(delegate.onDeinitCalled)
+//            // Set onDeinitCalled to false to check coordinator deinit when it's released
+//            delegate.onDeinitCalled = false
+//            XCTAssertFalse(delegate.onDeinitCalled)
         }
         
-        XCTAssertTrue(delegate.onDeinitCalled)
+        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 10 )
+        await MainActor.run {
+            XCTAssertTrue(delegate.onDeinitCalled)
+        }
     }
 }
 

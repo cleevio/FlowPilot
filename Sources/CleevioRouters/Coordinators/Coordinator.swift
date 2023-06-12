@@ -23,6 +23,7 @@ public protocol CoordinatorEventDelegate: AnyObject, Sendable {
     /// Notifies the delegate that the specified coordinator has been deallocated.
     ///
     /// - Parameter coordinator: The coordinator that has been deallocated.
+    @MainActor
     func onDeinit<T: Coordinator>(of type: T.Type)
 
     /// Notifies the delegate that a parent coordinator has been set.
@@ -51,7 +52,10 @@ open class Coordinator: CoordinatorEventDelegate {
     public init() { }
 
     deinit {
-        coordinatorEventDelegate?.onDeinit(of: type(of: self))
+        let typeOfSelf = Self.self
+        Task { @MainActor [coordinatorEventDelegate] in
+            coordinatorEventDelegate?.onDeinit(of: typeOfSelf)
+        }
     }
 
     /// Sets the associated `PlatformViewController` whose lifecycle determines the lifecycle of the coordinator.
@@ -111,6 +115,7 @@ open class Coordinator: CoordinatorEventDelegate {
     ///
     /// - Parameter coordinator: The coordinator that has been deallocated.
     @inlinable
+    @MainActor
     open func onDeinit<T: Coordinator>(of type: T.Type) {
         removeChildCoordinator(of: type)
     }

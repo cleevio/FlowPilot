@@ -24,7 +24,7 @@ final class RouterCoordinatorTests: XCTestCase {
         XCTAssertTrue(delegate.onDismissCalled)
     }
 
-    func testDeinit() {
+    func testDeinit() async throws {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
         
@@ -46,14 +46,18 @@ final class RouterCoordinatorTests: XCTestCase {
             }
             
             coordinator.removeChildCoordinator(of: RouterCoordinator.self)
-            XCTAssertTrue(delegate.onDeinitCalled)
-            
-            // Set onDeinitCalled to false to check coordinator deinit when it's released
-            delegate.onDeinitCalled = false
-            XCTAssertFalse(delegate.onDeinitCalled)
+            // Following is not possible until we get synchronous deinits
+//            XCTAssertTrue(delegate.onDeinitCalled)
+//            
+//            // Set onDeinitCalled to false to check coordinator deinit when it's released
+//            delegate.onDeinitCalled = false
+//            XCTAssertFalse(delegate.onDeinitCalled)
         }
         
-        XCTAssertTrue(delegate.onDeinitCalled)
+        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 10 )
+        await MainActor.run {
+            XCTAssertTrue(delegate.onDeinitCalled)
+        }
     }
 
     func testDismissOfChildCoordinator() {
@@ -73,7 +77,7 @@ final class RouterCoordinatorTests: XCTestCase {
         XCTAssertNil(coordinator.childCoordinator(of: RouterCoordinator.self))
     }
 
-    func testCoordinate() {
+    func testCoordinate() async throws {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
         
@@ -90,7 +94,10 @@ final class RouterCoordinatorTests: XCTestCase {
             XCTAssertTrue(childCoordinator.routerEventDelegate === coordinator)
         }
         
-        XCTAssertTrue(delegate.onDeinitCalled)
+        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 10 )
+        await MainActor.run {
+            XCTAssertTrue(delegate.onDeinitCalled)
+        }
     }
 
     func testRouterPresent() {
