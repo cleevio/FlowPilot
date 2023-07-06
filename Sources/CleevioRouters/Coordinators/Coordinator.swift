@@ -50,15 +50,15 @@ open class Coordinator: CoordinatorEventDelegate {
     public var rootViewController: PlatformViewController? { viewControllers.first(where: { $0 != nil }) ?? nil }
 
     /// The delegate that receives events related to the coordinator.
-    public weak var coordinatorEventDelegate: CoordinatorEventDelegate?
+    public weak var eventDelegate: CoordinatorEventDelegate?
 
     /// Initializes a new instance of the `Coordinator` class.
     public init() { }
 
     deinit {
         let typeOfSelf = Self.self
-        Task { @MainActor [coordinatorEventDelegate] in
-            coordinatorEventDelegate?.onDeinit(of: typeOfSelf)
+        Task { @MainActor [eventDelegate] in
+            eventDelegate?.onDeinit(of: typeOfSelf)
         }
     }
 
@@ -94,8 +94,11 @@ open class Coordinator: CoordinatorEventDelegate {
     }
 
     /// Starts the coordinator. Subclasses must provide an implementation of this method.
+    ///
+    /// - Parameter animated: Defines whether there should be animation while presenting the coordinator
+
     @inlinable
-    open func start() {
+    open func start(animated: Bool = true) {
         fatalError("Start should always be implemented")
     }
 
@@ -105,12 +108,13 @@ open class Coordinator: CoordinatorEventDelegate {
      - Parameter coordinator: The child coordinator to coordinate with.
 
      When a coordinator is coordinated to, it becomes a child coordinator of this coordinator, and is stored weakly in the `childCoordinators` array.
+     /// - Parameter animated: Defines whether there should be animation while presenting the coordinator
      */
     @inlinable
-    open func coordinate(to coordinator: some Coordinator) {
+    open func coordinate(to coordinator: some Coordinator, animated: Bool = true) {
         onCoordinationStarted(of: coordinator)
-        coordinator.start()
-        coordinator.coordinatorEventDelegate = self
+        coordinator.start(animated: animated)
+        coordinator.eventDelegate = self
     }
 
     // MARK: CoordinatorEventDelegate

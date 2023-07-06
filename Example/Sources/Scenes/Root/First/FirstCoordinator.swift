@@ -24,11 +24,11 @@ final class FirstCoordinator: BaseCoordinator {
         super.init(router: router)
     }
     
-    override func start() {
+    override func start(animated: Bool) {
         let viewModel = FirstViewModel(count: counter)
         let viewController = BaseHostingController(rootView: FirstView(viewModel: viewModel))
         
-        present(viewController)
+        present(viewController, animated: animated)
         
         viewModel.route
             .sink(receiveValue: { [weak self] route in

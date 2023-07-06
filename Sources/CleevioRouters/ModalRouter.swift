@@ -31,7 +31,8 @@ open class ModalConfiguration {
     final public let onDismiss: (() -> ())?
     final public let dismissImage: DismissImage?
 
-    public init(onDismiss: (() -> ())? = nil, dismissImage: ModalConfiguration.DismissImage? = nil) {
+    public init(onDismiss: (() -> ())? = nil,
+                dismissImage: ModalConfiguration.DismissImage? = nil) {
         self.onDismiss = onDismiss
         self.dismissImage = dismissImage
     }
@@ -58,11 +59,9 @@ open class ModalConfiguration {
 final public class ModalSheetConfiguration: ModalConfiguration {
     public let sheetPresentationOptions: UISheetPresentationControllerOptions?
 
-    public init(
-        onDismiss: (() -> ())? = nil,
+    public init(onDismiss: (() -> ())? = nil,
         dismissImage: ModalConfiguration.DismissImage? = nil,
-        sheetPresentationOptions: UISheetPresentationControllerOptions? = nil
-    ) {
+        sheetPresentationOptions: UISheetPresentationControllerOptions? = nil ) {
         self.sheetPresentationOptions = sheetPresentationOptions
         super.init(onDismiss: onDismiss, dismissImage: dismissImage)
     }
@@ -82,12 +81,10 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
 
     // MARK: - Object Lifecycle
 
-    public init(
-        parentViewController: UIViewController,
+    public init(parentViewController: UIViewController,
         presentationStyle: UIModalPresentationStyle = .automatic,
         transitionStyle: UIModalTransitionStyle? = nil,
-        configuration: ModalConfiguration? = nil
-    ) {
+        configuration: ModalConfiguration? = nil) {
         self.parentViewController = parentViewController
         self.presentationStyle = presentationStyle
         self.transitionStyle = transitionStyle

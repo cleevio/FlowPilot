@@ -15,13 +15,12 @@ final class RouterCoordinatorTests: XCTestCase {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
         let coordinator = RouterCoordinator(router: router)
-        coordinator.routerEventDelegate = delegate
-        coordinator.coordinatorEventDelegate = delegate
+        coordinator.eventDelegate = delegate
         
         // Test onDismiss delegate method is called
-        XCTAssertFalse(delegate.onDismissCalled)
+        XCTAssertFalse(router.dismissCalled)
         coordinator.dismiss()
-        XCTAssertTrue(delegate.onDismissCalled)
+        XCTAssertTrue(router.dismissCalled)
     }
 
     func testDeinit() async throws {
@@ -31,15 +30,13 @@ final class RouterCoordinatorTests: XCTestCase {
         // Test coordinator deinit
         autoreleasepool {
             let coordinator = RouterCoordinator(router: router)
-            coordinator.routerEventDelegate = delegate
-            coordinator.coordinatorEventDelegate = delegate
+            coordinator.eventDelegate = delegate
             
             // Test childcoordinator deinit
             autoreleasepool {
                 let childCoordinator = RouterCoordinator(router: router)
                 coordinator.coordinate(to: childCoordinator)
-                childCoordinator.routerEventDelegate = delegate
-                childCoordinator.coordinatorEventDelegate = delegate
+                childCoordinator.eventDelegate = delegate
                 
                 // Test onDeinit delegate method is called
                 XCTAssertFalse(delegate.onDeinitCalled)
@@ -64,11 +61,9 @@ final class RouterCoordinatorTests: XCTestCase {
         let router = MockRouter()
         let delegate = MockRouterEventDelegate()
         let coordinator = RouterCoordinator(router: router)
-        coordinator.routerEventDelegate = delegate
-        coordinator.coordinatorEventDelegate = delegate
+        coordinator.eventDelegate = delegate
         let childCoordinator = RouterCoordinator(router: router)
-        childCoordinator.routerEventDelegate = coordinator
-        childCoordinator.coordinatorEventDelegate = coordinator
+        childCoordinator.eventDelegate = coordinator
 
         // Test onDismiss delegate method is called
         XCTAssertFalse(router.dismissCalled)
@@ -83,15 +78,13 @@ final class RouterCoordinatorTests: XCTestCase {
         
         autoreleasepool {
             let coordinator = RouterCoordinator(router: router)
-            coordinator.routerEventDelegate = delegate
-            coordinator.coordinatorEventDelegate = delegate
+            coordinator.eventDelegate = delegate
             
             let childCoordinator = RouterCoordinator(router: router)
             coordinator.coordinate(to: childCoordinator)
             
             XCTAssertFalse(delegate.onDeinitCalled)
-            XCTAssertTrue(childCoordinator.coordinatorEventDelegate === coordinator)
-            XCTAssertTrue(childCoordinator.routerEventDelegate === coordinator)
+            XCTAssertTrue(childCoordinator.eventDelegate === coordinator)
         }
         
         try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 10 )
@@ -101,22 +94,22 @@ final class RouterCoordinatorTests: XCTestCase {
     }
 
     func testRouterPresent() {
-        func presentHelper(viewController: PlatformViewController, expectedResult: Bool) {
+        func presentHelper(viewController: PlatformViewController,
+                           expectedResult: Bool,
+                           file: StaticString = #filePath,
+                           line: UInt = #line) {
             let expectation = expectation(description: "Expecting animation result")
 
             let router = MockRouter()
             router.onPresent = { viewControllerToBePresent, animated in
-                XCTAssertEqual(animated, expectedResult)
-                XCTAssertTrue(viewControllerToBePresent === viewController)
+                XCTAssertEqual(animated, expectedResult, file: file, line: line)
+                XCTAssertTrue(viewControllerToBePresent === viewController, file: file, line: line)
                 expectation.fulfill()
             }
 
-            let delegate = MockRouterEventDelegate()
-            delegate.animatePresent = expectedResult
             let coordinator = RouterCoordinator(router: router)
-            coordinator.routerEventDelegate = delegate
 
-            coordinator.present(viewController)
+            coordinator.present(viewController, animated: expectedResult)
             
             wait(for: [expectation], timeout: 0.1)
         }
@@ -145,26 +138,10 @@ class MockRouter: Router {
     }
 }
 
-class MockRouterEventDelegate: MockCoordinatorEventDelegate, RouterEventDelegate {    
-    var onDismissCalled = false
-    var animatePresent = true
-    var animateDismiss = true
-
-    func onDismiss(of coordinator: some CleevioRouters.Coordinator, router: some CleevioRouters.Router) {
-        onDismissCalled = true
-    }
-
-    func isPresentAnimated(of viewController: some PlatformViewController, on router: some Router, coordinator: some CleevioRouters.Coordinator) -> Bool {
-        animatePresent
-    }
-    
-    func isDismissAnimated(of coordinator: some Coordinator, router: some Router) -> Bool {
-        animateDismiss
-    }
-}
+class MockRouterEventDelegate: MockCoordinatorEventDelegate { }
 
 open class RouterCoordinator: CleevioRouters.RouterCoordinator {
-    override open func start() {
+    override open func start(animated: Bool = true) {
         
     }
 }

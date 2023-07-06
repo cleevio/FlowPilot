@@ -22,5 +22,6 @@ public protocol LegacyCoordinator {
 
     var identifier: UUID { get }
 
+    @MainActor
     func start() -> CoordinatingResult<CoordinationResult>
 }

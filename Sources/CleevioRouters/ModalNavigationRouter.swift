@@ -16,13 +16,11 @@ open class ModalNavigationRouter: ModalRouter {
     
     // MARK: - Object Lifecycle
 
-    public init(
-        parentViewController: UIViewController,
+    public init(parentViewController: UIViewController,
         presentationStyle: UIModalPresentationStyle = .automatic,
         transitionStyle: UIModalTransitionStyle? = nil,
         modalConfiguration: ModalConfiguration? = nil,
-        navigationRouter: NavigationRouter
-    ) {
+        navigationRouter: NavigationRouter) {
         self.navigationRouterWrapper = NavigationRouterWrapper(navigationRouter: navigationRouter)
 
         super.init(

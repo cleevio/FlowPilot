@@ -21,7 +21,8 @@ open class NavigationRouter: NSObject, DismissHandler {
     private var animation: NavigationAnimation
     public let dismissPublisher: ActionSubject<Void> = .init()
 
-    public init(navigationController: UINavigationController, animation: NavigationAnimation = .default) {
+    public init(navigationController: UINavigationController,
+                animation: NavigationAnimation = .default) {
         self.navigationController = navigationController
         self.animation = animation
         self.routerRootController = navigationController.viewControllers.first

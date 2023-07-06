@@ -17,10 +17,8 @@ open class WindowNavigationRouter: WindowRouter {
 
     // MARK: - Object Lifecycle
 
-    public init(
-        window: UIWindow,
-        navigationRouter: NavigationRouter
-    ) {
+    public init(window: UIWindow,
+        navigationRouter: NavigationRouter) {
         self.navigationRouterWrapper = NavigationRouterWrapper(navigationRouter: navigationRouter)
 
         super.init(window: window)
@@ -48,11 +46,9 @@ open class WindowNavigationRouter: WindowRouter {
 
 extension WindowNavigationRouter {
     @MainActor
-    convenience public init(
-        window: UIWindow,
-        navigationController: UINavigationController? = nil,
-        navigationAnimation: NavigationRouter.NavigationAnimation = .default
-    ) {
+    convenience public init(window: UIWindow,
+                            navigationController: UINavigationController? = nil,
+                            navigationAnimation: NavigationRouter.NavigationAnimation = .default) {
        let navigationRouter = NavigationRouter(
         navigationController: navigationController ?? .init(),
         animation: navigationAnimation

@@ -11,11 +11,11 @@ import CleevioCore
 @MainActor
 final class SecondCoordinator: BaseCoordinator {
     
-    override func start() {
+    override func start(animated: Bool) {
         let viewModel = SecondViewModel()
         let viewController = BaseHostingController(rootView: SecondView(viewModel: viewModel))
         
-        present(viewController)
+        present(viewController, animated: animated)
         
         viewModel.route
             .sink(receiveValue: { [weak self] route in

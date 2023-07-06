@@ -38,9 +38,8 @@ public struct CoordinatorPreview: View {
         self.baseViewController = baseViewController
         let coordinator = coordinator(router)
         self.delegate = .init(router: .init(parentViewController: baseViewController))
-        coordinator.routerEventDelegate = delegate
-        coordinator.coordinatorEventDelegate = delegate
-        coordinator.start()
+        coordinator.eventDelegate = delegate
+        coordinator.start(animated: true)
     }
     
     public var body: some View {
@@ -61,7 +60,6 @@ public struct CoordinatorPreview: View {
 }
 
 public enum CoordinatorPreviewResultType: CustomStringConvertible {
-    case dismissedByRouter
     case dismiss
     case coordinatorDeinit
     
@@ -93,11 +91,11 @@ open class CoordinatorPreviewCoordinator: RouterCoordinator {
     }
     
     @inlinable
-    open override func start() {
+    open override func start(animated: Bool) {
         let view = Text(type.description).preferredColorScheme(.dark)
         let viewController = BaseUIHostingController(rootView: view)
         
-        present(viewController)
+        present(viewController, animated: animated)
     }
 }
 
@@ -111,11 +109,9 @@ open class CoordinatorPreviewCoordinator: RouterCoordinator {
  - router: A `RouterType` that conforms to the `Router` protocol.
  */
 @MainActor
-open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate, CoordinatorEventDelegate {
-    public weak var routerEventDelegate: RouterEventDelegate?
-    
+open class PreviewRouterDelegate<RouterType: Router>: CoordinatorEventDelegate {
     @usableFromInline let router: RouterType
-    
+
     @inlinable
     public init(router: RouterType) {
         self.router = router
@@ -123,17 +119,12 @@ open class PreviewRouterDelegate<RouterType: Router>: RouterEventDelegate, Coord
     
     @inlinable
     public func onDeinit<T: Coordinator>(of type: T.Type) {
-        CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router).start()
+        CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router).start(animated: true)
     }
     
     @inlinable
     public func onDismiss(of coordinator: some Coordinator, router: some Router) {
-        CoordinatorPreviewCoordinator(type: .dismiss, router: self.router).start()
-    }
-    
-    @inlinable
-    public func onDismissedByRouter(of coordinator: some Coordinator, router: some Router) {
-        CoordinatorPreviewCoordinator(type: .dismissedByRouter, router: self.router).start()
+        CoordinatorPreviewCoordinator(type: .dismiss, router: self.router).start(animated: true)
     }
     
     @inlinable

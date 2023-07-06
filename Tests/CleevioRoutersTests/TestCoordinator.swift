@@ -17,7 +17,7 @@ protocol SecondCoordinatorDelegate: AnyObject {
 final class SecondCoordinator: RouterCoordinator {
     public weak var delegate: SecondCoordinatorDelegate?
     
-    override func start() {
+    override func start(animated: Bool) {
     }
 }
 

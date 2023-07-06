@@ -19,11 +19,11 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
         super.init(router: router)
     }
 
-    override func start() {
+    override func start(animated: Bool) {
         let viewModel = RootViewModel()
         let viewController = BaseHostingController(rootView: RootView(viewModel: viewModel))
         
-        present(viewController)
+        present(viewController, animated: animated)
         
         viewModel.route
             .sink(receiveValue: { [weak self] route in

@@ -21,7 +21,7 @@ final class CoordinatorTests: XCTestCase {
 
         // Verify child coordinator was added
         XCTAssertEqual(coordinator.childCoordinators.count, 1)
-        XCTAssertTrue(childCoordinator.coordinatorEventDelegate === coordinator)
+        XCTAssertTrue(childCoordinator.eventDelegate === coordinator)
 
         // Retrieve child coordinator
         let retrievedChildCoordinator = coordinator.childCoordinator(of: Coordinator.self)
@@ -42,7 +42,7 @@ final class CoordinatorTests: XCTestCase {
         autoreleasepool {
             let viewController = PlatformViewController()
             let coordinator = Coordinator()
-            coordinator.coordinatorEventDelegate = delegate
+            coordinator.eventDelegate = delegate
 
             XCTAssertEqual(coordinator.rootViewController, nil)
             XCTAssertEqual(coordinator.viewControllers.count, 0)
@@ -71,7 +71,7 @@ final class CoordinatorTests: XCTestCase {
 
             autoreleasepool {
                 let coordinator = Coordinator()
-                coordinator.coordinatorEventDelegate = delegate
+                coordinator.eventDelegate = delegate
                 XCTAssertEqual(coordinator.rootViewController, nil)
 
                 // Associate view controller with coordinator
@@ -108,12 +108,12 @@ final class CoordinatorTests: XCTestCase {
         // Test coordinator deinit
         autoreleasepool {
             let coordinator = Coordinator()
-            coordinator.coordinatorEventDelegate = delegate
+            coordinator.eventDelegate = delegate
 
             // Test childcoordinator deinit
             autoreleasepool {
                 let childCoordinator = Coordinator()
-                childCoordinator.coordinatorEventDelegate = delegate
+                childCoordinator.eventDelegate = delegate
 
                 // Test onDeinit delegate method is called
                 XCTAssertFalse(delegate.onDeinitCalled)
@@ -151,7 +151,7 @@ class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
 
 @MainActor
 class Coordinator: CleevioRouters.Coordinator {
-    override func start() {
+    override func start(animated: Bool) {
         
     }
 }

@@ -28,7 +28,9 @@ open class NavigationRouterWrapper: Sendable {
         }
     }
 
-    open func dismiss(animated: Bool, completion: (() -> Void)?, mainRouterDismissingAction: ((Bool, (() -> Void)?) -> Void)) {
+    open func dismiss(animated: Bool,
+                      completion: (() -> Void)?,
+                      mainRouterDismissingAction: ((Bool, (() -> Void)?) -> Void)) {
         let mainRouterNeedsToBeDismissed = !navigationRouter.hasAnyPushedControllers
 
         perform(mainRouterNeedsToBeDismissed ? .dismiss : .pop(.toParent), animated: animated, completion: completion, mainRouterDismissAction: mainRouterDismissingAction)
