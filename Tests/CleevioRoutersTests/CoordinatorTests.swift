@@ -28,9 +28,51 @@ final class CoordinatorTests: XCTestCase {
 
         // Verify retrieved child coordinator is the same as the original child coordinator
         XCTAssertTrue(retrievedChildCoordinator === childCoordinator)
+        XCTAssertTrue(coordinator.childCoordinator(of: Coordinator.self, identifier: nil) === childCoordinator)
 
         // Remove child coordinator
         coordinator.removeChildCoordinator(of: Coordinator.self)
+
+        // Verify child coordinator was removed
+        XCTAssertEqual(coordinator.childCoordinators.count, 0)
+    }
+
+    func testChildCoordinatorIdentified() {
+        let coordinator = Coordinator()
+        let childCoordinator = IdentifiedCoordinator(identifier: .first)
+
+        XCTAssertEqual(coordinator.childCoordinators.count, 0)
+
+        // Add child coordinator
+        coordinator.coordinate(to: childCoordinator)
+
+        // Verify child coordinator was added
+        XCTAssertEqual(coordinator.childCoordinators.count, 1)
+        XCTAssertTrue(childCoordinator.eventDelegate === coordinator)
+
+        // Retrieve child coordinator
+        let retrievedChildCoordinator = coordinator.childCoordinator(of: IdentifiedCoordinator.self, identifier: childCoordinator.identifier)
+
+        // Check it is not found without identifier
+        XCTAssertNil(coordinator.childCoordinator(of: IdentifiedCoordinator.self))
+
+        // Check it is not found with wrong identifier
+        let wrongIdentifier = IdentifiedCoordinator.Identifier.second.rawValue
+        XCTAssertNil(coordinator.childCoordinator(of: IdentifiedCoordinator.self, identifier: wrongIdentifier))
+
+        // Verify retrieved child coordinator is the same as the original child coordinator
+        XCTAssertTrue(retrievedChildCoordinator === childCoordinator)
+
+        // Check it is not removed without identifier
+        coordinator.removeChildCoordinator(of: IdentifiedCoordinator.self)
+        XCTAssertEqual(coordinator.childCoordinators.count, 1)
+
+        // Check it is not removed with wrong identifier
+        coordinator.removeChildCoordinator(of: IdentifiedCoordinator.self, identifier: wrongIdentifier)
+        XCTAssertEqual(coordinator.childCoordinators.count, 1)
+
+        // Remove child coordinator
+        coordinator.removeChildCoordinator(of: IdentifiedCoordinator.self, identifier: childCoordinator.identifier)
 
         // Verify child coordinator was removed
         XCTAssertEqual(coordinator.childCoordinators.count, 0)
@@ -140,7 +182,7 @@ class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
     var onDeinitCalled = false
     var onCoordinationStartedCalled = false
 
-    func onDeinit<T>(of type: T.Type) where T : CleevioRouters.Coordinator {
+    func onDeinit<T>(of type: T.Type, identifier: String?) where T : CleevioRouters.Coordinator {
         onDeinitCalled = true
     }
 
@@ -149,9 +191,24 @@ class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
     }
 }
 
-@MainActor
 class Coordinator: CleevioRouters.Coordinator {
     override func start(animated: Bool) {
         
     }
+}
+
+class IdentifiedCoordinator: Coordinator {
+    nonisolated let _identifier: Identifier
+
+    init(identifier: Identifier) {
+        self._identifier = identifier
+        super.init()
+    }
+    
+    enum Identifier: String {
+        case first
+        case second
+    }
+    
+    override nonisolated var identifier: String? { _identifier.rawValue }
 }

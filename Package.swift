@@ -13,7 +13,7 @@ let swiftSettings: [SwiftSetting] = [
 ]
 
 let package = Package(
-    name: "CleevioRoutersLibrary",
+    name: "CleevioRouters",
     platforms: [
         .iOS(.v13)
     ],

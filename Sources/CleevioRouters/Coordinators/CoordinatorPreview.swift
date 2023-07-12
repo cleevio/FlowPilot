@@ -118,7 +118,7 @@ open class PreviewRouterDelegate<RouterType: Router>: CoordinatorEventDelegate {
     }
     
     @inlinable
-    public func onDeinit<T: Coordinator>(of type: T.Type) {
+    public func onDeinit<T: Coordinator>(of type: T.Type, identifier: String?) {
         CoordinatorPreviewCoordinator(type: .coordinatorDeinit, router: self.router).start(animated: true)
     }
     

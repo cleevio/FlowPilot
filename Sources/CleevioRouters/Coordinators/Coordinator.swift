@@ -23,14 +23,19 @@ public typealias PlatformViewController = NSViewController
 public protocol CoordinatorEventDelegate: AnyObject, Sendable {
     /// Notifies the delegate that the specified coordinator has been deallocated.
     ///
-    /// - Parameter coordinator: The coordinator that has been deallocated.
+    /// Use this method to inform the delegate that a specific coordinator has been deallocated. The method can be called by the coordinator itself during its deallocation process.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the coordinator that has been deallocated.
+    ///   - identifier: The specific identifier that specifies the coordinator. Use `nil` if the coordinator is not identified.
     @MainActor
-    func onDeinit<T: Coordinator>(of type: T.Type)
+    func onDeinit<T: Coordinator>(of type: T.Type, identifier: String?)
 
     /// Notifies the delegate that a parent coordinator has been set.
     ///
     /// - Parameter coordinator: The parent coordinator that has been set.
-    @MainActor func onCoordinationStarted(of coordinator: some Coordinator)
+    @MainActor
+    func onCoordinationStarted(of coordinator: some Coordinator)
 }
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
@@ -39,26 +44,40 @@ public protocol CoordinatorEventDelegate: AnyObject, Sendable {
 open class Coordinator: CoordinatorEventDelegate {
 
     /// A dictionary that stores the child coordinators.
-    public fileprivate(set) final var childCoordinators: [HashableType<Coordinator>: WeakBox<Coordinator>] = [:]
+    public private(set) final var _childCoordinators: [IdentifiedHashableType<Coordinator>: WeakBox<Coordinator>] = [:]
+
+    /// The child coordinators.
+    public var childCoordinators: some Collection<Coordinator> {
+        _childCoordinators.values.lazy.compactMap(\.unbox)
+    }
 
     /// The unique identifier for the coordinator.
-    private var id = UUID()
+    public private(set) var id = UUID()
 
     /// The view controllers that this coordinator manages. The lifetime of this `Coordinator` object is tied to the lifetime of the view controllers.
     public private(set) final var viewControllers: WeakArray<PlatformViewController> = .init([])
 
-    public var rootViewController: PlatformViewController? { viewControllers.first(where: { $0 != nil }) ?? nil }
+    /// The root view controller managed by this coordinator.
+    public var rootViewController: PlatformViewController? {
+        viewControllers.first(where: { $0 != nil }) ?? nil
+    }
 
     /// The delegate that receives events related to the coordinator.
     public weak var eventDelegate: CoordinatorEventDelegate?
 
+    /// The identifier of the coordinator. If defined, this identifier becomes necessary to get the type parent's childCoordinators
+    nonisolated
+    open var identifier: String? { nil }
+    
     /// Initializes a new instance of the `Coordinator` class.
     public init() { }
 
     deinit {
         let typeOfSelf = Self.self
+        let identifier = self.identifier
+
         Task { @MainActor [eventDelegate] in
-            eventDelegate?.onDeinit(of: typeOfSelf)
+            eventDelegate?.onDeinit(of: typeOfSelf, identifier: identifier)
         }
     }
 
@@ -72,17 +91,29 @@ open class Coordinator: CoordinatorEventDelegate {
 
     /// Returns a child coordinator of the specified type.
     ///
-    /// - Parameter type: The type of the child coordinator to return.
+    /// Use this method to retrieve a child coordinator of a specific type.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the child coordinator to return.
+    ///   - identifier: The specific identifier that specifies the child coordinator. Use `nil` if the child coordinator is not identified.
     /// - Returns: The child coordinator of the specified type, or `nil` if it doesn't exist.
-    public final func childCoordinator<T: Coordinator>(of type: T.Type = T.self) -> T? {
-        childCoordinators[type]?.unbox as? T
+    ///
+    /// - Note: If the child coordinator has an identifier and it is not provided as a parameter, the method will return `nil`. Make sure to provide the appropriate identifier when necessary to ensure the expected behavior.
+    public final func childCoordinator<T: Coordinator>(of type: T.Type = T.self, identifier: String? = nil) -> T? {
+        _childCoordinators[type, identifier]?.unbox as? T
     }
 
     /// Removes the child coordinator of the specified type.
     ///
-    /// - Parameter type: The type of the child coordinator to remove.
-    public final func removeChildCoordinator<T: Coordinator>(of type: T.Type = T.self) {
-        childCoordinators[type] = nil
+    /// Use this method to remove a child coordinator of a specific type.
+    ///
+    /// - Parameters:
+    ///   - type: The type of the child coordinator to remove.
+    ///   - identifier: The specific identifier that specifies the child coordinator. Use `nil` if the child coordinator is not identified.
+    ///
+    /// - Note: If the child coordinator has an identifier and it is not provided as a parameter, the method will do nothing. Make sure to provide the appropriate identifier when necessary to ensure the expected behavior.
+    public final func removeChildCoordinator<T: Coordinator>(of type: T.Type = T.self, identifier: String? = nil) {
+        _childCoordinators[type, identifier] = nil
     }
 
     /// Removes the specified child coordinator.
@@ -90,13 +121,14 @@ open class Coordinator: CoordinatorEventDelegate {
     /// - Parameter coordinator: The child coordinator to remove.
     @inlinable
     public final func removeChildCoordinator(_ coordinator: some Coordinator) {
-        removeChildCoordinator(of: type(of: coordinator))
+        removeChildCoordinator(of: type(of: coordinator), identifier: coordinator.identifier)
     }
 
-    /// Starts the coordinator. Subclasses must provide an implementation of this method.
+    /// Starts the coordinator.
     ///
-    /// - Parameter animated: Defines whether there should be animation while presenting the coordinator
-
+    /// Subclasses must provide an implementation of this method.
+    ///
+    /// - Parameter animated: Defines whether there should be animation while presenting the coordinator.
     @inlinable
     open func start(animated: Bool = true) {
         fatalError("Start should always be implemented")
@@ -107,8 +139,8 @@ open class Coordinator: CoordinatorEventDelegate {
 
      - Parameter coordinator: The child coordinator to coordinate with.
 
-     When a coordinator is coordinated to, it becomes a child coordinator of this coordinator, and is stored weakly in the `childCoordinators` array.
-     /// - Parameter animated: Defines whether there should be animation while presenting the coordinator
+     When a coordinator is coordinated to, it becomes a child coordinator of this coordinator and is stored weakly in the `childCoordinators` array.
+     /// - Parameter animated: Defines whether there should be animation while presenting the coordinator.
      */
     @inlinable
     open func coordinate(to coordinator: some Coordinator, animated: Bool = true) {
@@ -119,19 +151,13 @@ open class Coordinator: CoordinatorEventDelegate {
 
     // MARK: CoordinatorEventDelegate
 
-    /// Notifies the delegate that the specified coordinator has been deallocated.
-    ///
-    /// - Parameter coordinator: The coordinator that has been deallocated.
     @inlinable
     @MainActor
-    open func onDeinit<T: Coordinator>(of type: T.Type) {
-        removeChildCoordinator(of: type)
+    open func onDeinit<T: Coordinator>(of type: T.Type, identifier: String?) {
+        removeChildCoordinator(of: type, identifier: identifier)
     }
 
-    /// Notifies the delegate that a parent coordinator has been set.
-    ///
-    /// - Parameter coordinator: The parent coordinator that has been set.
     open func onCoordinationStarted(of coordinator: some Coordinator) {
-        childCoordinators[type(of: coordinator)] = WeakBox(coordinator)
+        _childCoordinators[type(of: coordinator), coordinator.identifier] = WeakBox(coordinator)
     }
 }
