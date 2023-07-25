@@ -58,7 +58,7 @@ open class Coordinator: CoordinatorEventDelegate {
     public private(set) final var viewControllers: WeakArray<PlatformViewController> = .init([])
 
     /// The root view controller managed by this coordinator.
-    public var rootViewController: PlatformViewController? {
+    open var rootViewController: PlatformViewController? {
         viewControllers.first(where: { $0 != nil }) ?? nil
     }
 
