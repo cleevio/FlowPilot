@@ -175,6 +175,21 @@ final class CoordinatorTests: XCTestCase {
             XCTAssertTrue(delegate.onDeinitCalled)
         }
     }
+
+    func testChildCoordinatorOrder() async throws {
+        let coordinator = Coordinator()
+        let childCoordinator1 = IdentifiedCoordinator(identifier: .first)
+        let childCoordinator2 = IdentifiedCoordinator(identifier: .second)
+
+        // Add child coordinator
+        coordinator.coordinate(to: childCoordinator1)
+        coordinator.coordinate(to: childCoordinator2)
+
+        // Test order
+        XCTAssertEqual(coordinator.childCoordinators.count, 2)
+        XCTAssertTrue(coordinator.childCoordinators[0] === childCoordinator1)
+        XCTAssertTrue(coordinator.childCoordinators[1] === childCoordinator2)
+    }
 }
 
 @MainActor

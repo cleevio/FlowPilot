@@ -26,14 +26,16 @@ let package = Package(
     ],
     dependencies: [
 //        .package(url: "git@github.com:cleevio/CleevioCore-iOS.git", branch: "feature/new-coordinators"), //.init(2, 0, 0, prereleaseIdentifiers: ["dev3"])
-        .package(url: "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore", .upToNextMajor(from: .init(2, 0, 0))),
-        .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: .init(2, 6, 1)))
+        .package(url: "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore", .upToNextMajor(from: Version(2,0,0))),
+        .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: Version(2,6,1))),
+        .package(url: "https://github.com/apple/swift-collections", .upToNextMajor(from: Version(1,0,0)))
     ],
     targets: [
         .target(
             name: "CleevioRouters",
             dependencies: [
-                .product(name: "CleevioCore", package: "CleevioCore")
+                .product(name: "CleevioCore", package: "CleevioCore"),
+                .product(name: "OrderedCollections", package: "swift-collections")
             ],
             swiftSettings: swiftSettings
         ),

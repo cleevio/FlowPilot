@@ -7,6 +7,7 @@
 
 import Foundation
 import CleevioCore
+import OrderedCollections
 
 #if os(iOS)
 import UIKit
@@ -38,16 +39,18 @@ public protocol CoordinatorEventDelegate: AnyObject, Sendable {
     func onCoordinationStarted(of coordinator: some Coordinator)
 }
 
+public typealias ChildCoordinatorCollection = LazyMapSequence<LazyFilterSequence<LazyMapSequence<LazySequence<OrderedDictionary<IdentifiedHashableType<Coordinator>, WeakBox<Coordinator>>.Values>.Elements, Coordinator?>>, Coordinator>
+
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
 @available(macOS 10.15, *)
 @MainActor
 open class Coordinator: CoordinatorEventDelegate {
 
     /// A dictionary that stores the child coordinators.
-    public private(set) final var _childCoordinators: [IdentifiedHashableType<Coordinator>: WeakBox<Coordinator>] = [:]
+    public private(set) final var _childCoordinators: OrderedDictionary<IdentifiedHashableType<Coordinator>, WeakBox<Coordinator>> = [:]
 
     /// The child coordinators.
-    public var childCoordinators: some Collection<Coordinator> {
+    public var childCoordinators: ChildCoordinatorCollection {
         _childCoordinators.values.lazy.compactMap(\.unbox)
     }
 

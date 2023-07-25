@@ -7,6 +7,7 @@
 
 import Foundation
 import CleevioCore
+import OrderedCollections
 
 /// An enumeration representing the type of a hashable identifier.
 ///
@@ -23,7 +24,7 @@ public enum IdentifiedHashableType<T>: Hashable {
     case identified(HashableType<T>, identifier: String)
 }
 
-public extension Dictionary {
+public extension OrderedDictionary {
     /// Accesses the value associated with the specified key.
     ///
     /// - Parameters:
