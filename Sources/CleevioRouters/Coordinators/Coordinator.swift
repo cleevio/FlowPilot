@@ -39,13 +39,33 @@ public protocol CoordinatorEventDelegate: AnyObject, Sendable {
     func onCoordinationStarted(of coordinator: some Coordinator)
 }
 
+@available(macOS 10.15, *)
 public typealias ChildCoordinatorCollection = LazyMapSequence<LazyFilterSequence<LazyMapSequence<LazySequence<OrderedDictionary<IdentifiedHashableType<Coordinator>, WeakBox<Coordinator>>.Values>.Elements, Coordinator?>>, Coordinator>
 
 /// The `Coordinator` class is a base class for coordinator objects. It provides methods for managing child coordinators.
 @available(macOS 10.15, *)
 @MainActor
 open class Coordinator: CoordinatorEventDelegate {
+    struct RootViewControllerNotFound: LocalizedError {
+        var viewControllerCount: Int
 
+        var errorDescription: String? {
+            "No valid rootViewController found."
+        }
+        
+        var failureReason: String? {
+            if viewControllerCount == 0 {
+                "The rootViewController may have been accessed before the start(animated:) function was called, or no view controller was presented."
+            } else {
+                "All \(viewControllerCount) view controllers have been deallocated."
+            }
+        }
+        
+        var recoverySuggestion: String? {
+            "Ensure that the rootViewController is set correctly and that view controllers are not deallocated prematurely / the lifecycle of coordinator does not exceed the lifecycle of its view controllers."
+        }
+    }
+    
     /// A dictionary that stores the child coordinators.
     public private(set) final var _childCoordinators: OrderedDictionary<IdentifiedHashableType<Coordinator>, WeakBox<Coordinator>> = [:]
 
@@ -62,7 +82,13 @@ open class Coordinator: CoordinatorEventDelegate {
 
     /// The root view controller managed by this coordinator.
     open var rootViewController: PlatformViewController? {
-        viewControllers.first(where: { $0 != nil }) ?? nil
+        get throws {
+            guard let rootViewController = viewControllers.first(where: { $0 != nil }) else {
+                throw RootViewControllerNotFound(viewControllerCount: viewControllers.count)
+            }
+            
+            return rootViewController
+        }
     }
 
     /// The delegate that receives events related to the coordinator.

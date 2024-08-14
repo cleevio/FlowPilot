@@ -81,12 +81,12 @@ final class CoordinatorTests: XCTestCase {
     func testAssociatedViewController() async throws {
         let delegate = MockCoordinatorEventDelegate()
         
-        autoreleasepool {
+        try autoreleasepool {
             let viewController = PlatformViewController()
             let coordinator = Coordinator()
             coordinator.eventDelegate = delegate
 
-            XCTAssertEqual(coordinator.rootViewController, nil)
+            XCTAssertThrowsError(try coordinator.rootViewController)
             XCTAssertEqual(coordinator.viewControllers.count, 0)
             
             // Associate view controller with coordinator
@@ -94,7 +94,7 @@ final class CoordinatorTests: XCTestCase {
             
             // Verify view controller was associated with coordinator
             XCTAssertEqual(coordinator.viewControllers.count, 1)
-            XCTAssertEqual(coordinator.rootViewController, viewController)
+            XCTAssertEqual(try coordinator.rootViewController, viewController)
             
             XCTAssertFalse(delegate.onDeinitCalled)
         }
@@ -108,27 +108,27 @@ final class CoordinatorTests: XCTestCase {
     func testAssociatedMultipleViewControllers() async throws {
         let delegate = MockCoordinatorEventDelegate()
         
-        autoreleasepool {
+        try autoreleasepool {
             let viewController = PlatformViewController()
 
-            autoreleasepool {
+            try autoreleasepool {
                 let coordinator = Coordinator()
                 coordinator.eventDelegate = delegate
-                XCTAssertEqual(coordinator.rootViewController, nil)
+                XCTAssertThrowsError(try coordinator.rootViewController)
 
                 // Associate view controller with coordinator
                 coordinator.setAssociatedViewController(viewController)
                 // Verify view controller was associated with coordinator
                 XCTAssertEqual(coordinator.viewControllers.count, 1)
-                XCTAssertEqual(coordinator.rootViewController, viewController)
+                XCTAssertEqual(try coordinator.rootViewController, viewController)
                 
-                autoreleasepool {
+                try autoreleasepool {
                     let viewController2 = PlatformViewController()
                     // Associate view controller with coordinator
                     coordinator.setAssociatedViewController(viewController2)
                     // Verify view controller was associated with coordinator
                     XCTAssertEqual(coordinator.viewControllers.count, 2)
-                    XCTAssertEqual(coordinator.rootViewController, viewController)
+                    XCTAssertEqual(try coordinator.rootViewController, viewController)
                 }
                 
                 XCTAssertEqual(nil, coordinator.viewControllers[1], "ViewController1 should not be strongly held")
@@ -189,6 +189,35 @@ final class CoordinatorTests: XCTestCase {
         XCTAssertEqual(coordinator.childCoordinators.count, 2)
         XCTAssertTrue(coordinator.childCoordinators[0] === childCoordinator1)
         XCTAssertTrue(coordinator.childCoordinators[1] === childCoordinator2)
+    }
+
+    func testNoRootViewControllerThrowsError() async throws {
+        let coordinator = Coordinator()
+        XCTAssertThrowsError(try coordinator.rootViewController)
+    }
+
+    func testRootViewControllerReturnsViewController() async throws {
+        let coordinator = Coordinator()
+        let viewController = PlatformViewController()
+        coordinator.setAssociatedViewController(viewController)
+        XCTAssertNoThrow(try coordinator.rootViewController)
+    }
+
+    func testRootViewControllerReturnsFirstViewController() async throws {
+        let coordinator = Coordinator()
+        let viewController = PlatformViewController()
+        let viewController2 = PlatformViewController()
+        coordinator.setAssociatedViewController(viewController)
+        coordinator.setAssociatedViewController(viewController2)
+        XCTAssertTrue(try coordinator.rootViewController === viewController)
+    }
+
+    func testRootViewControllerReturnsFirstNonNilViewController() async throws {
+        let coordinator = Coordinator()
+        let viewController = PlatformViewController()
+        coordinator.setAssociatedViewController(PlatformViewController())
+        coordinator.setAssociatedViewController(viewController)
+        XCTAssertTrue(try coordinator.rootViewController === viewController)
     }
 }
 
