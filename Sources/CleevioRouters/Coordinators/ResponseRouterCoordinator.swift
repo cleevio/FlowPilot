@@ -46,7 +46,7 @@ open class ResponseHandler<Response> {
 }
 
 @MainActor
-protocol ResponseRoutingDelegate<Response>: AnyObject {
+public protocol ResponseRoutingDelegate<Response>: AnyObject {
     associatedtype Response
     func response(with response: Response)
 }
