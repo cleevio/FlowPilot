@@ -31,6 +31,24 @@ open class RouterCoordinator: Coordinator {
         super.init()
     }
 
+    @inlinable
+    public func coordinate<Response>(to coordinator: ResponseRouterCoordinator<Response>, animated: Bool = true)
+    -> ResponseHandler<Response>
+    {
+        let responseHandler = ResponseHandler<Response>()
+        
+        coordinator.onResponse = { result in
+            responseHandler.handleResult(result)
+        }
+        
+        super.coordinate(
+            to: coordinator,
+            animated: animated
+        )
+
+        return responseHandler
+    }
+
     /**
      Dismisses the coordinator by calling its delegate's `onDismiss` method.
      */
