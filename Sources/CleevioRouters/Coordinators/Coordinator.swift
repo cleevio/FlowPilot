@@ -81,9 +81,9 @@ open class Coordinator: CoordinatorEventDelegate {
     public private(set) final var viewControllers: WeakArray<PlatformViewController> = .init([])
 
     /// The root view controller managed by this coordinator.
-    open var rootViewController: PlatformViewController? {
+    open var rootViewController: PlatformViewController {
         get throws {
-            guard let rootViewController = viewControllers.first(where: { $0 != nil }) else {
+            guard let rootViewController = viewControllers.lazy.compactMap({ $0 }).first else {
                 throw RootViewControllerNotFound(viewControllerCount: viewControllers.count)
             }
             
