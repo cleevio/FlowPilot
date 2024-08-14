@@ -45,16 +45,22 @@ open class ResponseHandler<Response> {
     }
 }
 
+@MainActor
+protocol ResponseRoutingDelegate<Response>: AnyObject {
+    associatedtype Response
+    func response(with response: Response)
+}
+
 @available(macOS 10.15, *)
 @MainActor
-open class ResponseRouterCoordinator<Response>: RouterCoordinator {
+open class ResponseRouterCoordinator<Response>: RouterCoordinator, ResponseRoutingDelegate {
     public var onResponse: ((Result<Response, Error>) -> Void)?
 
     deinit {
         onResponse?(.failure(CancellationError()))
     }
 
-    final public func finish(response: Response) {
+    final public func response(with response: Response) {
         onResponse?(.success(response))
     }
 }
