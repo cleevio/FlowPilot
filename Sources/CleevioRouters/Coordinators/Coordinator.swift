@@ -211,7 +211,7 @@ extension Coordinator {
     @inlinable
     public func shouldAnimateTransition(preference: Bool) -> Bool {
         #if canImport(UIKit)
-        preference && (options.contains(.respectsReduceMotionDisabled) ? UIAccessibility.isReduceMotionEnabled : true)
+        preference && (options.contains(.respectsReduceMotionDisabled) ? !UIAccessibility.isReduceMotionEnabled : true)
         #else
         preference
         #endif
