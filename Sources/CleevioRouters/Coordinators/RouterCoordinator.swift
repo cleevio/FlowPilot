@@ -54,7 +54,7 @@ open class RouterCoordinator: Coordinator {
      */
     @inlinable
     open func dismiss(animated: Bool = true) {
-        router.dismiss(animated: animated)
+        router.dismiss(animated: shouldAnimateTransition(preference: animated))
     }
 
     /**

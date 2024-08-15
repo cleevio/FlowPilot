@@ -77,6 +77,21 @@ open class Coordinator: CoordinatorEventDelegate {
     /// The unique identifier for the coordinator.
     public private(set) var id = UUID()
 
+    #if canImport(UIKit)
+    final public var options: Options = .default
+
+    public struct Options: OptionSet {
+        public let rawValue: UInt8
+        
+        public init(rawValue: UInt8) {
+            self.rawValue = rawValue
+        }
+
+        public static let respectsReduceMotionDisabled = Self(rawValue: 1 << 0)
+        public static let `default`: Self = [.respectsReduceMotionDisabled]
+    }
+    #endif
+    
     /// The view controllers that this coordinator manages. The lifetime of this `Coordinator` object is tied to the lifetime of the view controllers.
     public private(set) final var viewControllers: WeakArray<PlatformViewController> = .init([])
 
@@ -174,7 +189,7 @@ open class Coordinator: CoordinatorEventDelegate {
     @inlinable
     open func coordinate(to coordinator: some Coordinator, animated: Bool = true) {
         onCoordinationStarted(of: coordinator)
-        coordinator.start(animated: animated)
+        coordinator.start(animated: shouldAnimateTransition(preference: animated))
         coordinator.eventDelegate = self
     }
 
@@ -188,5 +203,17 @@ open class Coordinator: CoordinatorEventDelegate {
 
     open func onCoordinationStarted(of coordinator: some Coordinator) {
         _childCoordinators[type(of: coordinator), coordinator.identifier] = WeakBox(coordinator)
+    }
+}
+
+@available(macOS 10.15, *)
+extension Coordinator {
+    @inlinable
+    public func shouldAnimateTransition(preference: Bool) -> Bool {
+        #if canImport(UIKit)
+        preference && (options.contains(.respectsReduceMotionDisabled) ? UIAccessibility.isReduceMotionEnabled : true)
+        #else
+        preference
+        #endif
     }
 }
