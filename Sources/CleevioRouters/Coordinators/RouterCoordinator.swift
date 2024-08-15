@@ -66,6 +66,6 @@ open class RouterCoordinator: Coordinator {
     @inlinable
     open func present(_ viewController: some PlatformViewController, animated: Bool) {
         setAssociatedViewController(viewController)
-        router.present(viewController, animated: animated)
+        router.present(viewController, animated: shouldAnimateTransition(preference: animated))
     }
 }
