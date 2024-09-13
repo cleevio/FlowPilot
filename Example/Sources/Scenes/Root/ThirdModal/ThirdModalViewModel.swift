@@ -1,14 +1,14 @@
 //
-//  SecondVIewModel.swift
+//  ThirdModalViewModel.swift
 //  CleevioCoordinators
 //
-//  Created by Lukáš Valenta on 04.04.2023.
+//  Created by Tomáš Šmerda on 22.08.2024.
 //
 
 import Foundation
 import Combine
 
-final class SecondViewModel: ObservableObject {
+final class ThirdModalViewModel: ObservableObject {
     var route: PassthroughSubject<Route, Never> = .init()
     
     enum Route {

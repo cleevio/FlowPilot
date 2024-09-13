@@ -54,7 +54,7 @@ open class RouterCoordinator: Coordinator {
      */
     @inlinable
     open func dismiss(animated: Bool = true) {
-        router.dismiss(animated: shouldAnimateTransition(preference: animated))
+        router.dismiss(animated: shouldAnimateTransition(preference: animated, respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)))
     }
 
     /**
@@ -66,6 +66,6 @@ open class RouterCoordinator: Coordinator {
     @inlinable
     open func present(_ viewController: some PlatformViewController, animated: Bool) {
         setAssociatedViewController(viewController)
-        router.present(viewController, animated: shouldAnimateTransition(preference: animated))
+        router.present(viewController, animated: shouldAnimateTransition(preference: animated, respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)))
     }
 }

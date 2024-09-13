@@ -21,6 +21,9 @@ struct RootView: View {
             Button("Show second view") {
                 viewModel.route.send(.showSecond)
             }
+            Button("Show modal view") {
+                viewModel.route.send(.showThirdModal)
+            }
             Button("Dismiss") {
                 viewModel.route.send(.dismiss)
             }

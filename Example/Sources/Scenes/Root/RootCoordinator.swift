@@ -32,6 +32,8 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
                     self?.showFirstCoordinator()
                 case .showSecond:
                     self?.showSecondCoordinator()
+                case .showThirdModal:
+                    self?.showThirdModalCoordinator()
                 case .dismiss:
                     self?.dismiss()
                 }
@@ -48,6 +50,11 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
 
     func showSecondCoordinator() {
         let coordinator = SecondCoordinator(router: router)
+        coordinate(to: coordinator)
+    }
+    
+    func showThirdModalCoordinator() {
+        let coordinator = ThirdModalCoordinator(router: router)
         coordinate(to: coordinator)
     }
 }

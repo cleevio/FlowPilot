@@ -30,26 +30,28 @@ public struct UISheetPresentationControllerOptions {
 open class ModalConfiguration {
     final public let onDismiss: (() -> ())?
     final public let dismissImage: DismissImage?
-
+    final public let respectsUserReduceMotion: Bool?
+    
     public init(onDismiss: (() -> ())? = nil,
-                dismissImage: ModalConfiguration.DismissImage? = nil) {
+                dismissImage: ModalConfiguration.DismissImage? = nil,
+                respectsUserReduceMotion: Bool = true) {
         self.onDismiss = onDismiss
         self.dismissImage = dismissImage
+        self.respectsUserReduceMotion = respectsUserReduceMotion
     }
-
+    
     public struct DismissImage {
-
         public let image: UIImage?
         public let position: Position
-        
-        public init(image: UIImage? = nil, position: Position) {
-            self.image = image
-            self.position = position
-        }
         
         public enum Position {
             case navigationBarLeading
             case navigationBarTrailing
+        }
+        
+        public init(image: UIImage? = nil, position: Position) {
+            self.image = image
+            self.position = position
         }
     }
 }
@@ -58,33 +60,38 @@ open class ModalConfiguration {
 @MainActor
 final public class ModalSheetConfiguration: ModalConfiguration {
     public let sheetPresentationOptions: UISheetPresentationControllerOptions?
-
+    
     public init(onDismiss: (() -> ())? = nil,
-        dismissImage: ModalConfiguration.DismissImage? = nil,
-        sheetPresentationOptions: UISheetPresentationControllerOptions? = nil ) {
+                dismissImage: ModalConfiguration.DismissImage? = nil,
+                sheetPresentationOptions: UISheetPresentationControllerOptions? = nil,
+                respectsUserReduceMotion: Bool = true) {
         self.sheetPresentationOptions = sheetPresentationOptions
-        super.init(onDismiss: onDismiss, dismissImage: dismissImage)
+        super.init(onDismiss: onDismiss, dismissImage: dismissImage, respectsUserReduceMotion: respectsUserReduceMotion)
     }
 }
 
 @MainActor
 open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAdaptivePresentationControllerDelegate, DismissHandler, Router {
-
+    
     // MARK: - Instance Properties
-
+    
     public unowned let parentViewController: UIViewController
     public let dismissPublisher: ActionSubject<Void> = .init()
-
+    
     public let presentationStyle: UIModalPresentationStyle
     public let transitionStyle: UIModalTransitionStyle?
     public let configuration: ModalConfiguration?
-
+    
+#if canImport(UIKit)
+    final public var options: Coordinator.Options = .default
+#endif
+    
     // MARK: - Object Lifecycle
-
+    
     public init(parentViewController: UIViewController,
-        presentationStyle: UIModalPresentationStyle = .automatic,
-        transitionStyle: UIModalTransitionStyle? = nil,
-        configuration: ModalConfiguration? = nil) {
+                presentationStyle: UIModalPresentationStyle = .automatic,
+                transitionStyle: UIModalTransitionStyle? = nil,
+                configuration: ModalConfiguration? = nil) {
         self.parentViewController = parentViewController
         self.presentationStyle = presentationStyle
         self.transitionStyle = transitionStyle
@@ -104,13 +111,13 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         sheetController.selectedDetentIdentifier = sheetPresentationOptions.selectedDetentIdentifier
         sheetController.prefersGrabberVisible = sheetPresentationOptions.prefersGrabberVisible
     }
-
-// MARK: - Router
-   
+    
+    // MARK: - Router
+    
     open func present(_ viewController: UIViewController, animated: Bool) {
         viewController.modalPresentationStyle = presentationStyle
         viewController.presentationController?.delegate = self
-
+        
         if let transitionStyle = transitionStyle {
             viewController.modalTransitionStyle = transitionStyle
         }
@@ -118,7 +125,7 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         if #available(iOS 15.0, *) {
             setupSheetControllerIfNecessary(sheetController: viewController) // Navigation for NavigationRouter
         }
-
+        
         parentViewController.definesPresentationContext = true
         parentViewController.present(viewController,
                                      animated: animated,
@@ -126,7 +133,7 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
         
         setDismissImage(on: viewController)
     }
-
+    
     open func setDismissImage(on viewController: UIViewController) {
         if let dismissImage = configuration?.dismissImage {
             switch dismissImage.position {
@@ -137,23 +144,29 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
             }
         }
     }
-
+    
     open func dismiss(animated: Bool, completion: (() -> Void)?) {
         parentViewController.dismiss(animated: animated, completion: { [weak self] in
             self?.configuration?.onDismiss?()
             completion?()
         })
     }
-
+    
     @objc open func dismissRouterObjC() {
-        dismiss(animated: true, completion: nil)
+        dismiss(
+            animated: shouldAnimateTransition(
+                preference: configuration?.respectsUserReduceMotion ?? true,
+                respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)
+            ),
+            completion: nil
+        )
     }
-
+    
     @inlinable
     open func dismissRouter(animated: Bool, completion: (() -> Void)?) {
         dismiss(animated: animated, completion: completion)
     }
-
+    
     open func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         dismissPublisher.send()
         dismissPublisher.send(completion: .finished)

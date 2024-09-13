@@ -1,5 +1,5 @@
 //
-//  SecondVIewModel.swift
+//  SecondViewModel.swift
 //  CleevioCoordinators
 //
 //  Created by Lukáš Valenta on 04.04.2023.
