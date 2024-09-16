@@ -6,13 +6,13 @@
 //
 
 #if os(iOS)
-import CleevioRouters
+import FlowPilot
 import FloatingPanel
 import UIKit
 import CleevioCore
 
 @MainActor
-open class FloatingPanelRouter: CleevioRouters.Router {
+open class FloatingPanelRouter: FlowPilot.Router {
     public let parentViewController: UIViewController
     public let floatingPanelController: FloatingPanelController
         

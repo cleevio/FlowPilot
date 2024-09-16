@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 import CleevioCore
-import CleevioRouters
+import FlowPilot
 
 @available(*, deprecated, message: "It is expected to use new coordinators from now on")
 public enum RouterResult<T> {

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import CleevioRouters
+import FlowPilot
 
 @MainActor
 final class CoordinatorTests: XCTestCase {
@@ -226,16 +226,16 @@ class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
     var onDeinitCalled = false
     var onCoordinationStartedCalled = false
 
-    func onDeinit<T>(of type: T.Type, identifier: String?) where T : CleevioRouters.Coordinator {
+    func onDeinit<T>(of type: T.Type, identifier: String?) where T : FlowPilot.Coordinator {
         onDeinitCalled = true
     }
 
-    func onCoordinationStarted(of coordinator: some CleevioRouters.Coordinator) {
+    func onCoordinationStarted(of coordinator: some FlowPilot.Coordinator) {
         onCoordinationStartedCalled = true
     }
 }
 
-class Coordinator: CleevioRouters.Coordinator {
+class Coordinator: FlowPilot.Coordinator {
     override func start(animated: Bool) {
         
     }

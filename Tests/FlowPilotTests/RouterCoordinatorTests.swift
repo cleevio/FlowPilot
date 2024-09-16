@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import CleevioRouters
+import FlowPilot
 import CleevioCore
 
 @MainActor
@@ -140,7 +140,7 @@ class MockRouter: Router {
 
 class MockRouterEventDelegate: MockCoordinatorEventDelegate { }
 
-open class RouterCoordinator: CleevioRouters.RouterCoordinator {
+open class RouterCoordinator: FlowPilot.RouterCoordinator {
     override open func start(animated: Bool = true) {
         
     }

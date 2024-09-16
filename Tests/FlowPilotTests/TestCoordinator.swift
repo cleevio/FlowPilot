@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CleevioRouters
+import FlowPilot
 
 @MainActor
 protocol SecondCoordinatorDelegate: AnyObject {

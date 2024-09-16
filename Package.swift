@@ -13,46 +13,45 @@ let swiftSettings: [SwiftSetting] = [
 ]
 
 let package = Package(
-    name: "CleevioRouters",
+    name: "FlowPilot",
     platforms: [
         .iOS(.v13)
     ],
     products: [
         .library(
-            name: "CleevioRouters",
-            targets: ["CleevioRouters"]),
-        .library(name: "CleevioFloatingRouters", targets: ["CleevioFloatingRouters"]),
-        .library(name: "LegacyCoordinators", targets: ["LegacyCoordinators"])
+            name: "FlowPilot",
+            targets: ["FlowPilot"]),
+        .library(name: "FlowPilotFloatingRouters", targets: ["FlowPilotFloatingRouters"]),
+        .library(name: "FlowPilotLegacyCombineCoordinators", targets: ["FlowPilotLegacyCombineCoordinators"])
     ],
     dependencies: [
-//        .package(url: "git@github.com:cleevio/CleevioCore-iOS.git", branch: "feature/new-coordinators"), //.init(2, 0, 0, prereleaseIdentifiers: ["dev3"])
-        .package(url: "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore", .upToNextMajor(from: Version(2,0,0))),
+        .package(url: "https://github.com/cleevio/CleevioCore.git", .upToNextMajor(from: Version(2,0,0))),
         .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: Version(2,6,1))),
         .package(url: "https://github.com/apple/swift-collections", .upToNextMajor(from: Version(1,0,0)))
     ],
     targets: [
         .target(
-            name: "CleevioRouters",
+            name: "FlowPilot",
             dependencies: [
                 .product(name: "CleevioCore", package: "CleevioCore"),
                 .product(name: "OrderedCollections", package: "swift-collections")
             ],
             swiftSettings: swiftSettings
         ),
-        .target(name: "CleevioFloatingRouters", dependencies: [
-            "CleevioRouters",
+        .target(name: "FlowPilotFloatingRouters", dependencies: [
+            "FlowPilot",
             .product(name: "FloatingPanel", package: "FloatingPanel", condition: .when(platforms: [.iOS, .macCatalyst]))
         ],
                 swiftSettings: swiftSettings
                ),
-        .target(name: "LegacyCoordinators", dependencies: [
-            "CleevioRouters",
+        .target(name: "FlowPilotLegacyCombineCoordinators", dependencies: [
+            "FlowPilot",
             .product(name: "CleevioCore", package: "CleevioCore")
         ]
                ),
         .testTarget(
-            name: "CleevioRoutersTests",
-            dependencies: ["CleevioRouters"],
+            name: "FlowPilotTests",
+            dependencies: ["FlowPilot"],
             swiftSettings: swiftSettings
         ),
     ]

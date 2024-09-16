@@ -64,13 +64,13 @@ public protocol NavigationRouterWrappedRouter: Router {
     @MainActor var navigationRouterWrapper: NavigationRouterWrapper { get }
 }
 
-extension CleevioRouters.ModalNavigationRouter: NavigationRouterWrappedRouter { }
-extension CleevioRouters.WindowNavigationRouter: NavigationRouterWrappedRouter { }
+extension FlowPilot.ModalNavigationRouter: NavigationRouterWrappedRouter { }
+extension FlowPilot.WindowNavigationRouter: NavigationRouterWrappedRouter { }
 
-extension CleevioRouters.NavigationRouter: NavigationRouterWrappedRouter {
+extension FlowPilot.NavigationRouter: NavigationRouterWrappedRouter {
     /// Gets the `NavigationRouterWrapper` instance associated with this navigation router.
     @inlinable
-    public var navigationRouterWrapper: CleevioRouters.NavigationRouterWrapper {
+    public var navigationRouterWrapper: FlowPilot.NavigationRouterWrapper {
         .init(navigationRouter: self)
     }
 }

@@ -189,7 +189,11 @@ open class Coordinator: CoordinatorEventDelegate {
     @inlinable
     open func coordinate(to coordinator: some Coordinator, animated: Bool = true) {
         onCoordinationStarted(of: coordinator)
+        #if canImport(UIkit)
         coordinator.start(animated: shouldAnimateTransition(preference: animated, respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)))
+        #else
+        coordinator.start(animated: animated)
+        #endif
         coordinator.eventDelegate = self
     }
     

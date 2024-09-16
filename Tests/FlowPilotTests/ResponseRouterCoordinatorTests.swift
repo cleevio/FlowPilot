@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import CleevioRouters
+import FlowPilot
 import CleevioCore
 
 @MainActor
@@ -21,7 +21,7 @@ final class ResponseRouterCoordinatorTests: XCTestCase {
 
         Task.detached {
             try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 10 )
-            await coordinator.finish(response: true)
+            await coordinator.response(with: true)
         }
 
         let response = try await routerCoordinator.coordinate(to: coordinator).response()
@@ -29,7 +29,7 @@ final class ResponseRouterCoordinatorTests: XCTestCase {
     }
 }
 
-final class ResponseRouterCoordinator<Response>: CleevioRouters.ResponseRouterCoordinator<Response> {
+final class ResponseRouterCoordinator<Response>: FlowPilot.ResponseRouterCoordinator<Response> {
     override func start(animated: Bool = true) {
         
     }

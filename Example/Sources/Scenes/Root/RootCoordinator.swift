@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import CleevioCore
-import CleevioRouters
+import FlowPilot
 
 @MainActor
 final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoordinator {

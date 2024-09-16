@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import CleevioRouters
+import FlowPilot
 import CleevioCore
 
-typealias Router = CleevioRouters.Router
+typealias Router = FlowPilot.Router
 
 @MainActor
 class BaseCoordinator: RouterCoordinator {

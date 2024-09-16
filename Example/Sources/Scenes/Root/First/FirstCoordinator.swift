@@ -7,7 +7,7 @@
 
 import Foundation
 import CleevioCore
-import CleevioRouters
+import FlowPilot
 
 protocol FirstCoordinatorDelegate: AnyObject {
     @MainActor func showSecondTap()
