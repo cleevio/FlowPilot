@@ -154,11 +154,15 @@ open class ModalRouter: NSObject, UIPopoverPresentationControllerDelegate, UIAda
     
     @objc open func dismissRouterObjC() {
         dismiss(
-            animated: shouldAnimateTransition(
-                preference: configuration?.respectsUserReduceMotion ?? true,
-                respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)
-            ),
+            animated: shouldAnimateDismissRouter(),
             completion: nil
+        )
+    }
+    
+    public func shouldAnimateDismissRouter() -> Bool {
+        shouldAnimateTransition(
+            preference: configuration?.respectsUserReduceMotion ?? true,
+            respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)
         )
     }
     

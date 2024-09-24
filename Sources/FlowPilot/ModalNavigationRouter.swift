@@ -48,7 +48,7 @@ open class ModalNavigationRouter: ModalRouter {
     }
     
     @objc open override func dismissRouterObjC() {
-        perform(.dismiss, animated: true)
+        perform(.dismiss, animated: shouldAnimateDismissRouter())
     }
     
     open override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
