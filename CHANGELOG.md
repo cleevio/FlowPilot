@@ -1,5 +1,5 @@
 # CleevioRouters Changelog
 
-## [2.4.1] - 2024-09-13
+## [3.0.1] - 2024-09-24
 ### Added
 - Support for reduce motion.
