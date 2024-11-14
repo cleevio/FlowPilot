@@ -19,50 +19,47 @@ final class RootCoordinator<RouterType: NavigationRouterWrappedRouter>: BaseCoor
         super.init(router: router)
     }
 
-    override func start(animated: Bool) {
+    override func start(animated: Bool = true) {
         let viewModel = RootViewModel()
+        viewModel.routingDelegate = self
         let viewController = BaseHostingController(rootView: RootView(viewModel: viewModel))
         
         present(viewController, animated: animated)
-        
-        viewModel.route
-            .sink(receiveValue: { [weak self] route in
-                switch route {
-                case .showFirst:
-                    self?.showFirstCoordinator()
-                case .showSecond:
-                    self?.showSecondCoordinator()
-                case .showThirdModal:
-                    self?.showThirdModalCoordinator()
-                case .dismiss:
-                    self?.dismiss()
-                }
-            })
-            .store(in: cancelBag)
     }
 
-    func showFirstCoordinator() {
+    func showFirst() {
         let coordinator = FirstCoordinator(count: 0, router: router)
         
         coordinate(to: coordinator)
         coordinator.delegate = self
     }
 
-    func showSecondCoordinator() {
+    func showSecond() {
         let coordinator = SecondCoordinator(router: router)
         coordinate(to: coordinator)
     }
     
-    func showThirdModalCoordinator() {
+    func showThirdModal() {
         let coordinator = ThirdModalCoordinator(router: router)
         coordinate(to: coordinator)
     }
 }
 
-extension RootCoordinator: FirstCoordinatorDelegate {
-    func showSecondTap() {
+extension RootCoordinator: FirstCoordinatorDelegate, RootViewModelRoutingDelegate {
+    func valueSelection(initial: Bool) async throws -> Bool {
+        defer {
+            childCoordinator(of: ResponseParametersCoordinator.self)?.dismiss()
+        }
+        return try await coordinate(to: ResponseParametersCoordinator(parameters: initial, router: router)).response()
+    }
+    
+    func dismiss() async {
+        self.dismiss(animated: true)
+    }
+    
+    func showSecondView() {
         var viewControllers: [UIViewController] = [navigationRouter.navigationRouterWrapper.navigationRouter.navigationController.viewControllers.first!]
-        showSecondCoordinator()
+        showSecond()
 
         viewControllers.append(navigationRouter.navigationRouterWrapper.navigationRouter.navigationController.viewControllers.last!)
 

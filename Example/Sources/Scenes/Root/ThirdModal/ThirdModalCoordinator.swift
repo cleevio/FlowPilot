@@ -10,22 +10,18 @@ import CleevioCore
 import FlowPilot
 
 @MainActor
-final class ThirdModalCoordinator: ModalNavigationRouter {
-    
-    override func start(animated: Bool) {
+final class ThirdModalCoordinator: BaseCoordinator {
+    override func start(animated: Bool = true) {
         let viewModel = ThirdModalViewModel()
+        viewModel.routingDelegate = self
         let viewController = BaseHostingController(rootView: ThirdModalView(viewModel: viewModel))
         
         present(viewController, animated: animated)
-        
-        viewModel.route
-            .sink(receiveValue: { [weak self] route in
-                guard let self else { return }
-                switch route {
-                case .dismiss:
-                    self.dismiss()
-                }
-            })
-            .store(in: cancelBag)
+    }
+}
+
+extension ThirdModalCoordinator: ThirdModalViewModelRoutingDelegate {
+    func dismiss() async {
+        self.dismiss(animated: true)
     }
 }

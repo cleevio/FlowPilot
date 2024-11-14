@@ -3,11 +3,20 @@
     "pins": [
       {
         "package": "CleevioCore",
-        "repositoryURL": "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore",
+        "repositoryURL": "https://github.com/cleevio/CleevioCore.git",
         "state": {
           "branch": null,
-          "revision": "176a1ac517a001a3fc31a75f656bb8c1ed11e854",
-          "version": "2.0.0"
+          "revision": "593b5d1011ad0aa6963ea2d8bf2ddc5e59caa917",
+          "version": "2.1.7"
+        }
+      },
+      {
+        "package": "CleevioUI",
+        "repositoryURL": "https://github.com/cleevio/CleevioUI.git",
+        "state": {
+          "branch": null,
+          "revision": "ff86db5f6e73f99ece752712c252effa10f4e205",
+          "version": "3.0.5"
         }
       },
       {

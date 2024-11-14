@@ -8,10 +8,21 @@
 import Foundation
 import Combine
 
+protocol ThirdModalViewModelRoutingDelegate: AnyObject {
+    func dismiss() async
+}
+
 final class ThirdModalViewModel: ObservableObject {
-    var route: PassthroughSubject<Route, Never> = .init()
-    
-    enum Route {
+    weak var routingDelegate: ThirdModalViewModelRoutingDelegate?
+
+    enum Action {
         case dismiss
+    }
+
+    func send(action: Action) async {
+        switch action {
+        case .dismiss:
+            await routingDelegate?.dismiss()
+        }
     }
 }

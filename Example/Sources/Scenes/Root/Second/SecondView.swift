@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FlowPilot
+import CleevioUI
 
 struct SecondView: View {
     @ObservedObject var viewModel: SecondViewModel
@@ -14,8 +15,8 @@ struct SecondView: View {
     var body: some View {
         ScrollView {
             Text("Hello, second coordinator World!")
-            Button("Dismiss") {
-                viewModel.route.send(.dismiss)
+            AsyncButton("Dismiss") {
+                await viewModel.send(action: .dismiss)
             }
         }
     }

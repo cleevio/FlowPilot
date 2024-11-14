@@ -10,7 +10,7 @@ import CleevioCore
 import FlowPilot
 
 protocol FirstCoordinatorDelegate: AnyObject {
-    @MainActor func showSecondTap()
+    func showSecondView() async throws
 }
 
 @MainActor
@@ -24,25 +24,12 @@ final class FirstCoordinator: BaseCoordinator {
         super.init(router: router)
     }
     
-    override func start(animated: Bool) {
+    override func start(animated: Bool = true) {
         let viewModel = FirstViewModel(count: counter)
+        viewModel.routingDelegate = self
         let viewController = BaseHostingController(rootView: FirstView(viewModel: viewModel))
         
         present(viewController, animated: animated)
-        
-        viewModel.route
-            .sink(receiveValue: { [weak self] route in
-                guard let self else { return }
-                switch route {
-                case .dismiss:
-                    self.dismiss()
-                case .continueLoop:
-                    self.showFirstCoordinator()
-                case .secondView:
-                    self.delegate?.showSecondTap()
-                }
-            })
-            .store(in: cancelBag)
     }
 
     func showFirstCoordinator() {
@@ -52,8 +39,16 @@ final class FirstCoordinator: BaseCoordinator {
     }
 }
 
-extension FirstCoordinator: FirstCoordinatorDelegate {
-    func showSecondTap() {
+extension FirstCoordinator: FirstCoordinatorDelegate, FirstViewModelRoutingDelegate {
+    func dismiss() {
+        self.dismiss(animated: true)
+    }
+    
+    func continueLoop() async throws {
+        showFirstCoordinator()
+    }
+    
+    func showSecondView() {
         guard let viewController = viewControllers.first??.navigationController else { return }
         let coordinator = SecondCoordinator(router: ModalRouter(parentViewController: viewController))
         
