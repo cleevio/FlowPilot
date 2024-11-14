@@ -91,7 +91,7 @@ open class CoordinatorPreviewCoordinator: RouterCoordinator {
     }
     
     @inlinable
-    open override func start(animated: Bool) {
+    open override func start(animated: Bool = true) {
         let view = Text(type.description).preferredColorScheme(.dark)
         let viewController = BaseUIHostingController(rootView: view)
         
