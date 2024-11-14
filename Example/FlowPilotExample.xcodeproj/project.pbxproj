@@ -3,55 +3,40 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B22DD9C129F3E33600B90789 /* FirstVIewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22DD9BE29F3E33600B90789 /* FirstVIewModel.swift */; };
-		B22DD9C229F3E33600B90789 /* FirstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22DD9BF29F3E33600B90789 /* FirstView.swift */; };
-		B22DD9C329F3E33600B90789 /* FirstCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22DD9C029F3E33600B90789 /* FirstCoordinator.swift */; };
-		B2DF64DF29DCB9F0004A2864 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF64DE29DCB9F0004A2864 /* AppDelegate.swift */; };
-		B2DF64E129DCB9F0004A2864 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF64E029DCB9F0004A2864 /* SceneDelegate.swift */; };
-		B2DF64E829DCB9F1004A2864 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2DF64E729DCB9F1004A2864 /* Assets.xcassets */; };
-		B2DF64F829DCBBA4004A2864 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF64F729DCBBA4004A2864 /* RootCoordinator.swift */; };
-		B2DF64FA29DCBBAC004A2864 /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF64F929DCBBAC004A2864 /* BaseCoordinator.swift */; };
-		B2DF64FC29DCBC2B004A2864 /* BaseHostingConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF64FB29DCBC2B004A2864 /* BaseHostingConfiguration.swift */; };
-		B2DF64FE29DCBC90004A2864 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF64FD29DCBC90004A2864 /* RootView.swift */; };
-		B2DF650029DCBF8C004A2864 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF64FF29DCBF8C004A2864 /* RootViewModel.swift */; };
-		B2DF650329DCC17F004A2864 /* SecondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF650229DCC17F004A2864 /* SecondView.swift */; };
-		B2DF650529DCC187004A2864 /* SecondCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF650429DCC187004A2864 /* SecondCoordinator.swift */; };
-		B2DF650729DCC1C5004A2864 /* SecondVIewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF650629DCC1C5004A2864 /* SecondVIewModel.swift */; };
-		B2FC997929F3E08D00E9BF91 /* CleevioCore in Frameworks */ = {isa = PBXBuildFile; productRef = B2FC997829F3E08D00E9BF91 /* CleevioCore */; };
-		B2FC997D29F3E16E00E9BF91 /* CleevioRouters in Frameworks */ = {isa = PBXBuildFile; productRef = B2FC997C29F3E16E00E9BF91 /* CleevioRouters */; };
+		B2493A612CE2CF9F00E94B2C /* FlowPilot in Frameworks */ = {isa = PBXBuildFile; productRef = B2493A602CE2CF9F00E94B2C /* FlowPilot */; };
+		B2D83DE12CE6A7BC007D9A7C /* CleevioUI in Frameworks */ = {isa = PBXBuildFile; productRef = B2D83DE02CE6A7BC007D9A7C /* CleevioUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B22DD9BD29F3E2E300B90789 /* CleevioRouters */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CleevioRouters; path = ..; sourceTree = "<group>"; };
-		B22DD9BE29F3E33600B90789 /* FirstVIewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstVIewModel.swift; sourceTree = "<group>"; };
-		B22DD9BF29F3E33600B90789 /* FirstView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstView.swift; sourceTree = "<group>"; };
-		B22DD9C029F3E33600B90789 /* FirstCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstCoordinator.swift; sourceTree = "<group>"; };
-		B2DF64DB29DCB9F0004A2864 /* CleevioCoordinators.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CleevioCoordinators.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B2DF64DE29DCB9F0004A2864 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B2DF64E029DCB9F0004A2864 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B2DF64E729DCB9F1004A2864 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B2DF64EC29DCB9F1004A2864 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B2DF64F729DCBBA4004A2864 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
-		B2DF64F929DCBBAC004A2864 /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
-		B2DF64FB29DCBC2B004A2864 /* BaseHostingConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseHostingConfiguration.swift; sourceTree = "<group>"; };
-		B2DF64FD29DCBC90004A2864 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		B2DF64FF29DCBF8C004A2864 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
-		B2DF650229DCC17F004A2864 /* SecondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondView.swift; sourceTree = "<group>"; };
-		B2DF650429DCC187004A2864 /* SecondCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondCoordinator.swift; sourceTree = "<group>"; };
-		B2DF650629DCC1C5004A2864 /* SecondVIewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondVIewModel.swift; sourceTree = "<group>"; };
+		B2DF64DB29DCB9F0004A2864 /* FlowPilotExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowPilotExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B2493AAB2CE2D00700E94B2C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B2DF64DA29DCB9F0004A2864 /* FlowPilotExample */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B2493A982CE2D00700E94B2C /* Sources */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (B2493AAB2CE2D00700E94B2C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Sources; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B2DF64D829DCB9F0004A2864 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2FC997929F3E08D00E9BF91 /* CleevioCore in Frameworks */,
-				B2FC997D29F3E16E00E9BF91 /* CleevioRouters in Frameworks */,
+				B2D83DE12CE6A7BC007D9A7C /* CleevioUI in Frameworks */,
+				B2493A612CE2CF9F00E94B2C /* FlowPilot in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +47,7 @@
 			isa = PBXGroup;
 			children = (
 				B22DD9BD29F3E2E300B90789 /* CleevioRouters */,
-				B2DF64DD29DCB9F0004A2864 /* Sources */,
+				B2493A982CE2D00700E94B2C /* Sources */,
 				B2DF64DC29DCB9F0004A2864 /* Products */,
 				B2FC997B29F3E16E00E9BF91 /* Frameworks */,
 			);
@@ -71,63 +56,9 @@
 		B2DF64DC29DCB9F0004A2864 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B2DF64DB29DCB9F0004A2864 /* CleevioCoordinators.app */,
+				B2DF64DB29DCB9F0004A2864 /* FlowPilotExample.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		B2DF64DD29DCB9F0004A2864 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				B2DF64F529DCBB93004A2864 /* Scenes */,
-				B2DF64DE29DCB9F0004A2864 /* AppDelegate.swift */,
-				B2DF64E029DCB9F0004A2864 /* SceneDelegate.swift */,
-				B2DF64F929DCBBAC004A2864 /* BaseCoordinator.swift */,
-				B2DF64E729DCB9F1004A2864 /* Assets.xcassets */,
-				B2DF64EC29DCB9F1004A2864 /* Info.plist */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		B2DF64F529DCBB93004A2864 /* Scenes */ = {
-			isa = PBXGroup;
-			children = (
-				B2DF64F629DCBB9A004A2864 /* Root */,
-				B2DF64FB29DCBC2B004A2864 /* BaseHostingConfiguration.swift */,
-			);
-			path = Scenes;
-			sourceTree = "<group>";
-		};
-		B2DF64F629DCBB9A004A2864 /* Root */ = {
-			isa = PBXGroup;
-			children = (
-				B2DF650829DCC4F6004A2864 /* First */,
-				B2DF650129DCC16C004A2864 /* Second */,
-				B2DF64F729DCBBA4004A2864 /* RootCoordinator.swift */,
-				B2DF64FD29DCBC90004A2864 /* RootView.swift */,
-				B2DF64FF29DCBF8C004A2864 /* RootViewModel.swift */,
-			);
-			path = Root;
-			sourceTree = "<group>";
-		};
-		B2DF650129DCC16C004A2864 /* Second */ = {
-			isa = PBXGroup;
-			children = (
-				B2DF650229DCC17F004A2864 /* SecondView.swift */,
-				B2DF650429DCC187004A2864 /* SecondCoordinator.swift */,
-				B2DF650629DCC1C5004A2864 /* SecondVIewModel.swift */,
-			);
-			path = Second;
-			sourceTree = "<group>";
-		};
-		B2DF650829DCC4F6004A2864 /* First */ = {
-			isa = PBXGroup;
-			children = (
-				B22DD9C029F3E33600B90789 /* FirstCoordinator.swift */,
-				B22DD9BF29F3E33600B90789 /* FirstView.swift */,
-				B22DD9BE29F3E33600B90789 /* FirstVIewModel.swift */,
-			);
-			path = First;
 			sourceTree = "<group>";
 		};
 		B2FC997B29F3E16E00E9BF91 /* Frameworks */ = {
@@ -140,9 +71,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B2DF64DA29DCB9F0004A2864 /* CleevioCoordinators */ = {
+		B2DF64DA29DCB9F0004A2864 /* FlowPilotExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B2DF64EF29DCB9F1004A2864 /* Build configuration list for PBXNativeTarget "CleevioCoordinators" */;
+			buildConfigurationList = B2DF64EF29DCB9F1004A2864 /* Build configuration list for PBXNativeTarget "FlowPilotExample" */;
 			buildPhases = (
 				B2DF64D729DCB9F0004A2864 /* Sources */,
 				B2DF64D829DCB9F0004A2864 /* Frameworks */,
@@ -152,13 +83,16 @@
 			);
 			dependencies = (
 			);
-			name = CleevioCoordinators;
+			fileSystemSynchronizedGroups = (
+				B2493A982CE2D00700E94B2C /* Sources */,
+			);
+			name = FlowPilotExample;
 			packageProductDependencies = (
-				B2FC997829F3E08D00E9BF91 /* CleevioCore */,
-				B2FC997C29F3E16E00E9BF91 /* CleevioRouters */,
+				B2493A602CE2CF9F00E94B2C /* FlowPilot */,
+				B2D83DE02CE6A7BC007D9A7C /* CleevioUI */,
 			);
 			productName = "CleevioCoordinators 2.0";
-			productReference = B2DF64DB29DCB9F0004A2864 /* CleevioCoordinators.app */;
+			productReference = B2DF64DB29DCB9F0004A2864 /* FlowPilotExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -169,14 +103,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					B2DF64DA29DCB9F0004A2864 = {
 						CreatedOnToolsVersion = 14.3;
 					};
 				};
 			};
-			buildConfigurationList = B2DF64D629DCB9F0004A2864 /* Build configuration list for PBXProject "CleevioCoordinators" */;
+			buildConfigurationList = B2DF64D629DCB9F0004A2864 /* Build configuration list for PBXProject "FlowPilotExample" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -186,13 +120,13 @@
 			);
 			mainGroup = B2DF64D229DCB9F0004A2864;
 			packageReferences = (
-				B2FC997729F3E08D00E9BF91 /* XCRemoteSwiftPackageReference "cleeviocore" */,
+				B2D83DDF2CE6A7BC007D9A7C /* XCRemoteSwiftPackageReference "CleevioUI" */,
 			);
 			productRefGroup = B2DF64DC29DCB9F0004A2864 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B2DF64DA29DCB9F0004A2864 /* CleevioCoordinators */,
+				B2DF64DA29DCB9F0004A2864 /* FlowPilotExample */,
 			);
 		};
 /* End PBXProject section */
@@ -202,7 +136,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2DF64E829DCB9F1004A2864 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,19 +146,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2DF64FC29DCBC2B004A2864 /* BaseHostingConfiguration.swift in Sources */,
-				B22DD9C229F3E33600B90789 /* FirstView.swift in Sources */,
-				B2DF650029DCBF8C004A2864 /* RootViewModel.swift in Sources */,
-				B22DD9C129F3E33600B90789 /* FirstVIewModel.swift in Sources */,
-				B2DF650529DCC187004A2864 /* SecondCoordinator.swift in Sources */,
-				B2DF650329DCC17F004A2864 /* SecondView.swift in Sources */,
-				B2DF650729DCC1C5004A2864 /* SecondVIewModel.swift in Sources */,
-				B2DF64DF29DCB9F0004A2864 /* AppDelegate.swift in Sources */,
-				B2DF64FE29DCBC90004A2864 /* RootView.swift in Sources */,
-				B2DF64F829DCBBA4004A2864 /* RootCoordinator.swift in Sources */,
-				B2DF64E129DCB9F0004A2864 /* SceneDelegate.swift in Sources */,
-				B22DD9C329F3E33600B90789 /* FirstCoordinator.swift in Sources */,
-				B2DF64FA29DCBBAC004A2864 /* BaseCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +188,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -329,6 +250,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -415,7 +337,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B2DF64D629DCB9F0004A2864 /* Build configuration list for PBXProject "CleevioCoordinators" */ = {
+		B2DF64D629DCB9F0004A2864 /* Build configuration list for PBXProject "FlowPilotExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2DF64ED29DCB9F1004A2864 /* Debug */,
@@ -424,7 +346,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B2DF64EF29DCB9F1004A2864 /* Build configuration list for PBXNativeTarget "CleevioCoordinators" */ = {
+		B2DF64EF29DCB9F1004A2864 /* Build configuration list for PBXNativeTarget "FlowPilotExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2DF64F029DCB9F1004A2864 /* Debug */,
@@ -436,25 +358,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B2FC997729F3E08D00E9BF91 /* XCRemoteSwiftPackageReference "cleeviocore" */ = {
+		B2D83DDF2CE6A7BC007D9A7C /* XCRemoteSwiftPackageReference "CleevioUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@gitlab.cleevio.cz:cleevio-dev-ios/cleeviocore.git";
+			repositoryURL = "https://github.com/cleevio/CleevioUI.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 3.0.5;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B2FC997829F3E08D00E9BF91 /* CleevioCore */ = {
+		B2493A602CE2CF9F00E94B2C /* FlowPilot */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2FC997729F3E08D00E9BF91 /* XCRemoteSwiftPackageReference "cleeviocore" */;
-			productName = CleevioCore;
+			productName = FlowPilot;
 		};
-		B2FC997C29F3E16E00E9BF91 /* CleevioRouters */ = {
+		B2D83DE02CE6A7BC007D9A7C /* CleevioUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = CleevioRouters;
+			package = B2D83DDF2CE6A7BC007D9A7C /* XCRemoteSwiftPackageReference "CleevioUI" */;
+			productName = CleevioUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

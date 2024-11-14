@@ -10,21 +10,18 @@ import CleevioCore
 
 @MainActor
 final class SecondCoordinator: BaseCoordinator {
-    
-    override func start(animated: Bool) {
+    override func start(animated: Bool = true) {
         let viewModel = SecondViewModel()
+        viewModel.routingDelegate = self
+
         let viewController = BaseHostingController(rootView: SecondView(viewModel: viewModel))
         
         present(viewController, animated: animated)
-        
-        viewModel.route
-            .sink(receiveValue: { [weak self] route in
-                guard let self else { return }
-                switch route {
-                case .dismiss:
-                    self.dismiss()
-                }
-            })
-            .store(in: cancelBag)
+    }
+}
+
+extension SecondCoordinator: SecondViewModelRoutingDelegate {
+    func dismiss() async {
+        self.dismiss(animated: true)
     }
 }

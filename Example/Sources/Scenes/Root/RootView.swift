@@ -8,24 +8,42 @@
 import SwiftUI
 import FlowPilot
 import CleevioCore
+import CleevioUI
 
+@MainActor
 struct RootView: View {
     @ObservedObject var viewModel: RootViewModel
+
+    var valueSelection: String {
+        switch viewModel.selectedValue {
+        case .none:
+            "Not yet decided"
+        case .some(true):
+            "Selected"
+        case .some(false):
+            "Not selected"
+        }
+    }
 
     var body: some View {
         List {
             Text("Greatest root view ever")
-            Button("Show first view") {
-                viewModel.route.send(.showFirst)
+            AsyncButton(action: {
+                await viewModel.send(action: .valueSelectionTap)
+            }, label: {
+                LabeledContent("Selected value:", value: valueSelection)
+            })
+            AsyncButton("Show first view") {
+                await viewModel.send(action: .showFirst)
             }
-            Button("Show second view") {
-                viewModel.route.send(.showSecond)
+            AsyncButton("Show second view") {
+                await viewModel.send(action: .showSecond)
             }
-            Button("Show modal view") {
-                viewModel.route.send(.showThirdModal)
+            AsyncButton("Show modal view") {
+                await viewModel.send(action: .showThirdModal)
             }
-            Button("Dismiss") {
-                viewModel.route.send(.dismiss)
+            AsyncButton("Dismiss") {
+                await viewModel.send(action: .dismiss)
             }
         }
     }
