@@ -13,9 +13,14 @@ typealias Router = FlowPilot.Router
 
 @MainActor
 class BaseCoordinator: RouterCoordinator {
-    let cancelBag = CancelBag()
-
     deinit {
         print("BaseCoordinator deinit")
+    }
+}
+
+@MainActor
+class BaseResponseParametersCoordinator<Response, Parameters>: FlowPilot.ResponseParametersCoordinator<Response, Parameters> {
+    deinit {
+        print("BaseResponseParametersCoordinator deinit")
     }
 }

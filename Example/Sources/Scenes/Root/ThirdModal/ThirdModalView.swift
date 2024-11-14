@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FlowPilot
+import CleevioUI
 
 struct ThirdModalView: View {
     @ObservedObject var viewModel: ThirdModalViewModel
@@ -14,8 +15,8 @@ struct ThirdModalView: View {
     var body: some View {
         ScrollView {
             Text("Hello, modal coordinator World!")
-            Button("Dismiss") {
-                viewModel.route.send(.dismiss)
+            AsyncButton("Dismiss") {
+                await viewModel.send(action: .dismiss)
             }
         }
     }

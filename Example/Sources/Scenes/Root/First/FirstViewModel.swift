@@ -8,17 +8,35 @@
 import Foundation
 import Combine
 
+protocol FirstViewModelRoutingDelegate: AnyObject {
+    func dismiss()
+    func continueLoop() async throws
+    func showSecondView() async throws
+}
+
 final class FirstViewModel: ObservableObject {
-    var route: PassthroughSubject<Route, Never> = .init()
     var count: Int
+
+    weak var routingDelegate: FirstViewModelRoutingDelegate?
 
     init(count: Int) {
         self.count = count
     }
-    
-    enum Route {
+
+    enum Action {
         case dismiss
         case continueLoop
         case secondView
+    }
+
+    func send(action: Action) async {
+        switch action {
+        case .dismiss:
+            routingDelegate?.dismiss()
+        case .continueLoop:
+            try? await routingDelegate?.continueLoop()
+        case .secondView:
+            try? await routingDelegate?.showSecondView()
+        }
     }
 }

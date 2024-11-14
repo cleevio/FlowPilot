@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FlowPilot
+import CleevioUI
 
 struct FirstView: View {
     @ObservedObject var viewModel: FirstViewModel
@@ -15,14 +16,14 @@ struct FirstView: View {
         ScrollView {
             Text("Hello, first coordinator World!")
             Text("Count: \(viewModel.count)")
-            Button("Dismiss") {
-                viewModel.route.send(.dismiss)
+            AsyncButton("Dismiss") {
+                await viewModel.send(action: .dismiss)
             }
-            Button("Continue loop") {
-                viewModel.route.send(.continueLoop)
+            AsyncButton("Continue loop") {
+                await viewModel.send(action: .continueLoop)
             }
-            Button("Show second view") {
-                viewModel.route.send(.secondView)
+            AsyncButton("Show second view") {
+                await viewModel.send(action: .secondView)
             }
         }
     }

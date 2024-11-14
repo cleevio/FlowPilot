@@ -236,7 +236,7 @@ class MockCoordinatorEventDelegate: CoordinatorEventDelegate {
 }
 
 class Coordinator: FlowPilot.Coordinator {
-    override func start(animated: Bool) {
+    override func start(animated: Bool = true) {
         
     }
 }
