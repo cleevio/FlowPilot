@@ -54,7 +54,7 @@ open class RouterCoordinator: Coordinator {
      */
     @inlinable
     open func dismiss(animated: Bool = true) {
-        #if canImport(UIkit)
+        #if canImport(UIKit)
         router.dismiss(animated: shouldAnimateTransition(preference: animated, respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)))
         #else
         router.dismiss(animated: animated)
@@ -70,7 +70,7 @@ open class RouterCoordinator: Coordinator {
     @inlinable
     open func present(_ viewController: some PlatformViewController, animated: Bool) {
         setAssociatedViewController(viewController)
-        #if canImport(UIkit)
+        #if canImport(UIKit)
         router.present(viewController, animated: shouldAnimateTransition(preference: animated, respectsUserReduceMotion: options.contains(.respectsReduceMotionDisabled)))
         #else
         router.present(viewController, animated: animated)
