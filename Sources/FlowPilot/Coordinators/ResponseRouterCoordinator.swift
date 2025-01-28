@@ -21,7 +21,8 @@ import Combine
 /// - `deinit`
 ///     Sends a failure due to cancellation when the handler is deinitialized.
 @available(macOS 10.15, *)
-open class ResponseHandler<Response> {
+@MainActor
+open class ResponseHandler<Response: Sendable> {
     private let responseStream = PassthroughSubject<Response, Error>()
     private var cancellable: AnyCancellable?
 
@@ -33,7 +34,9 @@ open class ResponseHandler<Response> {
     }
 
     deinit {
-        self.handleResult(.failure(CancellationError()))
+        Task { @MainActor [handleResult] in
+            handleResult(.failure(CancellationError()))
+        }
     }
 
     ///     Asynchronously retrieves a response value or throws an error if encountered.
@@ -128,10 +131,12 @@ public protocol ResponseRoutingDelegate<Response>: AnyObject {
 @MainActor
 open class ResponseRouterCoordinator<Response>: RouterCoordinator, ResponseRoutingDelegate {
     /// An optional closure that takes a `Result<Response, Error>` to handle the result of a response.
-    public var onResponse: ((Result<Response, Error>) -> Void)?
+    public var onResponse: (@Sendable @MainActor (Result<Response, Error>) -> Void)?
 
     deinit {
-        onResponse?(.failure(CancellationError()))
+        Task { @MainActor [onResponse] in
+            onResponse?(.failure(CancellationError()))
+        }
     }
 
     ///     Sends a successful response to the `onResponse` closure.
