@@ -8,6 +8,7 @@
 #if canImport(UIKit)
 import UIKit
 @inlinable
+@MainActor
 public func shouldAnimateTransition(preference: Bool, respectsUserReduceMotion: Bool) -> Bool {
     preference && (respectsUserReduceMotion ? !UIAccessibility.isReduceMotionEnabled : true)
 }

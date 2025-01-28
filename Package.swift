@@ -1,15 +1,15 @@
-// swift-tools-version: 5.5
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let swiftSettings: [SwiftSetting] = [
     // Use for development to catch concurrency issues. SPM packages cannot depend on other packages that use unsafeFlags.
-//    SwiftSetting.unsafeFlags([
-//        "-Xfrontend", "-strict-concurrency=complete",
-//        "-Xfrontend", "-warn-concurrency",
-//        "-Xfrontend", "-enable-actor-data-race-checks",
-//    ])
+    SwiftSetting.unsafeFlags([
+        "-Xfrontend", "-strict-concurrency=complete",
+        "-Xfrontend", "-warn-concurrency",
+        "-Xfrontend", "-enable-actor-data-race-checks",
+    ])
 ]
 
 let package = Package(
@@ -54,5 +54,6 @@ let package = Package(
             dependencies: ["FlowPilot"],
             swiftSettings: swiftSettings
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5, .v6]
 )

@@ -32,7 +32,7 @@ open class RouterCoordinator: Coordinator {
     }
 
     @inlinable
-    open func coordinate<Response>(to coordinator: ResponseRouterCoordinator<Response>, animated: Bool = true)
+    open func coordinate<Response>(to coordinator: sending ResponseRouterCoordinator<Response>, animated: Bool = true)
     -> ResponseHandler<Response>
     {
         let responseHandler = ResponseHandler<Response>()

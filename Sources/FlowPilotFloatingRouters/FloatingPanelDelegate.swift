@@ -33,7 +33,7 @@ open class FloatingPanelDelegate {
     }
 }
 
-extension FloatingPanelDelegate: FloatingPanelControllerDelegate {
+extension FloatingPanelDelegate: @preconcurrency FloatingPanelControllerDelegate {
     @MainActor public func floatingPanelDidChangeState(_ fpc: FloatingPanel.FloatingPanelController) {
         handleFloatingPanelState(fpc.state)
     }

@@ -80,7 +80,7 @@ open class Coordinator: CoordinatorEventDelegate {
 #if canImport(UIKit)
     final public var options: Options = .default
     
-    public struct Options: OptionSet {
+    public struct Options: OptionSet, Sendable {
         public let rawValue: UInt8
         
         public init(rawValue: UInt8) {
@@ -118,9 +118,8 @@ open class Coordinator: CoordinatorEventDelegate {
     
     deinit {
         let typeOfSelf = Self.self
-        let identifier = self.identifier
-        
-        Task { @MainActor [eventDelegate] in
+
+        Task { @MainActor [eventDelegate, identifier] in
             eventDelegate?.onDeinit(of: typeOfSelf, identifier: identifier)
         }
     }

@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 import CleevioCore
-import FlowPilot
+@preconcurrency import FlowPilot
 
 @available(*, deprecated, message: "It is expected to use new coordinators from now on")
 public enum RouterResult<T> {
@@ -54,16 +54,18 @@ extension RouterResult: Equatable {
 
 @available(*, deprecated, message: "It is expected to use new coordinators from now on")
 public protocol LegacyRouter: AnyObject, DismissHandler {
-    func present(_ viewController: UIViewController, animated: Bool)
-    func dismiss(animated: Bool, completion: (() -> Void)?)
-    func dismiss<T>(animated: Bool, returning result: RouterResult<T>) -> AnyPublisher<RouterResult<T>, Never>
+    @MainActor func present(_ viewController: UIViewController, animated: Bool)
+    @MainActor func dismiss(animated: Bool, completion: (() -> Void)?)
+    @MainActor func dismiss<T>(animated: Bool, returning result: RouterResult<T>) -> AnyPublisher<RouterResult<T>, Never>
 }
 
 public extension LegacyRouter {
+    @MainActor
     func dismiss<T>(animated: Bool, returning result: RouterResult<T>) -> AnyPublisher<RouterResult<T>, Never> {
         Future { [weak self] promise in
-            self?.dismiss(animated: animated) {
-                promise(.success(result))
+            let dismissAction = { promise(.success(result)) }
+            Task { @MainActor  in
+                self?.dismiss(animated: animated) { promise(.success(result)) }
             }
         }
         .eraseToAnyPublisher()
