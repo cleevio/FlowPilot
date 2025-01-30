@@ -37,8 +37,8 @@ open class RouterCoordinator: Coordinator {
     {
         let responseHandler = ResponseHandler<Response>()
         
-        coordinator.onResponse = { result in
-            responseHandler.handleResult(result)
+        coordinator.onResponse = { [weak responseHandler] result in
+            responseHandler?.handleResult(result)
         }
         
         super.coordinate(
