@@ -21,8 +21,7 @@ import Combine
 /// - `deinit`
 ///     Sends a failure due to cancellation when the handler is deinitialized.
 @available(macOS 10.15, *)
-@MainActor
-open class ResponseHandler<Response: Sendable> {
+open class ResponseHandler<Response: Sendable>: @unchecked Sendable {
     private let responseStream = PassthroughSubject<Response, Error>()
     private var cancellable: AnyCancellable?
 
@@ -34,8 +33,8 @@ open class ResponseHandler<Response: Sendable> {
     }
 
     deinit {
-        Task { @MainActor [handleResult] in
-            handleResult(.failure(CancellationError()))
+        Task { @MainActor [responseStream] in
+            Self.handleResult(.failure(CancellationError()), on: responseStream)
         }
     }
 
@@ -43,8 +42,8 @@ open class ResponseHandler<Response: Sendable> {
     ///     - Throws: An error if the response stream completes with a failure.
     ///     - Returns: The response value upon successful completion.
     public func response() async throws -> Response {
-        try await withUnsafeThrowingContinuation { [weak self, responseStream] continuation in
-            self?.cancellable = responseStream
+        try await withUnsafeThrowingContinuation { [responseStream] continuation in
+            self.cancellable = responseStream
                 .first()
                 .sink { completion in
                     guard case .failure(let error) = completion else { return }
@@ -55,9 +54,13 @@ open class ResponseHandler<Response: Sendable> {
         }
     }
 
+    public func handleResult(_ result: Result<Response, Error>) {
+        Self.handleResult(result, on: responseStream)
+    }
+
     ///     Processes a result, either sending a success value or a failure completion to the stream.
     ///     - Parameter result: A result value of type `Result<Response, Error>`.
-    public func handleResult(_ result: Result<Response, Error>) {
+    private static func handleResult(_ result: Result<Response, Error>, on responseStream: PassthroughSubject<Response, Error>) {
         switch result {
         case let .success(response):
             responseStream.send(response)
