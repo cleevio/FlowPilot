@@ -43,9 +43,8 @@ open class ResponseHandler<Response: Sendable> {
     ///     - Throws: An error if the response stream completes with a failure.
     ///     - Returns: The response value upon successful completion.
     public func response() async throws -> Response {
-        try await withUnsafeThrowingContinuation { continuation in
-            cancellable =
-                responseStream
+        try await withUnsafeThrowingContinuation { [weak self, responseStream] continuation in
+            self?.cancellable = responseStream
                 .first()
                 .sink { completion in
                     guard case .failure(let error) = completion else { return }
