@@ -63,7 +63,6 @@ public extension LegacyRouter {
     @MainActor
     func dismiss<T>(animated: Bool, returning result: RouterResult<T>) -> AnyPublisher<RouterResult<T>, Never> {
         Future { [weak self] promise in
-            let dismissAction = { promise(.success(result)) }
             Task { @MainActor  in
                 self?.dismiss(animated: animated) { promise(.success(result)) }
             }
