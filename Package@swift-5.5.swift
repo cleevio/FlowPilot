@@ -26,7 +26,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/cleevio/CleevioCore.git", .upToNextMajor(from: Version(2,0,0))),
-        .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: Version(2,6,1))),
+        .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: Version(3,0,0))),
         .package(url: "https://github.com/apple/swift-collections", .upToNextMajor(from: Version(1,0,0)))
     ],
     targets: [
