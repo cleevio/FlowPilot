@@ -8,10 +8,11 @@
 import Foundation
 import Combine
 
-protocol ResponseParametersViewModelRoutingDelegate: AnyObject {
-    func response(with: Bool)
+protocol ResponseParametersViewModelRoutingDelegate: AnyObject, Sendable {
+    @MainActor func response(with: Bool)
 }
 
+@MainActor
 final class ResponseParametersViewModel: ObservableObject {
     weak var routingDelegate: ResponseParametersViewModelRoutingDelegate?
 
@@ -28,7 +29,7 @@ final class ResponseParametersViewModel: ObservableObject {
     func send(action: Action) async {
         switch action {
         case .save:
-            await routingDelegate?.response(with: value)
+            routingDelegate?.response(with: value)
         }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol RootViewModelRoutingDelegate: AnyObject {
+protocol RootViewModelRoutingDelegate: AnyObject, Sendable {
     func showFirst() async throws
     func showSecondView() async throws
     func showThirdModal() async throws

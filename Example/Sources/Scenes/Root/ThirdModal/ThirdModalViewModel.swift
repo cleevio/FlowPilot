@@ -8,10 +8,11 @@
 import Foundation
 import Combine
 
-protocol ThirdModalViewModelRoutingDelegate: AnyObject {
+protocol ThirdModalViewModelRoutingDelegate: AnyObject, Sendable {
     func dismiss() async
 }
 
+@MainActor
 final class ThirdModalViewModel: ObservableObject {
     weak var routingDelegate: ThirdModalViewModelRoutingDelegate?
 
