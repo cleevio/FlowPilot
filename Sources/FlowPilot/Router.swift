@@ -10,6 +10,7 @@ import Combine
 
 /// A protocol that defines the common behavior of a router that can present and dismiss view controllers.
 @available(macOS 10.15, *)
+@MainActor
 public protocol Router: AnyObject {
     /// Presents a view controller.
     ///
@@ -53,7 +54,13 @@ public extension Router {
     @inlinable
     @MainActor
     func eraseToAnyRouter() -> AnyRouter {
-        AnyRouter(presentAction: present(_:animated:), dismissAction: dismiss(animated:completion:), dismissRouterAction: dismissRouter(animated:completion:))
+        AnyRouter(presentAction: { viewController, animated in
+            self.present(viewController, animated: animated)
+        }, dismissAction: { animated, completion in
+            self.dismiss(animated: animated, completion: completion)
+        }, dismissRouterAction: { animated, completion in
+            self.dismissRouter(animated: animated, completion: completion)
+        })
     }
 }
 

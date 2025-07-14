@@ -8,12 +8,13 @@
 import Foundation
 import Combine
 
-protocol FirstViewModelRoutingDelegate: AnyObject {
-    func dismiss()
+protocol FirstViewModelRoutingDelegate: AnyObject, Sendable {
+    @MainActor func dismiss()
     func continueLoop() async throws
     func showSecondView() async throws
 }
 
+@MainActor
 final class FirstViewModel: ObservableObject {
     var count: Int
 

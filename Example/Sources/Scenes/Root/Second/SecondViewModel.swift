@@ -8,10 +8,11 @@
 import Foundation
 import Combine
 
-protocol SecondViewModelRoutingDelegate: AnyObject {
+protocol SecondViewModelRoutingDelegate: AnyObject, Sendable {
     func dismiss() async
 }
 
+@MainActor
 final class SecondViewModel: ObservableObject {
     weak var routingDelegate: SecondViewModelRoutingDelegate?
 

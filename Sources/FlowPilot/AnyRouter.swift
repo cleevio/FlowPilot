@@ -36,9 +36,9 @@ final public class AnyRouter: Router {
      - Note: Both `presentAction` and `dismissAction` closures are stored as properties to be used later when presenting or dismissing a view controller. The closures should take into account the platform-specific APIs when performing their respective actions.
      */
     @inlinable
-    init(presentAction: @escaping (PlatformViewController, Bool) -> Void,
-         dismissAction: @escaping (Bool, (() -> Void)?) -> Void,
-         dismissRouterAction: @escaping (Bool, (() -> Void)?) -> Void) {
+    init(presentAction: @escaping @MainActor (PlatformViewController, Bool) -> Void,
+         dismissAction: @escaping @MainActor (Bool, (() -> Void)?) -> Void,
+         dismissRouterAction: @escaping @MainActor (Bool, (() -> Void)?) -> Void) {
         self.presentAction = presentAction
         self.dismissAction = dismissAction
         self.dismissRouterAction = dismissRouterAction
