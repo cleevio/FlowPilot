@@ -25,9 +25,9 @@ let package = Package(
         .library(name: "FlowPilotLegacyCombineCoordinators", targets: ["FlowPilotLegacyCombineCoordinators"])
     ],
     dependencies: [
-        .package(url: "https://github.com/cleevio/CleevioCore.git", .upToNextMajor(from: Version(2,0,0))),
-        .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: Version(2,6,1))),
-        .package(url: "https://github.com/apple/swift-collections", .upToNextMajor(from: Version(1,0,0)))
+        .package(url: "https://github.com/cleevio/CleevioCore.git", .upToNextMajor(from: "2.0.0")),
+        .package(url: "https://github.com/scenee/FloatingPanel", "2.6.0"..<"3.1.0"),
+        .package(url: "https://github.com/apple/swift-collections", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
         .target(

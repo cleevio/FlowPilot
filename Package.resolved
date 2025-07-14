@@ -1,13 +1,13 @@
 {
-  "originHash" : "1d3d706e27c94b84b27fc9f9106ad443dab9dbebc0bb0f94efe495f1553857ad",
+  "originHash" : "6fe24bd31f36709bfd39b52f36a18bc28d5aea7acf39e7f34f9c4c545b46f242",
   "pins" : [
     {
       "identity" : "cleeviocore",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/cleevio/CleevioCore.git",
       "state" : {
-        "revision" : "593b5d1011ad0aa6963ea2d8bf2ddc5e59caa917",
-        "version" : "2.1.7"
+        "revision" : "9735bd620a882f7133f575dda79dc6e5930efe8e",
+        "version" : "2.2.0"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scenee/FloatingPanel",
       "state" : {
-        "revision" : "1d2e3a0304d5d56bae7d0c0bb861921374390bb0",
-        "version" : "2.8.8"
+        "revision" : "d5177203c08e01a7ffe07c8cccf3d19123db89d2",
+        "version" : "3.0.0"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
-        "version" : "1.0.4"
+        "revision" : "c1805596154bb3a265fd91b8ac0c4433b4348fb0",
+        "version" : "1.2.0"
       }
     }
   ],
