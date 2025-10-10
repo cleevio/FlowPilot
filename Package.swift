@@ -15,7 +15,7 @@ let package = Package(
         .library(name: "CleevioFloatingRouters", targets: ["CleevioFloatingRouters"])
     ],
     dependencies: [
-        .package(url: "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore", .upToNextMajor(from: .init(1, 0, 0))),
+        .package(url: "https://github.com/cleevio/CleevioCore.git", .upToNextMajor(from: .init(2, 1, 7))),
         .package(url: "https://github.com/scenee/FloatingPanel", .upToNextMajor(from: .init(2, 6, 1)))
     ],
     targets: [

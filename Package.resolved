@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "CleevioCore",
-        "repositoryURL": "git@gitlab.cleevio.cz:cleevio-dev-ios/CleevioCore",
+        "repositoryURL": "https://github.com/cleevio/CleevioCore.git",
         "state": {
           "branch": null,
-          "revision": "b7c3a7ead803933f75633384acd1686714ebfbd3",
-          "version": "1.2.0"
+          "revision": "9735bd620a882f7133f575dda79dc6e5930efe8e",
+          "version": "2.2.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/scenee/FloatingPanel",
         "state": {
           "branch": null,
-          "revision": "2a29cb5b3ecf4beb67cf524a030dd74a11b956c4",
-          "version": "2.6.1"
+          "revision": "1d2e3a0304d5d56bae7d0c0bb861921374390bb0",
+          "version": "2.8.8"
         }
       }
     ]
