@@ -66,7 +66,6 @@ open class ModalNavigationRouter: ModalRouter {
     
     open override func dismissRouter(animated: Bool, completion: (() -> Void)?) {
         navigationRouterWrapper.navigationRouter.dismissRouter(animated: animated, completion: nil)
-        super.dismissRouter(animated: animated, completion: completion)
     }
 }
 
