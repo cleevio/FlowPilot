@@ -1,5 +1,8 @@
 # CleevioRouters Changelog
 
+## [3.2.2] - 2025-12-12
+- Fix ModalNavigationRouter dismissRouter function not calling completion
+
 ## [3.2.1] - 2025-12-05
 - Fix ModalNavigationRouter dismissRouter function
 
